@@ -485,6 +485,7 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>8 Oct 2026, v8.</b> Optimizer compares all 25 held items in four kinds of fight, says whether the winner is clear, too close to call, or depends on a setting (and which one). Compare builds for one Aniimo: hit damage, BREAK gauge, crit, opener or finisher, Ultimate, skill effects and survival.</p>
       <p><b>8 Oct 2026, v7.</b> Acquired can no longer push a stat past 20, and impossible point totals show a red error. Held item picker with item level (the +2 Potential needs +10). "Plan points by" can now calculate points for a goal. Optimizer compares the held items that change Potential, with points chosen for each item. Save, load, export and import builds. Settings and data panel: formula switches, every assumption with its range, data checks and what is confirmed. Data and calculations now live in their own files, with automated tests.</p>
       <p><b>8 Oct 2026, v6.</b> Images load from the site's own images folder first, so the published version doesn't depend on other sites staying up.</p>
       <p><b>8 Oct 2026, v5.</b> Held items: the game's recommended items on every card, in each detail panel and in the planner (tap one to apply its +2 Potential), plus a held item guide for each role covering all 25 items.</p>
@@ -505,7 +506,7 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
 <script src="js/engine.js"></script>
 <script>
 const IMG={};/*IMG_DATA*/
-const GAME=window.ANIIMO_DATA;const FEATURES={"allItems": false, "builds": false, "team": false};
+const GAME=window.ANIIMO_DATA;const FEATURES={"allItems": true, "builds": true, "team": false};
 const DATA=GAME.aniimo;
 const ITEMS=GAME.items;const ITEM={};ITEMS.forEach(it=>ITEM[it.id]=it);
 const ASSETS=GAME.assets;
