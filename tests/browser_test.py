@@ -8,7 +8,7 @@ def check(name, ok, detail=''):
 
 with sync_playwright() as p:
     b = p.chromium.launch()
-    for ver in ('10.11',):
+    for ver in ('10.12',):
         ctx = b.new_context(viewport={'width': 1280, 'height': 900})
         ctx.route('http*://**/*', lambda r: r.abort())   # sandbox has no internet; images fall back
         pg = ctx.new_page(); errs = []
@@ -131,7 +131,7 @@ with sync_playwright() as p:
     def page_at(date, motion='no-preference'):
         c = b.new_context(viewport={'width': 1280, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort() if 'localhost' not in r.request.url else r.continue_())
         pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/work/site_v10.11/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
+        pg.goto('file:///home/claude/work/site_v10.12/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
     c, pg, errs = page_at('2026-10-08T12:00:00-04:00')
     check('v10.6 Oct 8: Windchaser leads, Prismana is the accent', pg.evaluate("document.body.dataset.theme") == 'windchaser' and pg.evaluate("document.body.dataset.sec") == 'prismana', pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]"))
     check('v10.7 Subtle event layer: petals and wind, at most 5 + 2 accent pieces', pg.locator('#fx .fx-petal').count() >= 2 and pg.locator('#fx .fx-streak').count() >= 1 and pg.locator('#fx > *:not(.fx-glow)').count() <= 7, pg.locator('#fx > *').count())
@@ -157,7 +157,7 @@ with sync_playwright() as p:
     # trimming: serve a copy over http with padded test portraits
     import subprocess, shutil, os, time
     from PIL import Image, ImageDraw
-    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.11', T); os.makedirs(T + '/images', exist_ok=True)
+    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.12', T); os.makedirs(T + '/images', exist_ok=True)
     def mk(n, W, H, box):
         im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); ImageDraw.Draw(im).ellipse(box, fill=(200, 80, 160, 255)); im.save(T + '/images/' + n, 'PNG')
     mk('p_inferlupa.webp', 1000, 1000, (380, 420, 620, 580)); Image.new('RGBA', (600, 1200), (230, 90, 40, 255)).save(T + '/images/p_flameruff.webp', 'PNG'); mk('p_emberpup.webp', 800, 800, (100, 100, 700, 700))
@@ -179,7 +179,7 @@ with sync_playwright() as p:
     def look(vis=None, tod=None, date='2026-10-08T12:00:00-04:00', hour=None, w=1600, motion='no-preference', drawn=False):
         c = b.new_context(viewport={'width': w, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort())
         pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/work/site_v10.11/index.html?date=' + date + ('&hour=' + str(hour) if hour is not None else '')); pg.wait_for_timeout(200)
+        pg.goto('file:///home/claude/work/site_v10.12/index.html?date=' + date + ('&hour=' + str(hour) if hour is not None else '')); pg.wait_for_timeout(200)
         if vis: pg.evaluate(f"localStorage.setItem('aniimo.visual.v1',JSON.stringify('{vis}'))")
         if tod: pg.evaluate(f"localStorage.setItem('aniimo.tod.v1',JSON.stringify('{tod}'))")
         if vis or tod: pg.reload(); pg.wait_for_timeout(300)
@@ -213,9 +213,26 @@ with sync_playwright() as p:
     check('v10.7 visual settings never change the numbers', before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
     check('v10.7 prismana panel borders stay still', True)
     check('v10.7 no script errors', not errs, errs); c.close()
+    # v10.12
+    c = b.new_context(viewport={'width': 1400, 'height': 1000}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+    pg.goto('file:///home/claude/work/site_v10.12/index.html'); pg.wait_for_timeout(400)
+    check('v10.12 Team Lab says up to 4', 'team of up to 4' in pg.inner_text('#teamlab .sechead'))
+    pg.click('#tlTabs [data-t=fight]'); pg.select_option('#tlAlpha', 'Alpha Rookey'); pg.fill('[data-t=hp]', '150000'); pg.dispatch_event('[data-t=hp]', 'change'); pg.fill('[data-t=def]', '700'); pg.dispatch_event('[data-t=def]', 'change'); pg.click('#tlSaveMeasure'); pg.wait_for_timeout(100)
+    pg.select_option('#tlAlpha', 'Alpha Geoclaw'); pg.wait_for_timeout(100)
+    check('v10.12 switching Alpha clears HP and DEF and loads its own level', pg.input_value('[data-t=hp]') == '' and pg.input_value('[data-t=def]') == '' and pg.input_value('[data-t=level]') == '55', [pg.input_value('[data-t=hp]'), pg.input_value('[data-t=level]')])
+    pg.click('#tlRun'); pg.wait_for_timeout(100); check('v10.12 simulation blocked until HP and DEF are entered', 'Target HP is missing' in pg.inner_text('#tlLog'))
+    pg.click('#tlTabs [data-t=fight]'); pg.select_option('#tlAlpha', 'Alpha Stellarys'); pg.wait_for_timeout(100)
+    check('v10.12 an Alpha with no published level leaves level blank', pg.input_value('[data-t=level]') == '')
+    pg.select_option('#tlAlpha', 'Alpha Rookey'); pg.wait_for_timeout(100)
+    check('v10.12 switching back restores that Alpha\'s saved measurement', pg.input_value('[data-t=hp]') == '150000' and pg.input_value('[data-t=def]') == '700')
+    pg.evaluate("TL.slots[0].moves[1].element='light';tlSave();tlRenderTeam();tlRenderActs()"); pg.click('#tlRun'); pg.wait_for_timeout(200); lg = pg.inner_text('#tlLog')
+    check('v10.12 log shows chart matchup per move (Light → Dark ×1.6) and hand-set ones', 'Light → Dark: ×1.6' in lg and 'chart' in lg and 'set by hand' in lg, lg[:600])
+    pg.click('#tlTabs [data-t=fight]'); pg.select_option('#tlAlpha', ''); pg.wait_for_timeout(100)
+    check('v10.12 custom target: element pickers appear, stats cleared', pg.locator('[data-tel]').count() == 2 and pg.input_value('[data-t=hp]') == '')
+    check('v10.12 no script errors', not errs, errs); c.close()
     # v10.11
     c = b.new_context(viewport={'width': 1400, 'height': 1000}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-    pg.goto('file:///home/claude/work/site_v10.11/index.html'); pg.wait_for_timeout(400)
+    pg.goto('file:///home/claude/work/site_v10.12/index.html'); pg.wait_for_timeout(400)
     pg.click('#tlSlots [data-delslot="3"]'); pg.wait_for_timeout(100)
     check('v10.11 remove a Team Lab slot (4 to 3), add button appears', pg.locator('#tlSlots .tl-slot[data-slot]').count() == 3 and pg.locator('#tlAddSlot').count() == 1)
     pg.click('#tlAddSlot'); pg.wait_for_timeout(100); check('v10.11 add it back (3 to 4), no add button at 4', pg.locator('#tlSlots .tl-slot[data-slot]').count() == 4 and pg.locator('#tlAddSlot').count() == 0)
@@ -236,7 +253,7 @@ with sync_playwright() as p:
     check('v10.11 no script errors', not errs, errs); c.close()
     # v10.10
     c = b.new_context(viewport={'width': 1400, 'height': 1000}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-    pg.goto('file:///home/claude/work/site_v10.11/index.html'); pg.wait_for_timeout(400); pg.click('#tlTabs [data-t=fight]'); pg.click('#tlRun'); pg.wait_for_timeout(200)
+    pg.goto('file:///home/claude/work/site_v10.12/index.html'); pg.wait_for_timeout(400); pg.click('#tlTabs [data-t=fight]'); pg.click('#tlRun'); pg.wait_for_timeout(200)
     check('v10.10 runs with unlisted EP or cooldown are labelled incomplete', 'incomplete' in pg.inner_text('#tlLog .verdict') and 'cooldown' in pg.inner_text('#tlLog .verdict'))
     pg.click('#tlTabs [data-t=fight]'); pg.evaluate("TL.target.def=-5;tlRun()"); pg.wait_for_timeout(100)
     check('v10.10 an impossible setup is refused before simulating', 'Fix the setup first' in pg.inner_text('#tlLog'), pg.inner_text('#tlLog')[:200])
@@ -257,7 +274,7 @@ with sync_playwright() as p:
     # v10.8 Team Lab
     c = b.new_context(viewport={'width': 1400, 'height': 1000}); c.route('http*://**/*', lambda r: r.abort())
     pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-    pg.goto('file:///home/claude/work/site_v10.11/index.html?date=2026-10-08T12:00:00-04:00'); pg.wait_for_timeout(400)
+    pg.goto('file:///home/claude/work/site_v10.12/index.html?date=2026-10-08T12:00:00-04:00'); pg.wait_for_timeout(400)
     check('v10.11 Team Lab: 4 slots with checked moves for Stellarys, Rookey, Fragrancier', pg.locator('#tlSlots .tl-slot[data-slot]').count() == 4 and 'Shooting Stars' in pg.inner_html('#tlSlots') and 'Secret Fragrance Mark' in pg.inner_html('#tlSlots'))
     plan_before = pg.text_content('#spendLine') + pg.text_content('#sumBox')
     pg.select_option('#pA', 'emberpup'); pg.fill('#rw_ATK', '1200'); pg.dispatch_event('#rw_ATK', 'input'); pg.select_option('#pItem', 'h02'); pg.fill('#pItemLv', '15'); pg.dispatch_event('#pItemLv', 'input')
@@ -293,7 +310,7 @@ with sync_playwright() as p:
     pg.select_option('#pA', 'emberpup'); pg.fill('#rw_ATK', ''); pg.dispatch_event('#rw_ATK', 'input'); pg.select_option('#pItem', ''); pg.wait_for_timeout(100)
     check('v10.8 Team Lab never changes the planner\'s numbers', plan_before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
     check('v10.8 no script errors', not errs, errs); c.close()
-    c = b.new_context(viewport={'width': 390, 'height': 844}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); pg.goto('file:///home/claude/work/site_v10.11/index.html'); pg.wait_for_timeout(300)
+    c = b.new_context(viewport={'width': 390, 'height': 844}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); pg.goto('file:///home/claude/work/site_v10.12/index.html'); pg.wait_for_timeout(300)
     pg.click('#tlTabs [data-t=fight]'); pg.click('#tlRun'); pg.wait_for_timeout(200)
     check('v10.8 phone: Team Lab fits, no sideways page scroll', pg.evaluate("document.documentElement.scrollWidth") <= 390, pg.evaluate("document.documentElement.scrollWidth")); c.close()
     b.close()

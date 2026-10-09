@@ -14,7 +14,12 @@ C.MODELS = {
        base: (att, def, might) => Math.max(att * might / 100 - def, 0.1 * att * might / 100) }
 };
 C.STATES = { normal: 'Normal', break: 'BREAK', recovery: 'Recovery' };
-const conf = list => (list = list.map(x => x === 'measured' ? 'assumption' : x), list.includes('placeholder')) ? 'placeholder' : list.includes('unknown') ? 'unknown' : list.includes('experimental') ? 'experimental' : list.includes('assumption') ? 'assumption' : 'verified';
+/* type matchup from the chart: the move's element against each of the target's elements, multiplied. null when either is unknown. */
+C.matchup = (chart, moveEl, targetEls) => {
+  if (!chart || !moveEl || !targetEls || !targetEls.length || !chart.attack[moveEl]) return null;
+  const a = chart.attack[moveEl]; return targetEls.reduce((t, e) => t * (a.strong.includes(e) ? chart.strong : a.weak.includes(e) ? chart.weak : 1), 1);
+};
+const conf = list => (list = list.map(x => x === 'measured' || x === 'manual' ? 'assumption' : x), list.includes('placeholder')) ? 'placeholder' : list.includes('unknown') ? 'unknown' : list.includes('experimental') ? 'experimental' : list.includes('assumption') ? 'assumption' : 'verified';
 
 /* member: {st (planner state), moves:[...], name} ; cfg: {members, actions, target, model, mightTotal, startEP, maxEP} */
 C.simulate = function (E, set, cfg) {
@@ -52,7 +57,7 @@ C.simulate = function (E, set, cfg) {
       const f = fx.blocked ? E.itemEffects(null, 0, c, sc) : fx;
       const P = E.hitParts(c, f, null, bCrit); cdrUsed = P.cdr;
       const fi = (c.a.formInfo || []).find(f => f.form === (m.st.form || c.a.forms[0])), els = fi ? fi.elements : (c.a.element ? [c.a.element] : []), autoSame = mv.element && els.length ? els.includes(mv.element) : null;
-      const typeM = Math.max(0, T.type == null ? 1 : +T.type), same = (autoSame == null ? !!mv.sameElement : autoSame) ? 1.1 : 1, elem = Math.max(0, 1 + (+m.boost || 0) / 100 - (+T.resist || 0) / 100);
+      const autoType = C.matchup(E.G && E.G.typeChart, mv.element, T.elements), typeM = autoType != null ? autoType : Math.max(0, T.type == null ? 1 : +T.type), same = (autoSame == null ? !!mv.sameElement : autoSame) ? 1.1 : 1, elem = Math.max(0, 1 + (+m.boost || 0) / 100 - (+T.resist || 0) / 100);
       const ampM = Math.max(0.2, 1 + P.amp + bAmp), finalM = 1 + P.final, alpha = T.wild === false ? 1 : 0.625;
       const mult = v => (v === '' || v == null || !Number.isFinite(+v)) ? 1 : Math.max(0, +v), stM = base.state === 'break' ? mult(T.breakMult) : base.state === 'recovery' ? mult(T.recoveryMult) : 1;
       const b = model.base(P.attack, def, perHitMight);
@@ -62,7 +67,7 @@ C.simulate = function (E, set, cfg) {
         { name: 'Target DEF' + (shred ? ` (−${Math.round(shred * 100)}% shred)` : '') + (T.defStatus === 'measured' ? ' (your measurement)' : ''), value: +def.toFixed(1), status: T.defStatus === 'measured' ? 'measured' : 'assumption' },
         { name: `Might${total_ && hits > 1 ? ` (${mv.might} ÷ ${hits} hits)` : ''}`, value: +perHitMight.toFixed(2), status: hits > 1 ? 'assumption' : (mv.status && mv.status.might) || 'assumption' },
         { name: model.label, value: +b.toFixed(1), status: 'experimental' },
-        { name: 'Type matchup', value: typeM, status: 'verified' },
+        { name: autoType != null ? `Type matchup (${mv.element} → ${T.elements.join('/')}, type chart)` : `Type matchup (set by hand: ${!mv.element ? 'move element unknown' : 'target element unknown'})`, value: +typeM.toFixed(4), status: autoType != null ? 'verified' : 'manual' },
         { name: autoSame == null ? 'Same element (ticked by hand)' : `Same element (move ${mv.element}, form ${els.join('/')})`, value: same, status: autoSame == null ? 'assumption' : 'verified' },
         { name: 'Elemental Boost − resistance', value: +elem.toFixed(3), status: 'assumption' },
         { name: 'Crit (expected)', value: +P.crit.toFixed(3), status: 'assumption' },
@@ -75,7 +80,7 @@ C.simulate = function (E, set, cfg) {
       ];
       hp = Math.max(0, hp - dmg); total += dmg;
       if (mv.kind === 'break' || (c.a.role === 'Break')) gauge += P.brk * perHitMight / 100;
-      log.push({ ...base, who: m.name, move: mv.name, hit: h, hits, damage: dmg, hpLeft: hp, hpPct: 100 * hp / maxHP, epBefore, epCost: cost, epGain: gain, epAfter, ep: epAfter, buffs: live.map(x => x.label), mods,
+      log.push({ ...base, who: m.name, move: mv.name, hit: h, hits, attackEl: mv.element || null, targetEls: T.elements || [], typeM, typeStatus: autoType != null ? 'verified' : 'manual', damage: dmg, hpLeft: hp, hpPct: 100 * hp / maxHP, epBefore, epCost: cost, epGain: gain, epAfter, ep: epAfter, buffs: live.map(x => x.label), mods,
         confidence: conf(mods.map(x => x.status).concat(c.usesPlaceholder.length ? ['placeholder'] : [])), itemNotes: f.unscored.concat(fx.blocked ? [fx.blocked] : []) });
       f.unscored.forEach(n => warnings.add(`${m.name}: ${n}`));
     }

@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-09c",
+ "version": "2026-10-09d",
  "aniimo": [
   {
    "num": "001",
@@ -11668,6 +11668,11 @@ window.ANIIMO_DATA = {
    "topic": "The 17 Alphas: element, region and location",
    "status": "verified",
    "source": "Dexerto Alpha locations. Level ranges for 11 of them from Nerdschalk; HP and DEF are not published."
+  },
+  {
+   "topic": "Type chart: which element is strong or weak against which (×1.6 / ×0.625, dual types multiply)",
+   "status": "verified",
+   "source": "GameWith type chart and Mobalytics agree on every matchup; multipliers from GameWith and AniimoTools."
   }
  ],
  "teamSize": 4,
@@ -12642,6 +12647,118 @@ window.ANIIMO_DATA = {
    "checked": "2026-10-09",
    "def": null
   }
- ]
+ ],
+ "typeChart": {
+  "strong": 1.6,
+  "weak": 0.625,
+  "attack": {
+   "grass": {
+    "strong": [
+     "earth",
+     "water"
+    ],
+    "weak": [
+     "grass",
+     "fire",
+     "light"
+    ]
+   },
+   "fire": {
+    "strong": [
+     "grass",
+     "ice"
+    ],
+    "weak": [
+     "fire",
+     "earth",
+     "water",
+     "light"
+    ]
+   },
+   "electric": {
+    "strong": [
+     "wind",
+     "water"
+    ],
+    "weak": [
+     "electric",
+     "earth",
+     "ice"
+    ]
+   },
+   "earth": {
+    "strong": [
+     "fire",
+     "ice"
+    ],
+    "weak": [
+     "grass",
+     "earth",
+     "water",
+     "dark"
+    ]
+   },
+   "wind": {
+    "strong": [
+     "grass",
+     "dark"
+    ],
+    "weak": [
+     "electric",
+     "wind"
+    ]
+   },
+   "water": {
+    "strong": [
+     "fire",
+     "earth"
+    ],
+    "weak": [
+     "grass",
+     "water",
+     "light",
+     "ice"
+    ]
+   },
+   "light": {
+    "strong": [
+     "wind",
+     "dark"
+    ],
+    "weak": [
+     "electric",
+     "light"
+    ]
+   },
+   "dark": {
+    "strong": [
+     "grass",
+     "electric",
+     "light"
+    ],
+    "weak": [
+     "wind",
+     "water"
+    ]
+   },
+   "ice": {
+    "strong": [
+     "electric",
+     "water"
+    ],
+    "weak": [
+     "fire",
+     "earth",
+     "ice"
+    ]
+   }
+  },
+  "sources": [
+   "https://gamewith.ai/aniimo/en/type-chart",
+   "https://mobalytics.gg/gamebase/guides/aniimo-elemental-type-damage-explained-chart",
+   "https://aniimotools.dev/guides/damage-formula/"
+  ],
+  "about": "Same matchups on GameWith and Mobalytics. Multipliers ×1.6 and ×0.625 from GameWith and AniimoTools (Mobalytics says 1.65 and 0.65). Dual-type targets multiply both matchups (AniimoTools)."
+ }
 };
 if (typeof module !== "undefined") module.exports = window.ANIIMO_DATA;

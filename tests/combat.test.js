@@ -74,4 +74,15 @@ const brute = (members, S, opts) => { const pools = members.map((m, i) => [null,
 t('team item search is exhaustive and matches a full brute force (4 Aniimo, Bell team crit)', () => { const S = E.settingsFrom(); S.A.luckUptime.v = 100;
   const m = s => ({ st: st(s), goal: 'hit', weight: 1 }), members = ['emberpup', 'emberpup', 'flameruff', 'emberpup'].map(m), pool = ['h02', 'h06', 'h07', 'h16', 'h09'].map(id => ({ id, lvl: 15 }));
   const r = E.optimizeTeam(members, S, { inventory: null, allowDuplicates: false, poolFor: () => pool }); assert.strictEqual(r.search, 'exhaustive'); near(r.best.score, brute(members, S, { poolFor: () => pool, allowDuplicates: false }), 1e-9); });
+/* v10.12 type chart */
+const MU = (el, tg) => C.matchup(GAME.typeChart, el, tg);
+t('type chart: strong ×1.6, resisted ×0.625, neutral ×1', () => { near(MU('fire', ['grass']), 1.6); near(MU('fire', ['water']), 0.625); near(MU('fire', ['wind']), 1); near(MU('dark', ['light']), 1.6); near(MU('light', ['light']), 0.625); });
+t('dual-type target multiplies: Grass vs Earth/Water ×2.56, Grass vs Grass/Fire ×0.390625, mixed ×1', () => { near(MU('grass', ['earth', 'water']), 2.56); near(MU('grass', ['grass', 'fire']), 0.390625); near(MU('grass', ['earth', 'fire']), 1); });
+t('unknown move or target element gives no chart value', () => { assert.strictEqual(MU(null, ['fire']), null); assert.strictEqual(MU('fire', []), null); });
+t('every element has a row; both sources agree on 9 elements', () => { assert.strictEqual(Object.keys(GAME.typeChart.attack).length, 9); });
+t('the simulator uses the chart per move and labels it', () => { const r = run([emb({}, [one(100, { element: 'water', cooldown: 0 }), one(100, { cooldown: 0 })])], [{ slot: 0, move: 0 }, { slot: 0, move: 1 }], { elements: ['fire', 'earth'], type: 1 });
+  near(r.log[0].typeM, 2.56); assert.strictEqual(r.log[0].typeStatus, 'verified'); assert.strictEqual(r.log[0].attackEl, 'water'); assert.deepStrictEqual(r.log[0].targetEls, ['fire', 'earth']);
+  near(r.log[0].damage, 900 * 2.56 * 0.625); assert.strictEqual(r.log[1].typeStatus, 'manual'); near(r.log[1].typeM, 1); assert(r.log[1].mods.some(m => /set by hand: move element unknown/.test(m.name))); });
+t('dual-element Aniimo: an Earth move from Highland Emberpup gets same-element ×1.1 and ×1.6 vs Fire', () => { const m = emb({ form: 'Highland' }, [one(100, { element: 'earth', cooldown: 0 })]); const r = run([m], [{ slot: 0, move: 0 }], { elements: ['fire'] }); near(r.log[0].damage, 900 * 1.6 * 1.1 * 0.625); });
+t('unknown target element falls back to the hand-set matchup, labelled', () => { const r = run([emb({}, [one(100, { element: 'fire', cooldown: 0 })])], [{ slot: 0, move: 0 }], { type: 0.625 }); near(r.log[0].typeM, 0.625); assert.strictEqual(r.log[0].typeStatus, 'manual'); });
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
