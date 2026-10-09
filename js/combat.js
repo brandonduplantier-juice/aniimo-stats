@@ -22,7 +22,7 @@ C.simulate = function (E, set, cfg) {
   const sc0 = set.scenarios[set.scenario] || { behind: 0.2, stackUptime: 0.8 };
   let hp = maxHP, time = 0, total = 0, gauge = 0;
   const ep = (cfg.members || []).map(() => Math.max(0, +cfg.startEP || 0)), maxEP = Math.max(1, +cfg.maxEP || 100);
-  const cds = {}, buffs = [], log = [], warnings = new Set();
+  const cds = {}, buffs = [], log = [], warnings = new Set(), incomplete = new Map();
   const ctx = (cfg.members || []).map(m => { try { return E.context(m.st, set); } catch (e) { return null; } });
   ctx.forEach((c, i) => { if (c && c.usesPlaceholder.length) warnings.add(`${E.bySlug[c.st.slug].name}: blank raw stats (${c.usesPlaceholder.join(', ')}) use the placeholder of ${set.A.rawPlaceholder.v}.`); });
   (cfg.actions || []).forEach((a, ai) => {
@@ -37,6 +37,8 @@ C.simulate = function (E, set, cfg) {
     const cost = mv.ep == null ? 0 : Math.max(0, +mv.ep);
     if (ep[a.slot] < cost) { log.push({ ...base, who: m.name, move: mv.name, error: `Not enough EP (${ep[a.slot].toFixed(0)} of ${cost})` }); return; }
     if (mv.ep == null) warnings.add(`${mv.name}: EP cost not listed, so it costs nothing here.`);
+    const miss = [mv.ep == null ? 'EP cost' : null, mv.cooldown == null ? 'cooldown' : null].filter(Boolean);
+    if (miss.length) incomplete.set(m.name + ': ' + mv.name, miss);
     ep[a.slot] -= cost;
     const live = buffs.filter(b => b.until > time);
     const bAmp = live.reduce((t, b) => t + (+b.amp || 0) / 100, 0), bCrit = live.reduce((t, b) => t + (+b.crit || 0) / 100, 0), shred = Math.min(1, live.reduce((t, b) => t + (+b.shred || 0) / 100, 0));
@@ -51,7 +53,7 @@ C.simulate = function (E, set, cfg) {
       const P = E.hitParts(c, f, null, bCrit); cdrUsed = P.cdr;
       const typeM = Math.max(0, T.type == null ? 1 : +T.type), same = mv.sameElement ? 1.1 : 1, elem = Math.max(0, 1 + (+m.boost || 0) / 100 - (+T.resist || 0) / 100);
       const ampM = Math.max(0.2, 1 + P.amp + bAmp), finalM = 1 + P.final, alpha = T.wild === false ? 1 : 0.625;
-      const stM = base.state === 'break' ? Math.max(0, +T.breakMult || 1) : base.state === 'recovery' ? Math.max(0, +T.recoveryMult || 1) : 1;
+      const mult = v => (v === '' || v == null || !Number.isFinite(+v)) ? 1 : Math.max(0, +v), stM = base.state === 'break' ? mult(T.breakMult) : base.state === 'recovery' ? mult(T.recoveryMult) : 1;
       const b = model.base(P.attack, def, perHitMight);
       const dmg = mv.kind === 'buff' ? 0 : b * typeM * same * elem * P.crit * ampM * finalM * P.persS * P.hitMult * alpha * stM;
       const mods = [
@@ -80,7 +82,8 @@ C.simulate = function (E, set, cfg) {
     ep[a.slot] = Math.min(maxEP, ep[a.slot] + Math.max(0, +mv.epGain || 0));
     const bf = mv.buff || {}; if ((+bf.duration || 0) > 0) buffs.push({ until: time + (+bf.duration), amp: +bf.amp || 0, crit: +bf.crit || 0, shred: +bf.shred || 0, label: `${m.name}: ${mv.name}` });
   });
-  return { log, total, gauge, hpLeft: hp, maxHP, defeated: hp <= 0, elapsed: time, ep, warnings: [...warnings], model: cfg.model || 'A', modelLabel: model.label, version: C.version };
+  return { log, total, gauge, hpLeft: hp, maxHP, defeated: hp <= 0, elapsed: time, ep, warnings: [...warnings], model: cfg.model || 'A', modelLabel: model.label, version: C.version,
+    complete: incomplete.size === 0, incomplete: [...incomplete].map(([move, missing]) => ({ move, missing })) };
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = C; else root.AniimoCombat = C;
 })(typeof window !== 'undefined' ? window : this);

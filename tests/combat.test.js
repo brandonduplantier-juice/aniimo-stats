@@ -38,4 +38,19 @@ t('import recalculates totals and rejects bad data', () => { const r = rep(); r.
   const bad = JSON.parse(JSON.stringify(r)); bad.steps[0].observed = -5; assert.throws(() => R.validate(bad)); const bad2 = JSON.parse(JSON.stringify(r)); bad2.steps[0].state = 'stunned'; assert.throws(() => R.validate(bad2)); });
 t('evidence groups by model and BREAK state and needs repeats', () => { const rs = [rep(), rep(), rep()]; rs.forEach(r => { r.steps[0].observed = r.steps[0].predicted * 1.1; R.summarize(r); }); const g = R.groupEvidence(rs); assert.strictEqual(g.length, 1); assert.strictEqual(g[0].state, 'break'); assert.strictEqual(g[0].evidence, 'repeated'); near(g[0].medianErrorPct, 10, 0.01); });
 t('CSV has one row per hit plus a header', () => { const r = rep(); assert.strictEqual(R.csv(r).split('\n').length, 2); assert(/model,mightTotal/.test(R.csv(r))); });
+/* v10.10 */
+t('BREAK multiplier of 0 stays 0; blank means no change', () => { near(run([emb()], [{ slot: 0, move: 0, state: 'break' }], { breakMult: 0 }).total, 0); near(run([emb()], [{ slot: 0, move: 0, state: 'break' }], { breakMult: '' }).total, 900 * 0.625); near(run([emb()], [{ slot: 0, move: 0, state: 'recovery' }], { recoveryMult: 0 }).total, 0); });
+t('a move with unknown EP or cooldown marks the run incomplete, and says which', () => { const r = run([emb({}, [one(50, { ep: null, cooldown: null })])], [{ slot: 0, move: 0 }]); assert.strictEqual(r.complete, false); assert.deepStrictEqual(r.incomplete[0].missing, ['EP cost', 'cooldown']);
+  const ok = run([emb({}, [one(50, { ep: 10, cooldown: 0 })])], [{ slot: 0, move: 0 }]); assert.strictEqual(ok.complete, true); });
+const repOf = (atk, def, o) => { const m = emb(); m.st.stats.ATK.raw = atk; const cfg = { members: [m], actions: [{ slot: 0, move: 0 }], target: { name: 'Alpha Test', hp: 1e9, def, ...(o || {}) }, model: 'A', mightTotal: true };
+  const r = R.make(cfg, C.simulate(E, SET(), cfg), { dataVersion: GAME.version, assumptions: { critRate: 0 } }); r.steps[0].observed = r.steps[0].predicted * 1.1; return R.summarize(r); };
+t('evidence never mixes different setups (ATK 1000 vs 1500)', () => { const g = R.groupEvidence([repOf(1000, 100), repOf(1500, 100), repOf(1000, 100)]); assert.strictEqual(g.length, 2); assert.deepStrictEqual(g.map(x => x.samples).sort(), [1, 2]); });
+t('evidence never mixes different target DEF', () => { assert.strictEqual(R.groupEvidence([repOf(1000, 100), repOf(1000, 300)]).length, 2); });
+t('identical setups share one fingerprint', () => { assert.strictEqual(repOf(1000, 100).fingerprint, repOf(1000, 100).fingerprint); assert.notStrictEqual(repOf(1000, 100).fingerprint, repOf(1000, 100, { breakMult: 2 }).fingerprint); });
+t('import rejects impossible setups', () => { const base = repOf(1000, 100), bad = (f, msg) => { const x = JSON.parse(JSON.stringify(base)); f(x); assert.throws(() => R.validate(x), msg); };
+  bad(x => x.configuration.target.def = -50, /Target DEF/); bad(x => x.configuration.members[0].st.stats.ATK.raw = 9e9, /raw ATK/); bad(x => x.configuration.members[0].st.level = 90, /level/);
+  bad(x => x.configuration.members[0].moves[0].hits = 0, /hits/); bad(x => x.configuration.actions[0].slot = 5, /slot/); bad(x => x.configuration.target.breakMult = -1, /BREAK/); bad(x => x.configuration.model = 'Z', /model/);
+  assert.doesNotThrow(() => R.validate(JSON.parse(JSON.stringify(base)))); });
+t('an imported fingerprint is recomputed, not trusted', () => { const x = JSON.parse(JSON.stringify(repOf(1000, 100))); const real = x.fingerprint; x.fingerprint = 'fake'; assert.strictEqual(R.validate(x).fingerprint, real); });
+t('reports and CSV carry the setup fingerprint and complete flag', () => { const r = repOf(1000, 100); assert(r.fingerprint && r.complete === false && r.incomplete[0].missing.includes('cooldown')); assert(/setup,complete/.test(R.csv(r))); });
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
