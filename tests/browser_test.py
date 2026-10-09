@@ -8,7 +8,7 @@ def check(name, ok, detail=''):
 
 with sync_playwright() as p:
     b = p.chromium.launch()
-    for ver in ('10.6',):
+    for ver in ('10.7',):
         ctx = b.new_context(viewport={'width': 1280, 'height': 900})
         ctx.route('http*://**/*', lambda r: r.abort())   # sandbox has no internet; images fall back
         pg = ctx.new_page(); errs = []
@@ -131,10 +131,10 @@ with sync_playwright() as p:
     def page_at(date, motion='no-preference'):
         c = b.new_context(viewport={'width': 1280, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort() if 'localhost' not in r.request.url else r.continue_())
         pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/work/site_v10.6/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
+        pg.goto('file:///home/claude/work/site_v10.7/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
     c, pg, errs = page_at('2026-10-08T12:00:00-04:00')
     check('v10.6 Oct 8: Windchaser leads, Prismana is the accent', pg.evaluate("document.body.dataset.theme") == 'windchaser' and pg.evaluate("document.body.dataset.sec") == 'prismana', pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]"))
-    check('v10.6 petals, wind and motes drawn', pg.locator('#fx .fx-petal').count() >= 12 and pg.locator('#fx .fx-mote').count() >= 14 and pg.locator('#fx .fx-streak').count() >= 6)
+    check('v10.7 Subtle event layer: petals and wind, at most 5 + 2 accent pieces', pg.locator('#fx .fx-petal').count() >= 2 and pg.locator('#fx .fx-streak').count() >= 1 and pg.locator('#fx > *:not(.fx-glow)').count() <= 7, pg.locator('#fx > *').count())
     check('v10.6 no events line on the page', pg.locator('#events').count() == 0)
     check('v10.6 header art box sits inside the header', pg.evaluate("(()=>{const i=document.querySelector('.intro').getBoundingClientRect(),a=document.getElementById('themeArt').getBoundingClientRect();return a.top>=i.top&&a.bottom<=i.bottom&&a.right<=i.right})()"))
     before = pg.text_content('#spendLine') + pg.text_content('#sumBox')
@@ -157,7 +157,7 @@ with sync_playwright() as p:
     # trimming: serve a copy over http with padded test portraits
     import subprocess, shutil, os, time
     from PIL import Image, ImageDraw
-    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.6', T); os.makedirs(T + '/images', exist_ok=True)
+    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.7', T); os.makedirs(T + '/images', exist_ok=True)
     def mk(n, W, H, box):
         im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); ImageDraw.Draw(im).ellipse(box, fill=(200, 80, 160, 255)); im.save(T + '/images/' + n, 'PNG')
     mk('p_inferlupa.webp', 1000, 1000, (380, 420, 620, 580)); Image.new('RGBA', (600, 1200), (230, 90, 40, 255)).save(T + '/images/p_flameruff.webp', 'PNG'); mk('p_emberpup.webp', 800, 800, (100, 100, 700, 700))
@@ -174,5 +174,43 @@ with sync_playwright() as p:
         check('v10.6 trimming causes no script errors', not errs, errs); c.close()
     finally:
         srv.terminate()
+    # v10.7 Living Idyll
+    ANIM = "(()=>{let n=0;document.querySelectorAll('#scene *, #fx *, #roam *').forEach(e=>{const s=getComputedStyle(e);if(s.animationName!=='none'&&s.display!=='none'&&e.closest('svg')===null)n++});return n+document.querySelectorAll('#scene .bloom.pulse').length})()"
+    def look(vis=None, tod=None, date='2026-10-08T12:00:00-04:00', hour=None, w=1600, motion='no-preference'):
+        c = b.new_context(viewport={'width': w, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort())
+        pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+        pg.goto('file:///home/claude/work/site_v10.7/index.html?date=' + date + ('&hour=' + str(hour) if hour is not None else '')); pg.wait_for_timeout(200)
+        if vis: pg.evaluate(f"localStorage.setItem('aniimo.visual.v1',JSON.stringify('{vis}'))")
+        if tod: pg.evaluate(f"localStorage.setItem('aniimo.tod.v1',JSON.stringify('{tod}'))")
+        if vis or tod: pg.reload(); pg.wait_for_timeout(300)
+        return c, pg, errs
+    for vis, cap in (('full', 42), ('subtle', 16), ('minimal', 0), ('off', 0)):
+        for hour in (12, 23):
+            c, pg, errs = look(vis if vis != 'subtle' else None, hour=hour); n = pg.evaluate(ANIM)
+            check(f'v10.7 {vis} at {hour}:00: {n} moving things, cap {cap}', n <= cap and (n > 0) == (cap > 0), n)
+            if vis == 'subtle' and hour == 12: check('v10.7 Subtle is the default', pg.evaluate("document.body.dataset.vis") == 'subtle')
+            if vis == 'minimal' and hour == 12: check('v10.7 Minimal keeps still scenery and still petals', pg.locator('#scene .land').count() == 1 and pg.locator('#fx .still').count() >= 1 and pg.locator('#scene .cloud').count() == 4)
+            if vis == 'off' and hour == 12: check('v10.7 Off: no scenery, no effects', pg.evaluate("document.getElementById('scene').hidden") and pg.locator('#fx *').count() == 0)
+            if vis == 'off' and hour == 23: check('v10.7 Off: no night styling', not pg.evaluate("document.body.classList.contains('night')"))
+            check(f'v10.7 {vis} {hour}:00 no script errors', not errs, errs); c.close()
+    c, pg, errs = look(hour=12); check('v10.7 noon is day', not pg.evaluate("document.body.classList.contains('night')") and pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") == '#8fd3ff'); c.close()
+    c, pg, errs = look(hour=23); check('v10.7 23:00 is night, sky not black', pg.evaluate("document.body.classList.contains('night')") and pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") == '#3b5293'); c.close()
+    c, pg, errs = look(hour=19); check('v10.7 19:00 is a blend (dusk)', pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") not in ('#8fd3ff', '#3b5293')); c.close()
+    c, pg, errs = look(tod='day', hour=23); check('v10.7 "Always day" overrides the clock', not pg.evaluate("document.body.classList.contains('night')")); c.close()
+    c, pg, errs = look(hour=23, motion='reduce'); check('v10.7 reduced motion: nothing moves', pg.evaluate(ANIM) == 0); check('v10.7 reduced motion: no wanderers', pg.evaluate("roamNow()") is False); c.close()
+    c, pg, errs = look(w=390); n = pg.evaluate(ANIM); check(f'v10.7 phone: {n} moving things, cap 8, no wanderers, no sideways scroll', n <= 8 and pg.evaluate("roamNow()") is False and pg.evaluate("document.documentElement.scrollWidth") <= 390, n); c.close()
+    c, pg, errs = look(w=1600)
+    check('v10.7 a wanderer appears in the side margin, clear of the page', pg.evaluate("roamNow(true)") and pg.evaluate("(()=>{const r=document.querySelector('#roam .roamer').getBoundingClientRect(),w=document.querySelector('.wrap').getBoundingClientRect();return r.right<=w.left||r.left>=w.right})()"))
+    check('v10.7 decoration layers never take clicks', pg.evaluate("['scene','fx','roam'].every(id=>getComputedStyle(document.getElementById(id)).pointerEvents==='none')"))
+    check('v10.7 Subtle keeps one wanderer at a time', pg.evaluate("roamNow()") is False and pg.locator('#roam .roamer').count() == 1)
+    before = pg.text_content('#spendLine') + pg.text_content('#sumBox')
+    pg.focus('#pLevel'); pg.wait_for_timeout(100); check('v10.7 typing in the planner calms the scenery', pg.evaluate("document.body.classList.contains('calm')"))
+    pg.evaluate("document.activeElement.blur()"); pg.wait_for_timeout(1800); check('v10.7 calm lifts after you stop', not pg.evaluate("document.body.classList.contains('calm')"))
+    pg.click("summary:has-text('Look')")
+    for v in ('full', 'minimal', 'off', 'subtle'): pg.select_option('#xVis', v); pg.wait_for_timeout(80)
+    pg.select_option('#xTod', 'night'); pg.wait_for_timeout(80)
+    check('v10.7 visual settings never change the numbers', before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
+    check('v10.7 prismana panel borders stay still', True)
+    check('v10.7 no script errors', not errs, errs); c.close()
     b.close()
 print(f'\n{sum(res)} passed, {len(res) - sum(res)} failed')

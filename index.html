@@ -404,10 +404,59 @@ body[data-theme=windchaser]{background:radial-gradient(circle at 82% 0,rgba(255,
 .fx-petal{position:absolute;top:-30px;width:16px;height:16px;animation:drift linear infinite}
 .fx-mote{position:absolute;width:6px;height:6px;border-radius:50%;animation:twinkle ease-in-out infinite}
 @media (max-width:600px){body[data-theme] .intro{padding-right:110px}body[data-theme] #themeArt{width:100px;right:6px}#themeArt .main{inset:0}}
+
+#scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#scene[hidden]{display:none}
+#scene .sky{position:absolute;inset:0;background:linear-gradient(180deg,var(--sk1,#8fd3ff),var(--sk2,#e9f7ff) 72%)}
+#scene .sky.art{background-size:cover;background-position:center bottom}
+#scene .tint{position:absolute;inset:0;opacity:0}
+body[data-theme] #scene .tint{opacity:.32;background:radial-gradient(circle at 80% 5%,var(--tring),transparent 40%),linear-gradient(180deg,var(--sky1),var(--sky2) 70%)}
+#scene .sun{position:absolute;right:8%;top:6%;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,#fffbe0 0 30%,rgba(255,236,150,.55) 34%,transparent 70%);opacity:var(--sunO,1)}
+#scene .moon{position:absolute;right:10%;top:8%;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 42% 40%,#fffbea 0 40%,rgba(255,255,230,.22) 44%,transparent 70%);opacity:var(--moonO,0)}
+#scene .stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:var(--starO,0)}
+#scene .cloud{position:absolute;width:240px;height:80px;opacity:.9}
+#scene .cloud.anim{animation:cloud linear infinite}
+@keyframes cloud{from{transform:translateX(-70vw)}to{transform:translateX(120vw)}}
+#scene .island{position:absolute;left:6%;top:16%;width:190px;opacity:.5}
+#scene .land{position:absolute;left:0;right:0;bottom:0;height:36vh}
+#scene .land svg{width:100%;height:100%;display:block}
+#scene .flowers{position:absolute;bottom:0;width:240px;height:90px}
+#scene .flowers.l{left:0}#scene .flowers.r{right:0;transform:scaleX(-1)}
+#scene .flowers.sway svg{animation:fsway 6s ease-in-out infinite alternate;transform-origin:50% 100%}
+@keyframes fsway{from{transform:skewX(-3deg)}to{transform:skewX(3deg)}}
+#scene .bloom{position:absolute;width:54px;height:54px}
+#scene .bloom::before{content:"";position:absolute;inset:-22px;border-radius:50%;background:radial-gradient(circle,rgba(170,255,230,.85),rgba(120,220,255,.25) 45%,transparent 70%)}
+#scene .bloom.pulse::before{animation:bpulse 5s ease-in-out infinite}
+@keyframes bpulse{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
+#scene .bloom svg{position:relative;width:100%;height:100%}
+#scene .firefly{position:absolute;width:5px;height:5px;border-radius:50%;background:#fff6a8;box-shadow:0 0 9px 2px #ffe86a;opacity:var(--fireO,0);animation:ffly ease-in-out infinite alternate}
+@keyframes ffly{from{transform:translate(0,0)}to{transform:translate(40px,-60px)}}
+#roam{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.roamer{position:absolute}
+.roamer img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 6px rgba(30,50,90,.3))}
+.roamer.hop{animation:rhop 7s ease-in-out forwards}
+@keyframes rhop{0%{transform:translateY(50px);opacity:0}14%{transform:translateY(0);opacity:1}24%{transform:translateY(-20px)}34%{transform:translateY(0)}44%{transform:translateY(-14px)}54%{transform:translateY(0)}86%{opacity:1}100%{transform:translateY(50px);opacity:0}}
+.roamer.fly{animation:rfly 9s ease-in-out forwards}
+@keyframes rfly{0%{transform:translate(0,-80px);opacity:0}15%{opacity:1}50%{transform:translate(8px,30vh)}85%{opacity:1}100%{transform:translate(-6px,62vh);opacity:0}}
+.roamer.peek{animation:rpeek 7s ease-in-out forwards}
+@keyframes rpeek{0%{transform:translateX(var(--from));opacity:0}18%{transform:translateX(0);opacity:1}30%{transform:translateX(0) rotate(-6deg)}42%{transform:translateX(0) rotate(4deg)}54%{transform:translateX(0) rotate(0)}82%{transform:translateX(0);opacity:1}100%{transform:translateX(var(--from));opacity:0}}
+.still{animation:none!important}
+/* calm workspace: panels never move; ambience pauses and dims while you work */
+body[data-theme=prismana] .frame{animation:none!important}
+body[data-theme=prismana] .plate{animation:none}
+body[data-vis=full][data-theme=prismana] .plate{animation:iri2 10s linear infinite}
+body.calm #scene *,body.calm #fx *,body.calm #roam *,body.calm #scene *::before{animation-play-state:paused!important}
+body.calm #fx,body.calm #roam{opacity:.45;transition:opacity .4s}
+body.night .sechead p,body.night .key,body.night footer,body.night .logo,body.night .tools .count{color:#f4f7ff;text-shadow:0 1px 3px rgba(10,20,50,.75)}
+body.night footer a{color:#d6e7ff}
+@media (max-width:600px){#scene .island,#scene .ruins,#scene .bloom.b3,#scene .bloom.b4,#scene .flowers.r{display:none}#scene .land{height:24vh}#scene .flowers{width:150px;height:60px}}
+@media (prefers-reduced-motion:reduce){#scene *,#scene *::before,#roam *{animation:none!important}}
 </style>
 </head>
 <body>
+<div id="scene" aria-hidden="true"></div>
 <div id="fx" aria-hidden="true"></div>
+<div id="roam" aria-hidden="true"></div>
 <div class="wrap">
 <div class="bar">
   <a class="logo" href="#top" id="top"><span class="gem" id="logoGem"></span>Potential Planner</a>
@@ -545,7 +594,7 @@ body[data-theme=windchaser]{background:radial-gradient(circle at 82% 0,rgba(255,
       </div>
       <p class="small">None of these is confirmed in game. The "Compare" check in the Optimizer tells you whether flipping one changes the answer.</p>
     </div></details>
-    <details class="frame"><summary>Look</summary><div><div class="settingsgrid"><label>Theme<select id="xTheme"></select></label></div><p class="small">Automatic dresses the page for events running in the game, on official dates only (Windchaser's Departure runs until 9 Dec). It changes colors and decorations only, never numbers.</p></div></details>
+    <details class="frame"><summary>Look</summary><div><div class="settingsgrid"><label>Theme<select id="xTheme"></select></label><label>Visual intensity<select id="xVis"></select></label><label>Time of day<select id="xTod"><option value="auto">Automatic (your device's clock)</option><option value="day">Always day</option><option value="night">Always night</option></select></label></div><p class="small">Automatic dresses the page for events running in the game, on official dates only (Windchaser's Departure runs until 9 Dec). It changes colors and decorations only, never numbers. Visual intensity sets how much moves: Subtle keeps the scenery and lets only a few things drift; Minimal keeps everything still; Off shows the plain sky. Time of day follows your device's clock, not the game's day and night cycle. Reduced-motion settings on your device always stop the movement.</p></div></details>
     <details class="frame"><summary>Assumptions</summary><div>
       <p class="small"><span class="chip placeholder">placeholder</span> not from the game. <span class="chip assumption">assumption</span> a reasonable guess. Low and high are the ends tested by the "what changes the winner" check.</p>
       <div class="scroll"><table class="atab" id="aTable"></table></div>
@@ -605,6 +654,7 @@ body[data-theme=windchaser]{background:radial-gradient(circle at 82% 0,rgba(255,
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>8 Oct 2026, v10.7.</b> Living Idyll: the page now sits in an illustrated Aniimo landscape (sky, clouds, a floating ruin, rolling hills, wildflowers, glowing Blooms) that follows your device's time of day, with stars and fireflies at night. Nimbi, Chirpi and Skippy sometimes wander through the empty side margins. Event themes now dress up the landscape instead of replacing it. New Look settings: visual intensity (Full, Subtle, Minimal, Off; Subtle by default, each with a cap on how much moves) and time of day. Panels never move; ambience pauses and dims while you type, calculate or read a detail panel.</p>
       <p><b>8 Oct 2026, v10.6.</b> Portraits are trimmed of empty space so every Aniimo fills its box about the same. Header art fits inside the header. The leading event theme is now a featured event if one is marked, otherwise the longest-running confirmed event (total length, not time left); shorter events add accents. Right now that is Windchaser's Departure (Irisalis) with petals, wind and light motes, with Prismana sparkles as the accent. The events line is gone; the Theme choice moved to Settings and data, under Look.</p>
       <p><b>8 Oct 2026, v10.5.</b> Portraits always fit their box. Tall or wide artwork (Flameruff, Inferlupa and others) was running past the edge of the planner picture and the detail panel; every picture now shrinks to fit, whatever its shape.</p>
       <p><b>8 Oct 2026, v10.4.</b> Event themes. The page dresses up for what's running in the game: Windchaser's Departure brings a teal and gold sky with drifting feathers and Irisalis in the header; Prismana events bring rainbow borders, sparkles and the featured Prismana form; Glamour Star brings stage lights. Overlapping events mix, with the strongest one leading. Themes switch on official event dates, can be picked by hand (Theme menu), stay still for anyone who has reduced motion turned on, and never change any numbers. The events line is now one row, with Details to expand.</p>
@@ -747,7 +797,7 @@ function openDetail(i){const x=DATA[i];
     <h4>Personality</h4><p>${esc(x.personality)}</p>
     <p style="color:var(--faint);font-size:13px;margin-top:14px">Source: ${esc(x.basis)}${x.toolsSlug?`, <a href="https://aniimotools.dev/creatures/${x.toolsSlug}/" target="_blank" rel="noopener">AniimoTools page</a>`:''}</p></div>
   <div class="dlgfoot">${x.released?`<button class="gbtn" type="button" data-plan="${esc(x.slug)}">Plan this Aniimo</button>`:'<span style="color:var(--faint)">Upcoming, no plan yet</span>'}<button class="gbtn blue" type="button" data-close>Close</button></div>`;
-  if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','')}
+  if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','');setCalm(true)}
 $('grid').addEventListener('click',e=>{const c=e.target.closest('.card');if(c)openDetail(+c.dataset.i)});
 dlg.addEventListener('click',e=>{if(e.target===dlg||e.target.closest('[data-close]'))closeDlg();
   const p=e.target.closest('[data-plan]');if(p){closeDlg();pickAniimo(p.dataset.plan)}});
@@ -942,15 +992,22 @@ function activeThemes(){const now=nowDate(),by={};
 const rnd=seed=>()=>{seed=(seed*9301+49297)%233280;return seed/233280};
 const FEATHER=c=>`<svg viewBox="0 0 24 24"><path d="M20 3C12 4 6 9 4 20l1 1C7 15 10 12 14 10 10 13 8 16 7 19c7-2 11-8 13-16z" fill="#fff" stroke="${c}" stroke-width="1.2"/></svg>`;
 const STAR=c=>`<svg viewBox="0 0 24 24"><path d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0z" fill="${c}"/></svg>`;
-function fxLayer(motif,sec){const r=rnd(motif.length*97+(sec?7:1)),n=x=>sec?Math.ceil(x/2):x,cls=sec?' sec':'';let h='';
-  if(motif==='wind'){for(let i=0;i<n(6);i++)h+=`<div class="fx-streak${cls}" style="top:${(8+r()*80).toFixed(1)}%;animation-duration:${(7+r()*7).toFixed(1)}s;animation-delay:-${(r()*12).toFixed(1)}s"></div>`;
-    const PET=['#ffc4dc','#e6c8ff','#ffd9b0','#bff0e6','#fff1a8'];for(let i=0;i<n(12);i++)h+=`<div class="fx-petal${cls}" style="left:${(r()*95).toFixed(1)}%;animation-duration:${(16+r()*14).toFixed(1)}s;animation-delay:-${(r()*30).toFixed(1)}s"><svg viewBox="0 0 20 20"><path d="M10 1C15 6 15 14 10 19 5 14 5 6 10 1z" fill="${PET[i%5]}" opacity=".9"/></svg></div>`;
-    for(let i=0;i<n(14);i++)h+=`<div class="fx-mote${cls}" style="left:${(r()*97).toFixed(1)}%;top:${(r()*95).toFixed(1)}%;background:${i%3?'#fff6c9':'#d8fff4'};box-shadow:0 0 6px ${i%3?'#ffe27a':'#7fe0cf'};animation-duration:${(3+r()*3).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s"></div>`;
-    for(let i=0;i<n(5);i++)h+=`<div class="fx-feather${cls}" style="left:${(r()*90).toFixed(1)}%;animation-duration:${(18+r()*14).toFixed(1)}s;animation-delay:-${(r()*30).toFixed(1)}s">${FEATHER(i%2?'#d9a514':'#2f9f8f')}</div>`}
-  if(motif==='prismana'){h+=sec?'':`<div class="fx-glow" style="left:-15vw;top:-10vw;background:radial-gradient(circle,#ffb6e1,transparent 70%)"></div><div class="fx-glow" style="right:-18vw;top:30vh;background:radial-gradient(circle,#9fd8ff,transparent 70%)"></div>`;
-    const hues=['#ff7fc8','#ffc94d','#6fe3b0','#6fb9ff','#b38bff'];for(let i=0;i<n(16);i++)h+=`<div class="fx-spark${cls}" style="left:${(r()*96).toFixed(1)}%;top:${(r()*92).toFixed(1)}%;animation-duration:${(2.4+r()*2.6).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s">${STAR(hues[i%5])}</div>`}
-  if(motif==='glamour'){for(let i=0;i<n(3);i++)h+=`<div class="fx-beam${cls}" style="left:${10+i*32}%;animation-duration:${(8+r()*4).toFixed(1)}s;animation-delay:-${(r()*6).toFixed(1)}s"></div>`;
-    for(let i=0;i<n(10);i++)h+=`<div class="fx-spark${cls}" style="left:${(r()*96).toFixed(1)}%;top:${(r()*92).toFixed(1)}%;animation-duration:${(2.4+r()*2.6).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s">${STAR('#ffcf3d')}</div>`}
+function fxLayer(motif,cap,still,sec){const r=rnd(motif.length*97+(sec?7:1)),cls=sec?' sec':'';
+  const pos=()=>`left:${(r()*95).toFixed(1)}%;`,dur=(a,b)=>`animation-duration:${(a+r()*(b-a)).toFixed(1)}s;animation-delay:-${(r()*24).toFixed(1)}s;`;
+  const PET=['#ffc4dc','#e6c8ff','#ffd9b0','#bff0e6','#fff1a8'],HUE=['#ff7fc8','#ffc94d','#6fe3b0','#6fb9ff','#b38bff'];
+  const petalSvg=i=>`<svg viewBox="0 0 20 20"><path d="M10 1C15 6 15 14 10 19 5 14 5 6 10 1z" fill="${PET[i%5]}" opacity=".9"/></svg>`;
+  const petal=i=>`<div class="fx-petal${cls}" style="${pos()}${dur(16,30)}">${petalSvg(i)}</div>`;
+  const streak=()=>`<div class="fx-streak${cls}" style="top:${(8+r()*80).toFixed(1)}%;${dur(9,15)}"></div>`;
+  const mote=i=>`<div class="fx-mote${cls}" style="${pos()}top:${(r()*95).toFixed(1)}%;background:${i%3?'#fff6c9':'#d8fff4'};box-shadow:0 0 6px ${i%3?'#ffe27a':'#7fe0cf'};${dur(3,6)}"></div>`;
+  const feather=i=>`<div class="fx-feather${cls}" style="${pos()}${dur(20,32)}">${FEATHER(i%2?'#d9a514':'#2f9f8f')}</div>`;
+  const spark=i=>`<div class="fx-spark${cls}" style="${pos()}top:${(r()*92).toFixed(1)}%;${dur(2.6,5)}">${STAR(motif==='glamour'?'#ffcf3d':HUE[i%5])}</div>`;
+  const beam=i=>`<div class="fx-beam${cls}" style="left:${10+(i%3)*32}%;${dur(9,13)}"></div>`;
+  const ORDER={wind:[petal,petal,streak,petal,mote,feather,petal,streak,mote,petal,mote,feather],prismana:Array(12).fill(spark),glamour:[beam,spark,beam,spark,beam,spark,spark,spark,spark,spark,spark,spark]};
+  let h='';(ORDER[motif]||[]).slice(0,cap).forEach((f,i)=>h+=f(i));
+  if(motif==='prismana'&&!sec&&(cap||still))h+=`<div class="fx-glow" style="left:-15vw;top:-10vw;background:radial-gradient(circle,#ffb6e1,transparent 70%)"></div><div class="fx-glow" style="right:-18vw;top:30vh;background:radial-gradient(circle,#9fd8ff,transparent 70%)"></div>`;
+  for(let i=0;i<(still||0);i++){const left=(i%2?78:6)+r()*14,top=12+r()*70;
+    h+=motif==='wind'?`<div class="fx-petal still" style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%;transform:rotate(${Math.round(r()*360)}deg)">${petalSvg(i)}</div>`
+      :`<div class="fx-spark still" style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%;opacity:.8">${STAR(motif==='glamour'?'#ffcf3d':HUE[i%5])}</div>`}
   return h}
 function applyTheme(){const pick=LS.get('aniimo.theme.v1','auto'),T=GAME.themes||{};
   let L=pick==='auto'?activeThemes():pick==='default'||!T[pick]?[]:[{key:pick,art:null}];
@@ -960,7 +1017,7 @@ function applyTheme(){const pick=LS.get('aniimo.theme.v1','auto'),T=GAME.themes|
   const t=T[p.key],c=t.colors;
   root.setProperty('--sky1',c.sky1);root.setProperty('--sky2',c.sky2);root.setProperty('--tframe',c.frame);root.setProperty('--tframe2',c.frame2);root.setProperty('--plateA',c.plateA);root.setProperty('--plateB',c.plateB);root.setProperty('--tring',c.ring);
   b.dataset.theme=p.key;b.dataset.sec=sec.map(x=>x.key).join(' ');
-  $('fx').innerHTML=fxLayer(t.motif,false)+sec.map(x=>fxLayer(T[x.key].motif,true)).join('');
+  {const L2=lim(),off=VIS().key==='off';$('fx').innerHTML=off?'':fxLayer(t.motif,L2.event,L2.staticEvent,false)+sec.map(x=>fxLayer(T[x.key].motif,L2.eventSec,0,true)).join('')}
   const artOf=x=>x.art||T[x.key].art||T[x.key].fallbackArt;const a1=artOf(p),a2=sec.map(artOf).find(Boolean);
   $('themeArt').innerHTML=(a1?`<span class="main">${im(a1,'',t.label)}</span>`:'')+(a2&&a2!==a1?`<span class="side">${im(a2,'','')}</span>`:'');
   $('themeTag').textContent='✦ '+[t.label,...sec.map(x=>T[x.key].label)].join(' + ')+(pick==='auto'?' event theme':' theme')}
@@ -968,6 +1025,65 @@ function applyTheme(){const pick=LS.get('aniimo.theme.v1','auto'),T=GAME.themes|
 function initThemePick(){const opts=[['auto','Automatic (follows official event dates)'],['default','Default sky'],...Object.entries(GAME.themes||{}).map(([k,t])=>[k,t.label])];
   $('xTheme').innerHTML=opts.map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join('');$('xTheme').value=LS.get('aniimo.theme.v1','auto');
   $('xTheme').oninput=()=>{LS.set('aniimo.theme.v1',$('xTheme').value);applyTheme()}}
+
+/* ---------- Living Idyll: scenery, time of day, wandering Aniimo, visual intensity ----------
+   Everything here is decoration: CSS animations only, no animation loop, nothing touches the numbers. */
+const VIS=()=>{const L=GAME.visual.levels,k=LS.get('aniimo.visual.v1',GAME.visual.default||'subtle');return Object.assign({key:L[k]?k:'subtle'},L[k]||L.subtle)};
+const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches,SMALL=()=>innerWidth<=600;
+function lim(){const v=VIS(),o={...v};
+  if(SMALL()){o.event=Math.ceil(o.event/2);o.eventSec=Math.floor(o.eventSec/2);o.clouds=Math.min(o.clouds,1);o.blooms=Math.min(o.blooms,1);o.fire=Math.ceil(o.fire/2);o.roam=false;o.sway=false;o.maxAnimated=Math.ceil(o.maxAnimated/2)}
+  if(RM()){o.staticEvent=o.event?Math.min(4,o.event):o.staticEvent;o.clouds=o.blooms=o.fire=o.event=o.eventSec=0;o.roam=false;o.sway=false;o.maxAnimated=0}
+  return o}
+function todT(){const mode=LS.get('aniimo.tod.v1','auto');if(mode==='day')return 0;if(mode==='night')return 1;
+  const q=new URLSearchParams(location.search).get('hour'),d=new Date(),h=q!=null&&q!==''?+q:d.getHours()+d.getMinutes()/60;
+  if(h>=8&&h<17)return 0;if(h>=21||h<5)return 1;return h<8?1-(h-5)/3:(h-17)/4}
+const mixC=(a,b,t)=>'#'+[1,3,5].map(i=>Math.round(parseInt(a.substr(i,2),16)*(1-t)+parseInt(b.substr(i,2),16)*t).toString(16).padStart(2,'0')).join('');
+function updateTime(){const t=todT(),sc=$('scene').style;
+  sc.setProperty('--sk1',mixC('#8fd3ff','#3b5293',t));sc.setProperty('--sk2',mixC('#eaf8ff','#8193cc',t));
+  sc.setProperty('--h1',mixC('#bfe6a8','#5d7d9a',t));sc.setProperty('--h2',mixC('#94d382','#4b6d8a',t));sc.setProperty('--h3',mixC('#6cbf66','#3c5d79',t));
+  sc.setProperty('--ruin',mixC('#9db7c9','#41577a',t));sc.setProperty('--sunO',String(1-t));sc.setProperty('--moonO',String(t));sc.setProperty('--starO',String(t));sc.setProperty('--fireO',t>0.5?'1':'0');
+  document.body.classList.toggle('night',t>0.5&&VIS().key!=='off')}
+const CLOUD=`<svg viewBox="0 0 240 80"><g fill="#fff"><ellipse cx="70" cy="52" rx="60" ry="24"/><ellipse cx="120" cy="38" rx="50" ry="32"/><ellipse cx="170" cy="52" rx="56" ry="22"/></g></svg>`;
+const BLOOM=`<svg viewBox="0 0 40 40"><g fill="#bff7ea" stroke="#5fd0c0" stroke-width="1"><circle cx="20" cy="9" r="7"/><circle cx="31" cy="17" r="7"/><circle cx="27" cy="30" r="7"/><circle cx="13" cy="30" r="7"/><circle cx="9" cy="17" r="7"/></g><circle cx="20" cy="20" r="6" fill="#fff6b0"/></svg>`;
+const FLOWERS=`<svg viewBox="0 0 240 90" preserveAspectRatio="xMinYMax meet">${Array.from({length:14},(_,i)=>{const x=8+i*16+(i%3)*3,h=26+((i*37)%40),c=['#ff9fc8','#ffd36e','#c9a8ff','#ffffff','#ff8a8a'][i%5];return `<path d="M${x} 90 Q${x+4} ${90-h/2} ${x+2} ${90-h}" stroke="#4f9d55" stroke-width="2" fill="none"/><g fill="${c}"><circle cx="${x+2}" cy="${86-h}" r="4"/><circle cx="${x+7}" cy="${90-h}" r="4"/><circle cx="${x+2}" cy="${94-h}" r="4"/><circle cx="${x-3}" cy="${90-h}" r="4"/></g><circle cx="${x+2}" cy="${90-h}" r="2.4" fill="#fff3a0"/>`}).join('')}</svg>`;
+function renderScene(){const v=VIS(),L=lim(),sc=$('scene');document.body.dataset.vis=v.key;
+  if(v.key==='off'){sc.innerHTML='';sc.hidden=true;document.body.classList.remove('night');return}
+  sc.hidden=false;const r=rnd(42),art=GAME.scene&&GAME.scene.art;
+  let h=`<div class="sky${art?' art':''}"${art?` style="background-image:url('${esc(localSrc(art))}')"`:''}></div><div class="tint"></div>`;
+  if(!art){h+=`<div class="sun"></div><div class="moon"></div><div class="stars">${Array.from({length:SMALL()?18:40},()=>`<i style="left:${(r()*100).toFixed(1)}%;top:${(r()*42).toFixed(1)}%"></i>`).join('')}</div>`;
+    h+=[[8,4],[22,30],[12,58],[30,82]].map(([top,left],i)=>`<div class="cloud${i<L.clouds?' anim':''}" style="top:${top}%;left:${left}%;${i<L.clouds?`animation-duration:${150+i*45}s;animation-delay:-${i*60}s;`:''}">${CLOUD}</div>`).join('');
+    h+=`<div class="island"><svg viewBox="0 0 190 120"><path d="M10 60 Q95 40 180 60 Q150 110 95 118 Q40 110 10 60z" style="fill:var(--h3)" opacity=".8"/><g style="fill:var(--ruin)"><rect x="60" y="22" width="10" height="40"/><rect x="110" y="22" width="10" height="40"/><path d="M56 24 Q90 -4 124 24 L118 30 Q90 8 62 30z"/><rect x="82" y="34" width="16" height="28" opacity=".7"/></g></svg></div>`;
+    h+=`<div class="land"><svg viewBox="0 0 1600 360" preserveAspectRatio="none"><path d="M0 170 Q200 90 420 150 T860 130 T1300 120 T1600 150 V360 H0z" style="fill:var(--h1)"/>
+      <g class="ruins" style="fill:var(--ruin)" opacity=".55"><rect x="1080" y="70" width="14" height="70"/><rect x="1150" y="80" width="14" height="60"/><path d="M1074 74 Q1122 30 1170 82 L1162 88 Q1122 46 1082 80z"/><rect x="330" y="96" width="10" height="52"/><rect x="372" y="104" width="10" height="44"/><rect x="326" y="92" width="60" height="8"/></g>
+      <path d="M0 230 Q260 160 560 215 T1120 200 T1600 215 V360 H0z" style="fill:var(--h2)"/><path d="M0 300 Q300 250 700 290 T1600 280 V360 H0z" style="fill:var(--h3)"/></svg></div>`;
+    h+=`<div class="flowers l${L.sway?' sway':''}">${FLOWERS}</div><div class="flowers r${L.sway?' sway':''}">${FLOWERS}</div>`;
+    h+=[[2,38],[95,30],[3,70],[94,62]].map(([left,top],i)=>`<div class="bloom b${i+1}${i<L.blooms?' pulse':''}" style="left:${left}%;top:${top}%">${BLOOM}</div>`).join('');
+    h+=Array.from({length:L.fire},()=>`<div class="firefly" style="left:${(r()*96).toFixed(1)}%;top:${(45+r()*45).toFixed(1)}%;animation-duration:${(6+r()*6).toFixed(1)}s;animation-delay:-${(r()*6).toFixed(1)}s"></div>`).join('')}
+  sc.innerHTML=h;updateTime()}
+/* wandering Aniimo: only in the empty side margins, never over the page */
+let roamT=null;
+function scheduleRoam(){clearTimeout(roamT);const L=lim();if(!L.roam)return;const[a,b]=L.roamGap;roamT=setTimeout(()=>roamNow(),(a+Math.random()*(b-a))*1000)}
+window.roamNow=force=>{const L=lim(),box=$('roam');
+  if(!force&&(!L.roam||document.hidden||document.body.classList.contains('calm')||box.children.length>=L.roamMax)){scheduleRoam();return false}
+  const w=document.querySelector('.wrap').getBoundingClientRect(),gutter=w.left;if(gutter<100){scheduleRoam();return false}
+  const R=GAME.roamers||[],c=R[Math.floor(Math.random()*R.length)],a=c&&E.bySlug[c.slug];if(!a){scheduleRoam();return false}
+  const right=Math.random()<.5,size=Math.min(90,gutter-20),x=right?innerWidth-gutter+(gutter-size)/2:(gutter-size)/2,y=c.move==='fly'?70:Math.round(innerHeight*(.35+Math.random()*.4));
+  const el=document.createElement('div');el.className='roamer '+c.move;el.style.cssText=`left:${x}px;top:${y}px;width:${size}px;height:${size}px;--from:${right?'130%':'-130%'}`;
+  el.innerHTML=im('p:'+a.slug,'',a.name);el.addEventListener('animationend',()=>{el.remove();scheduleRoam()});box.appendChild(el);return true};
+/* calm workspace */
+let calmT=null;
+function setCalm(on){clearTimeout(calmT);if(on){document.body.classList.add('calm');return}
+  calmT=setTimeout(()=>{if(!document.querySelector('.wrap :focus, dialog :focus')&&!dlg.open)document.body.classList.remove('calm')},1500)}
+document.addEventListener('focusin',e=>{if(e.target.closest('.wrap, dialog'))setCalm(true)});
+document.addEventListener('focusout',()=>setCalm(false));
+dlg.addEventListener('close',()=>setCalm(false));
+function initLook(){const L=GAME.visual.levels;$('xVis').innerHTML=Object.entries(L).map(([k,v])=>`<option value="${k}">${esc(v.label)}${k===GAME.visual.default?' (default)':''}</option>`).join('');
+  $('xVis').value=VIS().key;$('xTod').value=LS.get('aniimo.tod.v1','auto');
+  $('xVis').oninput=()=>{LS.set('aniimo.visual.v1',$('xVis').value);$('roam').innerHTML='';renderScene();applyTheme();scheduleRoam()};
+  $('xTod').oninput=()=>{LS.set('aniimo.tod.v1',$('xTod').value);updateTime()}}
+let rsT=null;addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{renderScene();applyTheme()},300)});
+setInterval(updateTime,300000);
+
 /* ---------- best personality for this setup ---------- */
 $('persBest').onclick=()=>{const g=$('oGoal').value,r=E.rankPersonalities(engineState(),SET,g,{custom:customW()}),a=cur(),b=r.best,ru=r.runnerUp;
   const pc=x=>(x*100).toFixed(1)+'%';
@@ -1165,7 +1281,7 @@ function renderData(){const ch=E.checkData();$('dVer').textContent=GAME.version;
   const flagged=GAME.aniimo.filter(a=>a.flags&&a.flags.length);
   $('dVerify').innerHTML='<tr><th>Topic</th><th>Status</th><th>Source</th></tr>'+GAME.verification.map(v=>`<tr><td>${esc(v.topic)}</td><td><span class="chip ${v.status}">${v.status}</span></td><td class="why">${esc(v.source)}</td></tr>`).join('')+
     `<tr><td>Aniimo with a point to check in game</td><td><span class="chip unverified">${flagged.length}</span></td><td class="why">${flagged.map(a=>esc(a.name)).join(', ')}</td></tr>`}
-initThemePick();applyTheme();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
+initThemePick();initLook();renderScene();applyTheme();scheduleRoam();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
 setForms();plan();
 </script>
 </body>

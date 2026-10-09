@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-08f",
+ "version": "2026-10-08g",
  "aniimo": [
   {
    "num": "001",
@@ -11932,6 +11932,98 @@ window.ANIIMO_DATA = {
    },
    "about": "Stage spotlights and gold sparkles for the audition event."
   }
- }
+ },
+ "visual": {
+  "default": "subtle",
+  "levels": {
+   "full": {
+    "label": "Full",
+    "clouds": 4,
+    "blooms": 4,
+    "sway": true,
+    "event": 12,
+    "eventSec": 6,
+    "staticEvent": 0,
+    "roam": true,
+    "roamMax": 2,
+    "roamGap": [
+     14,
+     26
+    ],
+    "fire": 10,
+    "maxAnimated": 42
+   },
+   "subtle": {
+    "label": "Subtle",
+    "clouds": 2,
+    "blooms": 2,
+    "sway": false,
+    "event": 5,
+    "eventSec": 2,
+    "staticEvent": 0,
+    "roam": true,
+    "roamMax": 1,
+    "roamGap": [
+     25,
+     40
+    ],
+    "fire": 4,
+    "maxAnimated": 16
+   },
+   "minimal": {
+    "label": "Minimal",
+    "clouds": 0,
+    "blooms": 0,
+    "sway": false,
+    "event": 0,
+    "eventSec": 0,
+    "staticEvent": 4,
+    "roam": false,
+    "roamMax": 0,
+    "roamGap": [
+     0,
+     0
+    ],
+    "fire": 0,
+    "maxAnimated": 0
+   },
+   "off": {
+    "label": "Off",
+    "clouds": 0,
+    "blooms": 0,
+    "sway": false,
+    "event": 0,
+    "eventSec": 0,
+    "staticEvent": 0,
+    "roam": false,
+    "roamMax": 0,
+    "roamGap": [
+     0,
+     0
+    ],
+    "fire": 0,
+    "maxAnimated": 0
+   }
+  },
+  "about": "Counts are the most moving things on screen at once for each level; phones get about half. Reduced-motion settings stop all movement whatever the level."
+ },
+ "scene": {
+  "art": null,
+  "about": "Illustrated Idyll landscape drawn by the site. Set \"art\" to an image key to use real environment art instead."
+ },
+ "roamers": [
+  {
+   "slug": "nimbi",
+   "move": "hop"
+  },
+  {
+   "slug": "chirpi",
+   "move": "fly"
+  },
+  {
+   "slug": "skippy",
+   "move": "peek"
+  }
+ ]
 };
 if (typeof module !== "undefined") module.exports = window.ANIIMO_DATA;
