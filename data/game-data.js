@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-08",
+ "version": "2026-10-08b",
  "aniimo": [
   {
    "num": "001",
@@ -52,6 +52,43 @@ window.ANIIMO_DATA = {
    "items": [
     "h02",
     "h12"
+   ],
+   "chart": {
+    "HP": 67,
+    "ATK": 90,
+    "BREAK": 40,
+    "REGEN": 68,
+    "P.DEF": 60,
+    "M.DEF": 57,
+    "total": 382,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "fire",
+      "earth"
+     ],
+     "img": "f:emberpup--highland-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:emberpup--mountain-woods-form"
+    }
    ]
   },
   {
@@ -103,6 +140,43 @@ window.ANIIMO_DATA = {
    "items": [
     "h02",
     "h12"
+   ],
+   "chart": {
+    "HP": 85,
+    "ATK": 111,
+    "BREAK": 45,
+    "REGEN": 80,
+    "P.DEF": 72,
+    "M.DEF": 63,
+    "total": 456,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "fire",
+      "earth"
+     ],
+     "img": "f:flameruff--highland-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:flameruff--mountain-woods-form"
+    }
    ]
   },
   {
@@ -160,6 +234,58 @@ window.ANIIMO_DATA = {
    "items": [
     "h02",
     "h12"
+   ],
+   "chart": {
+    "HP": 95,
+    "ATK": 119,
+    "BREAK": 52,
+    "REGEN": 90,
+    "P.DEF": 80,
+    "M.DEF": 75,
+    "total": 511,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "fire",
+      "earth"
+     ],
+     "img": "f:scorchhowl--highland-form"
+    },
+    {
+     "form": "Thunderstorm",
+     "elements": [
+      "fire",
+      "electric"
+     ],
+     "img": "f:scorchhowl--thunderstorm-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:scorchhowl--prismana-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:scorchhowl--mountain-woods-form"
+    }
    ]
   },
   {
@@ -213,6 +339,38 @@ window.ANIIMO_DATA = {
    "element": "fire",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 95,
+    "ATK": 89,
+    "BREAK": 108,
+    "REGEN": 99,
+    "P.DEF": 70,
+    "M.DEF": 80,
+    "total": 541,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark",
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire",
+      "dark"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "dark",
+      "fire"
+     ],
+     "img": "f:inferlupa--v1005503"
+    }
    ]
   },
   {
@@ -261,6 +419,28 @@ window.ANIIMO_DATA = {
    "element": "dark",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 81,
+    "ATK": 106,
+    "BREAK": 46,
+    "REGEN": 80,
+    "P.DEF": 58,
+    "M.DEF": 58,
+    "total": 429,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -315,6 +495,44 @@ window.ANIIMO_DATA = {
    "element": "dark",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 95,
+    "ATK": 125,
+    "BREAK": 54,
+    "REGEN": 94,
+    "P.DEF": 68,
+    "M.DEF": 69,
+    "total": 505,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    },
+    {
+     "form": "Rainstorm",
+     "elements": [
+      "dark",
+      "water"
+     ],
+     "img": "f:stellarys--rainstorm-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "dark",
+      "ice"
+     ],
+     "img": "f:stellarys--prismana-form"
+    }
    ]
   },
   {
@@ -372,6 +590,44 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 97,
+    "ATK": 83,
+    "BREAK": 43,
+    "REGEN": 93,
+    "P.DEF": 67,
+    "M.DEF": 69,
+    "total": 452,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Beach",
+     "elements": [
+      "wind",
+      "water"
+     ],
+     "img": "f:chirpi--highland-form"
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "wind",
+      "grass"
+     ],
+     "img": "f:chirpi--mountain-woods-form"
+    }
    ]
   },
   {
@@ -430,6 +686,44 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 113,
+    "ATK": 119,
+    "BREAK": 51,
+    "REGEN": 88,
+    "P.DEF": 79,
+    "M.DEF": 81,
+    "total": 531,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Beach",
+     "elements": [
+      "wind",
+      "water"
+     ],
+     "img": "f:tromber--highland-form"
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "wind",
+      "grass"
+     ],
+     "img": "f:tromber--mountain-woods-form"
+    }
    ]
   },
   {
@@ -485,6 +779,52 @@ window.ANIIMO_DATA = {
    "element": "wind",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 96,
+    "ATK": 121,
+    "BREAK": 54,
+    "REGEN": 94,
+    "P.DEF": 74,
+    "M.DEF": 70,
+    "total": 509,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Beach",
+     "elements": [
+      "wind",
+      "water"
+     ],
+     "img": "f:cornet--highland-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "wind",
+      "electric"
+     ],
+     "img": "f:cornet--prismana-form"
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "wind",
+      "grass"
+     ],
+     "img": "f:cornet--mountain-woods-form"
+    }
    ]
   },
   {
@@ -539,6 +879,44 @@ window.ANIIMO_DATA = {
    "element": "wind",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 108,
+    "ATK": 80,
+    "BREAK": 107,
+    "REGEN": 80,
+    "P.DEF": 66,
+    "M.DEF": 109,
+    "total": 550,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Beach",
+     "elements": [
+      "wind",
+      "water"
+     ],
+     "img": "f:tubster--highland-form"
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "wind",
+      "grass"
+     ],
+     "img": "f:tubster--mountain-woods-form"
+    }
    ]
   },
   {
@@ -593,6 +971,70 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 69,
+    "ATK": 101,
+    "BREAK": 50,
+    "REGEN": 71,
+    "P.DEF": 53,
+    "M.DEF": 53,
+    "total": 397,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:iris--highland-form"
+    },
+    {
+     "form": "Forest",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:iris--mountain-woods-form"
+    },
+    {
+     "form": "Grassland",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:iris--thunderstorm"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:iris--mudflat-form"
+    },
+    {
+     "form": "Plateau",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:iris--rainstorm-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:iris--prismana"
+    }
    ]
   },
   {
@@ -651,6 +1093,70 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 118,
+    "BREAK": 52,
+    "REGEN": 94,
+    "P.DEF": 70,
+    "M.DEF": 70,
+    "total": 504,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:irisal--highland-form"
+    },
+    {
+     "form": "Forest",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:irisal--mountain-woods-form"
+    },
+    {
+     "form": "Grassland",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:irisal--thunderstorm"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:irisal--mudflat-form"
+    },
+    {
+     "form": "Plateau",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:irisal--rainstorm-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:irisal--prismana"
+    }
    ]
   },
   {
@@ -704,6 +1210,43 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h17"
+   ],
+   "chart": {
+    "HP": 80,
+    "ATK": 70,
+    "BREAK": 50,
+    "REGEN": 60,
+    "P.DEF": 66,
+    "M.DEF": 76,
+    "total": 402,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "water"
+     ],
+     "img": "f:skippy--highland-form"
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "water",
+      "ice"
+     ],
+     "img": "f:skippy--mountain-woods-form"
+    }
    ]
   },
   {
@@ -757,6 +1300,43 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h17"
+   ],
+   "chart": {
+    "HP": 109,
+    "ATK": 85,
+    "BREAK": 50,
+    "REGEN": 74,
+    "P.DEF": 66,
+    "M.DEF": 98,
+    "total": 482,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "water"
+     ],
+     "img": "f:pranky--highland-form"
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "water",
+      "ice"
+     ],
+     "img": "f:pranky--mountain-woods-form"
+    }
    ]
   },
   {
@@ -815,6 +1395,54 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h17"
+   ],
+   "chart": {
+    "HP": 120,
+    "ATK": 95,
+    "BREAK": 50,
+    "REGEN": 88,
+    "P.DEF": 72,
+    "M.DEF": 110,
+    "total": 535,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water",
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water",
+      "ice"
+     ],
+     "img": null
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "water",
+      "ice"
+     ],
+     "img": "f:glacy--highland-form"
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "water",
+      "ice"
+     ],
+     "img": "f:glacy--mountain-woods-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "water",
+      "light"
+     ],
+     "img": "f:glacy--prismana-form"
+    }
    ]
   },
   {
@@ -869,6 +1497,30 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 120,
+    "ATK": 95,
+    "BREAK": 50,
+    "REGEN": 106,
+    "P.DEF": 82,
+    "M.DEF": 82,
+    "total": 535,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass",
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass",
+      "water"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -921,6 +1573,51 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 80,
+    "ATK": 84,
+    "BREAK": 43,
+    "REGEN": 93,
+    "P.DEF": 69,
+    "M.DEF": 82,
+    "total": 451,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Rainstorm",
+     "elements": [
+      "wind",
+      "electric"
+     ],
+     "img": "f:nimbi--highland-form"
+    },
+    {
+     "form": "Cloudmist",
+     "elements": [
+      "wind"
+     ],
+     "img": "f:nimbi--mountain-woods-form"
+    },
+    {
+     "form": "Plateau",
+     "elements": [
+      "wind",
+      "ice"
+     ],
+     "img": "f:nimbi--thunderstorm"
+    }
    ]
   },
   {
@@ -985,6 +1682,59 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 95,
+    "ATK": 110,
+    "BREAK": 50,
+    "REGEN": 87,
+    "P.DEF": 80,
+    "M.DEF": 96,
+    "total": 518,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Rainstorm",
+     "elements": [
+      "wind",
+      "electric"
+     ],
+     "img": "f:turbo--highland-form"
+    },
+    {
+     "form": "Cloudmist",
+     "elements": [
+      "wind"
+     ],
+     "img": "f:turbo--mountain-woods-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "wind",
+      "dark"
+     ],
+     "img": "f:turbo--prismana-form"
+    },
+    {
+     "form": "Plateau",
+     "elements": [
+      "wind",
+      "ice"
+     ],
+     "img": "f:turbo--thunderstorm"
+    }
    ]
   },
   {
@@ -1040,6 +1790,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 110,
+    "BREAK": 50,
+    "REGEN": 80,
+    "P.DEF": 77,
+    "M.DEF": 103,
+    "total": 520,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -1092,6 +1864,35 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 94,
+    "ATK": 68,
+    "BREAK": 80,
+    "REGEN": 60,
+    "P.DEF": 71,
+    "M.DEF": 94,
+    "total": 467,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mountain",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:hummin--highland-form"
+    }
    ]
   },
   {
@@ -1155,6 +1956,46 @@ window.ANIIMO_DATA = {
    "element": "dark",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 115,
+    "ATK": 88,
+    "BREAK": 50,
+    "REGEN": 115,
+    "P.DEF": 84,
+    "M.DEF": 90,
+    "total": 542,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark",
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark",
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mountain",
+     "elements": [
+      "dark",
+      "grass"
+     ],
+     "img": "f:hexxin--highland-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "dark",
+      "grass"
+     ],
+     "img": "f:hexxin--v1020302"
+    }
    ]
   },
   {
@@ -1208,6 +2049,36 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 106,
+    "ATK": 80,
+    "BREAK": 100,
+    "REGEN": 71,
+    "P.DEF": 83,
+    "M.DEF": 110,
+    "total": 550,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mountain",
+     "elements": [
+      "grass",
+      "earth"
+     ],
+     "img": "f:tuckin--highland-form"
+    }
    ]
   },
   {
@@ -1259,6 +2130,51 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 76,
+    "ATK": 64,
+    "BREAK": 84,
+    "REGEN": 72,
+    "P.DEF": 93,
+    "M.DEF": 65,
+    "total": 454,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth",
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth",
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mudflat",
+     "elements": [
+      "earth"
+     ],
+     "img": "f:budclaw--highland-form"
+    },
+    {
+     "form": "Beach",
+     "elements": [
+      "earth"
+     ],
+     "img": "f:budclaw--mountain-woods-form"
+    },
+    {
+     "form": "Bay",
+     "elements": [
+      "earth"
+     ],
+     "img": "f:budclaw--thunderstorm"
+    }
    ]
   },
   {
@@ -1310,6 +2226,51 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 95,
+    "ATK": 80,
+    "BREAK": 104,
+    "REGEN": 85,
+    "P.DEF": 109,
+    "M.DEF": 77,
+    "total": 550,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth",
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth",
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mudflat",
+     "elements": [
+      "earth"
+     ],
+     "img": "f:shrubclaw--highland-form"
+    },
+    {
+     "form": "Beach",
+     "elements": [
+      "earth"
+     ],
+     "img": "f:shrubclaw--mountain-woods-form"
+    },
+    {
+     "form": "Bay",
+     "elements": [
+      "earth"
+     ],
+     "img": "f:shrubclaw--thunderstorm"
+    }
    ]
   },
   {
@@ -1362,6 +2323,28 @@ window.ANIIMO_DATA = {
    "element": "ice",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 93,
+    "ATK": 80,
+    "BREAK": 103,
+    "REGEN": 82,
+    "P.DEF": 113,
+    "M.DEF": 79,
+    "total": 550,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "ice"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -1411,6 +2394,49 @@ window.ANIIMO_DATA = {
    "element": "fire",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 69,
+    "ATK": 100,
+    "BREAK": 41,
+    "REGEN": 98,
+    "P.DEF": 60,
+    "M.DEF": 67,
+    "total": 435,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:sparki--highland-form"
+    },
+    {
+     "form": "Forest",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:sparki--mountain-woods-form"
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:sparki--thunderstorm"
+    }
    ]
   },
   {
@@ -1468,6 +2494,49 @@ window.ANIIMO_DATA = {
    "element": "fire",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 80,
+    "ATK": 113,
+    "BREAK": 50,
+    "REGEN": 115,
+    "P.DEF": 70,
+    "M.DEF": 89,
+    "total": 517,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:flamerion--highland-form"
+    },
+    {
+     "form": "Forest",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:flamerion--mountain-woods-form"
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:flamerion--thunderstorm"
+    }
    ]
   },
   {
@@ -1520,6 +2589,52 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h17"
+   ],
+   "chart": {
+    "HP": 94,
+    "ATK": 81,
+    "BREAK": 41,
+    "REGEN": 85,
+    "P.DEF": 68,
+    "M.DEF": 68,
+    "total": 437,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "wind",
+      "grass"
+     ],
+     "img": "f:flutternym--highland-form"
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "wind",
+      "dark"
+     ],
+     "img": "f:flutternym--mountain-woods-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "wind",
+      "earth"
+     ],
+     "img": "f:flutternym--thunderstorm"
+    }
    ]
   },
   {
@@ -1576,6 +2691,52 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h17"
+   ],
+   "chart": {
+    "HP": 110,
+    "ATK": 98,
+    "BREAK": 50,
+    "REGEN": 104,
+    "P.DEF": 85,
+    "M.DEF": 85,
+    "total": 532,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "wind",
+      "grass"
+     ],
+     "img": "f:gracewing--highland-form"
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "wind",
+      "dark"
+     ],
+     "img": "f:gracewing--mountain-woods-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "wind",
+      "earth"
+     ],
+     "img": "f:gracewing--thunderstorm"
+    }
    ]
   },
   {
@@ -1626,11 +2787,37 @@ window.ANIIMO_DATA = {
    "lastVerified": "2026-10-08",
    "toolsSlug": "somniwing",
    "afterCore": [],
-   "flags": [],
+   "flags": [
+    "Form names differ: this site lists Prismana; AniimoTools lists Basic. Kept this site's version; check in game."
+   ],
    "element": "wind",
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 111,
+    "ATK": 92,
+    "BREAK": 50,
+    "REGEN": 115,
+    "P.DEF": 85,
+    "M.DEF": 85,
+    "total": 538,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass",
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Prismana",
+     "elements": [
+      "wind"
+     ],
+     "img": null,
+     "unmatched": true
+    }
    ]
   },
   {
@@ -1682,6 +2869,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 70,
+    "ATK": 108,
+    "BREAK": 42,
+    "REGEN": 80,
+    "P.DEF": 70,
+    "M.DEF": 57,
+    "total": 427,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -1737,6 +2946,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 120,
+    "BREAK": 49,
+    "REGEN": 91,
+    "P.DEF": 83,
+    "M.DEF": 67,
+    "total": 510,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -1786,6 +3017,35 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 82,
+    "ATK": 107,
+    "BREAK": 43,
+    "REGEN": 78,
+    "P.DEF": 59,
+    "M.DEF": 59,
+    "total": 428,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Towerwood",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:budsquire--highland-form"
+    }
    ]
   },
   {
@@ -1841,6 +3101,51 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 96,
+    "ATK": 121,
+    "BREAK": 53,
+    "REGEN": 92,
+    "P.DEF": 74,
+    "M.DEF": 73,
+    "total": 509,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Thunderstorm",
+     "elements": [
+      "grass",
+      "electric"
+     ],
+     "img": "f:thornblade--rainstorm-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "grass",
+      "water"
+     ],
+     "img": "f:thornblade--prismana-form"
+    },
+    {
+     "form": "Towerwood",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:thornblade--highland-form"
+    }
    ]
   },
   {
@@ -1897,6 +3202,36 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 95,
+    "ATK": 113,
+    "BREAK": 91,
+    "REGEN": 78,
+    "P.DEF": 70,
+    "M.DEF": 70,
+    "total": 517,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "grass",
+      "light"
+     ],
+     "img": "f:melloblum--v1032402"
+    }
    ]
   },
   {
@@ -1948,6 +3283,50 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 74,
+    "ATK": 72,
+    "BREAK": 91,
+    "REGEN": 85,
+    "P.DEF": 68,
+    "M.DEF": 65,
+    "total": 455,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "grass",
+      "ice"
+     ],
+     "img": "f:pomegg--highland-form"
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:pomegg--mountain-woods-form"
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:pomegg--thunderstorm"
+    }
    ]
   },
   {
@@ -2003,6 +3382,50 @@ window.ANIIMO_DATA = {
    "element": "grass",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 87,
+    "ATK": 90,
+    "BREAK": 107,
+    "REGEN": 100,
+    "P.DEF": 80,
+    "M.DEF": 76,
+    "total": 540,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "grass",
+      "ice"
+     ],
+     "img": "f:pomawk--highland-form"
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:pomawk--mountain-woods-form"
+    },
+    {
+     "form": "Sea of Flowers",
+     "elements": [
+      "grass"
+     ],
+     "img": "f:pomawk--thunderstorm"
+    }
    ]
   },
   {
@@ -2053,6 +3476,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 71,
+    "ATK": 94,
+    "BREAK": 69,
+    "REGEN": 94,
+    "P.DEF": 58,
+    "M.DEF": 55,
+    "total": 441,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -2108,6 +3553,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 84,
+    "ATK": 111,
+    "BREAK": 81,
+    "REGEN": 110,
+    "P.DEF": 68,
+    "M.DEF": 65,
+    "total": 519,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -2158,6 +3625,44 @@ window.ANIIMO_DATA = {
    "element": "dark",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 77,
+    "ATK": 112,
+    "BREAK": 43,
+    "REGEN": 77,
+    "P.DEF": 60,
+    "M.DEF": 54,
+    "total": 423,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    },
+    {
+     "form": "Forest",
+     "elements": [
+      "dark",
+      "grass"
+     ],
+     "img": "f:wisptis--highland-form"
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "dark",
+      "fire"
+     ],
+     "img": "f:wisptis--mountain-woods-form"
+    }
    ]
   },
   {
@@ -2213,6 +3718,52 @@ window.ANIIMO_DATA = {
    "element": "dark",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 90,
+    "ATK": 125,
+    "BREAK": 52,
+    "REGEN": 91,
+    "P.DEF": 77,
+    "M.DEF": 70,
+    "total": 505,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    },
+    {
+     "form": "Forest",
+     "elements": [
+      "dark",
+      "grass"
+     ],
+     "img": "f:ignitis--highland-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "dark",
+      "fire"
+     ],
+     "img": "f:ignitis--prismana-form"
+    },
+    {
+     "form": "Highland",
+     "elements": [
+      "dark",
+      "fire"
+     ],
+     "img": "f:ignitis--mountain-woods-form"
+    }
    ]
   },
   {
@@ -2262,6 +3813,36 @@ window.ANIIMO_DATA = {
    "element": "ice",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 71,
+    "ATK": 88,
+    "BREAK": 38,
+    "REGEN": 67,
+    "P.DEF": 56,
+    "M.DEF": 57,
+    "total": 377,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "ice"
+     ],
+     "img": null
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "ice",
+      "dark"
+     ],
+     "img": "f:bonesky--highland-form"
+    }
    ]
   },
   {
@@ -2311,6 +3892,36 @@ window.ANIIMO_DATA = {
    "element": "ice",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 86,
+    "ATK": 105,
+    "BREAK": 45,
+    "REGEN": 81,
+    "P.DEF": 68,
+    "M.DEF": 68,
+    "total": 453,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "ice"
+     ],
+     "img": null
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "ice",
+      "dark"
+     ],
+     "img": "f:fenrier--highland-form"
+    }
    ]
   },
   {
@@ -2365,6 +3976,44 @@ window.ANIIMO_DATA = {
    "element": "ice",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 95,
+    "ATK": 118,
+    "BREAK": 53,
+    "REGEN": 98,
+    "P.DEF": 72,
+    "M.DEF": 76,
+    "total": 512,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "ice"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "ice",
+      "light"
+     ],
+     "img": "f:glynsera--prismana-form"
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "ice",
+      "dark"
+     ],
+     "img": "f:glynsera--highland-form"
+    }
    ]
   },
   {
@@ -2414,6 +4063,35 @@ window.ANIIMO_DATA = {
    "element": "electric",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 85,
+    "ATK": 85,
+    "BREAK": 87,
+    "REGEN": 73,
+    "P.DEF": 60,
+    "M.DEF": 60,
+    "total": 450,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "electric"
+     ],
+     "img": "f:bolty--highland-form"
+    }
    ]
   },
   {
@@ -2468,6 +4146,43 @@ window.ANIIMO_DATA = {
    "element": "electric",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 100,
+    "BREAK": 104,
+    "REGEN": 86,
+    "P.DEF": 70,
+    "M.DEF": 70,
+    "total": 530,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "electric",
+      "dark"
+     ],
+     "img": "f:blazen--prismana-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "electric"
+     ],
+     "img": "f:blazen--highland-form"
+    }
    ]
   },
   {
@@ -2516,6 +4231,28 @@ window.ANIIMO_DATA = {
    "element": "fire",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 53,
+    "ATK": 80,
+    "BREAK": 94,
+    "REGEN": 77,
+    "P.DEF": 79,
+    "M.DEF": 72,
+    "total": 455,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -2568,6 +4305,28 @@ window.ANIIMO_DATA = {
    "element": "fire",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 110,
+    "ATK": 82,
+    "BREAK": 108,
+    "REGEN": 88,
+    "P.DEF": 80,
+    "M.DEF": 80,
+    "total": 548,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -2617,6 +4376,35 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 81,
+    "ATK": 61,
+    "BREAK": 72,
+    "REGEN": 64,
+    "P.DEF": 53,
+    "M.DEF": 80,
+    "total": 411,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "water"
+     ],
+     "img": "f:susuta--highland-form"
+    }
    ]
   },
   {
@@ -2668,6 +4456,35 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 92,
+    "ATK": 96,
+    "BREAK": 80,
+    "REGEN": 67,
+    "P.DEF": 68,
+    "M.DEF": 68,
+    "total": 471,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "water"
+     ],
+     "img": "f:popota--highland-form"
+    }
    ]
   },
   {
@@ -2724,6 +4541,36 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 102,
+    "ATK": 108,
+    "BREAK": 50,
+    "REGEN": 88,
+    "P.DEF": 99,
+    "M.DEF": 75,
+    "total": 522,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "water",
+      "dark"
+     ],
+     "img": "f:piopiota--highland-form"
+    }
    ]
   },
   {
@@ -2778,6 +4625,42 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 104,
+    "ATK": 85,
+    "BREAK": 100,
+    "REGEN": 80,
+    "P.DEF": 70,
+    "M.DEF": 106,
+    "total": 545,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Nighttime",
+     "elements": [
+      "water"
+     ],
+     "img": "f:panpanta--highland-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "water"
+     ],
+     "img": "f:panpanta--prismana-form"
+    }
    ]
   },
   {
@@ -2826,6 +4709,28 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 75,
+    "ATK": 90,
+    "BREAK": 39,
+    "REGEN": 66,
+    "P.DEF": 56,
+    "M.DEF": 56,
+    "total": 382,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -2874,6 +4779,28 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 90,
+    "ATK": 109,
+    "BREAK": 44,
+    "REGEN": 79,
+    "P.DEF": 68,
+    "M.DEF": 68,
+    "total": 458,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -2928,6 +4855,44 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 121,
+    "BREAK": 50,
+    "REGEN": 88,
+    "P.DEF": 75,
+    "M.DEF": 75,
+    "total": 509,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Thunderstorm",
+     "elements": [
+      "water",
+      "electric"
+     ],
+     "img": "f:sherro--thunderstorm-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "water",
+      "light"
+     ],
+     "img": "f:sherro--prismana-form"
+    }
    ]
   },
   {
@@ -2977,6 +4942,36 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 76,
+    "ATK": 98,
+    "BREAK": 42,
+    "REGEN": 85,
+    "P.DEF": 68,
+    "M.DEF": 68,
+    "total": 437,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "earth",
+      "ice"
+     ],
+     "img": "f:baleetle--highland-form"
+    }
    ]
   },
   {
@@ -3031,6 +5026,44 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 90,
+    "ATK": 114,
+    "BREAK": 52,
+    "REGEN": 100,
+    "P.DEF": 80,
+    "M.DEF": 80,
+    "total": 516,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "earth",
+      "ice"
+     ],
+     "img": "f:waleetle--highland-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "earth",
+      "dark"
+     ],
+     "img": "f:waleetle--v1045302"
+    }
    ]
   },
   {
@@ -3085,6 +5118,36 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 91,
+    "ATK": 114,
+    "BREAK": 52,
+    "REGEN": 104,
+    "P.DEF": 101,
+    "M.DEF": 54,
+    "total": 516,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "earth",
+      "ice"
+     ],
+     "img": "f:bouldus--highland-form"
+    }
    ]
   },
   {
@@ -3134,6 +5197,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h02",
     "h15"
+   ],
+   "chart": {
+    "HP": 85,
+    "ATK": 106,
+    "BREAK": 41,
+    "REGEN": 77,
+    "P.DEF": 60,
+    "M.DEF": 60,
+    "total": 429,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -3188,6 +5273,36 @@ window.ANIIMO_DATA = {
    "items": [
     "h02",
     "h15"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 125,
+    "BREAK": 50,
+    "REGEN": 90,
+    "P.DEF": 70,
+    "M.DEF": 70,
+    "total": 505,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "electric",
+      "light"
+     ],
+     "img": "f:fenmane--prismana-form"
+    }
    ]
   },
   {
@@ -3238,6 +5353,43 @@ window.ANIIMO_DATA = {
    "element": "dark",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 60,
+    "ATK": 52,
+    "BREAK": 60,
+    "REGEN": 51,
+    "P.DEF": 68,
+    "M.DEF": 48,
+    "total": 339,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "dark",
+      "ice"
+     ],
+     "img": "f:helmut--highland-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "dark"
+     ],
+     "img": "f:helmut--mountain-woods-form"
+    }
    ]
   },
   {
@@ -3295,6 +5447,50 @@ window.ANIIMO_DATA = {
    "element": "dark",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 90,
+    "ATK": 125,
+    "BREAK": 55,
+    "REGEN": 81,
+    "P.DEF": 84,
+    "M.DEF": 70,
+    "total": 505,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "dark",
+      "ice"
+     ],
+     "img": "f:pawney--highland-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "dark"
+     ],
+     "img": "f:pawney--mountain-woods-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "dark"
+     ],
+     "img": "f:pawney--prismana-form"
+    }
    ]
   },
   {
@@ -3351,6 +5547,43 @@ window.ANIIMO_DATA = {
    "element": "dark",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 90,
+    "BREAK": 105,
+    "REGEN": 75,
+    "P.DEF": 100,
+    "M.DEF": 70,
+    "total": 540,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "dark"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "dark"
+     ],
+     "img": null
+    },
+    {
+     "form": "Snowfield",
+     "elements": [
+      "dark",
+      "ice"
+     ],
+     "img": "f:rookey--highland-form"
+    },
+    {
+     "form": "Mountain Woods",
+     "elements": [
+      "dark"
+     ],
+     "img": "f:rookey--mountain-woods-form"
+    }
    ]
   },
   {
@@ -3400,6 +5633,35 @@ window.ANIIMO_DATA = {
    "element": "wind",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 78,
+    "ATK": 65,
+    "BREAK": 76,
+    "REGEN": 63,
+    "P.DEF": 74,
+    "M.DEF": 51,
+    "total": 407,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mountain",
+     "elements": [
+      "wind"
+     ],
+     "img": "f:jawling--highland-form"
+    }
    ]
   },
   {
@@ -3449,6 +5711,35 @@ window.ANIIMO_DATA = {
    "element": "wind",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 94,
+    "ATK": 78,
+    "BREAK": 92,
+    "REGEN": 76,
+    "P.DEF": 88,
+    "M.DEF": 61,
+    "total": 489,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mountain",
+     "elements": [
+      "wind"
+     ],
+     "img": "f:helmwhelp--highland-form"
+    }
    ]
   },
   {
@@ -3502,6 +5793,35 @@ window.ANIIMO_DATA = {
    "element": "wind",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 104,
+    "ATK": 87,
+    "BREAK": 102,
+    "REGEN": 84,
+    "P.DEF": 98,
+    "M.DEF": 68,
+    "total": 543,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "wind"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "wind"
+     ],
+     "img": null
+    },
+    {
+     "form": "Mountain",
+     "elements": [
+      "wind"
+     ],
+     "img": "f:helgon--highland-form"
+    }
    ]
   },
   {
@@ -3555,6 +5875,36 @@ window.ANIIMO_DATA = {
    "element": "fire",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 95,
+    "ATK": 125,
+    "BREAK": 50,
+    "REGEN": 80,
+    "P.DEF": 70,
+    "M.DEF": 85,
+    "total": 505,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "fire",
+      "wind"
+     ],
+     "img": "f:infergon--v1002503"
+    }
    ]
   },
   {
@@ -3603,6 +5953,28 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 92,
+    "ATK": 100,
+    "BREAK": 42,
+    "REGEN": 70,
+    "P.DEF": 70,
+    "M.DEF": 61,
+    "total": 435,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -3656,6 +6028,36 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 104,
+    "ATK": 124,
+    "BREAK": 50,
+    "REGEN": 75,
+    "P.DEF": 83,
+    "M.DEF": 70,
+    "total": 506,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "earth",
+      "dark"
+     ],
+     "img": "f:grizbo--prismana-form"
+    }
    ]
   },
   {
@@ -3704,6 +6106,28 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 83,
+    "ATK": 68,
+    "BREAK": 79,
+    "REGEN": 56,
+    "P.DEF": 52,
+    "M.DEF": 74,
+    "total": 412,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -3752,6 +6176,30 @@ window.ANIIMO_DATA = {
    "element": "fire",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 99,
+    "ATK": 82,
+    "BREAK": 93,
+    "REGEN": 68,
+    "P.DEF": 63,
+    "M.DEF": 80,
+    "total": 485,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire",
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire",
+      "earth"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -3805,6 +6253,38 @@ window.ANIIMO_DATA = {
    "element": "fire",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 110,
+    "ATK": 91,
+    "BREAK": 104,
+    "REGEN": 75,
+    "P.DEF": 70,
+    "M.DEF": 89,
+    "total": 539,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire",
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire",
+      "earth"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "fire",
+      "dark"
+     ],
+     "img": "f:magmarex--prismana-form"
+    }
    ]
   },
   {
@@ -3853,6 +6333,28 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 99,
+    "ATK": 81,
+    "BREAK": 102,
+    "REGEN": 70,
+    "P.DEF": 80,
+    "M.DEF": 54,
+    "total": 486,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -3905,6 +6407,28 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h01"
+   ],
+   "chart": {
+    "HP": 110,
+    "ATK": 90,
+    "BREAK": 105,
+    "REGEN": 78,
+    "P.DEF": 97,
+    "M.DEF": 60,
+    "total": 540,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -3954,6 +6478,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 77,
+    "ATK": 87,
+    "BREAK": 50,
+    "REGEN": 100,
+    "P.DEF": 67,
+    "M.DEF": 67,
+    "total": 448,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4007,6 +6553,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 90,
+    "ATK": 116,
+    "BREAK": 50,
+    "REGEN": 75,
+    "P.DEF": 100,
+    "M.DEF": 83,
+    "total": 514,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4054,6 +6622,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 83,
+    "ATK": 68,
+    "BREAK": 37,
+    "REGEN": 90,
+    "P.DEF": 63,
+    "M.DEF": 63,
+    "total": 404,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4103,6 +6693,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 99,
+    "ATK": 93,
+    "BREAK": 45,
+    "REGEN": 90,
+    "P.DEF": 72,
+    "M.DEF": 74,
+    "total": 473,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4160,6 +6772,44 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 110,
+    "ATK": 115,
+    "BREAK": 50,
+    "REGEN": 90,
+    "P.DEF": 75,
+    "M.DEF": 75,
+    "total": 515,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    },
+    {
+     "form": "Rainstorm",
+     "elements": [
+      "electric",
+      "water"
+     ],
+     "img": "f:luminelle--rainstorm-form"
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "electric",
+      "light"
+     ],
+     "img": "f:luminelle--prismana-form"
+    }
    ]
   },
   {
@@ -4206,6 +6856,28 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 102,
+    "ATK": 76,
+    "BREAK": 44,
+    "REGEN": 93,
+    "P.DEF": 68,
+    "M.DEF": 76,
+    "total": 459,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4260,6 +6932,28 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 120,
+    "ATK": 90,
+    "BREAK": 50,
+    "REGEN": 110,
+    "P.DEF": 80,
+    "M.DEF": 90,
+    "total": 540,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4314,6 +7008,28 @@ window.ANIIMO_DATA = {
    "element": "electric",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 88,
+    "ATK": 92,
+    "BREAK": 90,
+    "REGEN": 118,
+    "P.DEF": 75,
+    "M.DEF": 75,
+    "total": 538,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4361,6 +7077,37 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 83,
+    "ATK": 66,
+    "BREAK": 91,
+    "REGEN": 92,
+    "P.DEF": 75,
+    "M.DEF": 79,
+    "total": 486,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth",
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth",
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Rainstorm",
+     "elements": [
+      "earth"
+     ],
+     "img": "f:reefish--rainstorm-form"
+    }
    ]
   },
   {
@@ -4408,6 +7155,37 @@ window.ANIIMO_DATA = {
    "element": "earth",
    "items": [
     "h04"
+   ],
+   "chart": {
+    "HP": 98,
+    "ATK": 78,
+    "BREAK": 107,
+    "REGEN": 108,
+    "P.DEF": 88,
+    "M.DEF": 93,
+    "total": 572,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "earth",
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "earth",
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Rainstorm",
+     "elements": [
+      "earth"
+     ],
+     "img": "f:coraliz--rainstorm-form"
+    }
    ]
   },
   {
@@ -4452,7 +7230,29 @@ window.ANIIMO_DATA = {
    "afterCore": [],
    "flags": [],
    "element": "ice",
-   "items": []
+   "items": [],
+   "chart": {
+    "HP": 89,
+    "ATK": 64,
+    "BREAK": 92,
+    "REGEN": 88,
+    "P.DEF": 76,
+    "M.DEF": 79,
+    "total": 488,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "ice"
+     ],
+     "img": null
+    }
+   ]
   },
   {
    "num": "087",
@@ -4496,7 +7296,29 @@ window.ANIIMO_DATA = {
    "afterCore": [],
    "flags": [],
    "element": "ice",
-   "items": []
+   "items": [],
+   "chart": {
+    "HP": 105,
+    "ATK": 75,
+    "BREAK": 110,
+    "REGEN": 103,
+    "P.DEF": 89,
+    "M.DEF": 93,
+    "total": 575,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "ice"
+     ],
+     "img": null
+    }
+   ]
   },
   {
    "num": "088",
@@ -4543,6 +7365,30 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h17"
+   ],
+   "chart": {
+    "HP": 104,
+    "ATK": 85,
+    "BREAK": 43,
+    "REGEN": 82,
+    "P.DEF": 78,
+    "M.DEF": 75,
+    "total": 467,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass",
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass",
+      "water"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4591,6 +7437,38 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h17"
+   ],
+   "chart": {
+    "HP": 122,
+    "ATK": 100,
+    "BREAK": 50,
+    "REGEN": 97,
+    "P.DEF": 92,
+    "M.DEF": 89,
+    "total": 550,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass",
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass",
+      "water"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "grass",
+      "dark"
+     ],
+     "img": "f:glameep--prismana-form"
+    }
    ]
   },
   {
@@ -4637,6 +7515,28 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 90,
+    "ATK": 102,
+    "BREAK": 45,
+    "REGEN": 90,
+    "P.DEF": 58,
+    "M.DEF": 65,
+    "total": 450,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4683,6 +7583,28 @@ window.ANIIMO_DATA = {
    "element": "water",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 106,
+    "ATK": 121,
+    "BREAK": 51,
+    "REGEN": 106,
+    "P.DEF": 68,
+    "M.DEF": 77,
+    "total": 529,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "water"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "water"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4729,6 +7651,28 @@ window.ANIIMO_DATA = {
    "element": "ice",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 105,
+    "BREAK": 50,
+    "REGEN": 100,
+    "P.DEF": 80,
+    "M.DEF": 80,
+    "total": 515,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "ice"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4775,6 +7719,28 @@ window.ANIIMO_DATA = {
    "element": "ice",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 88,
+    "ATK": 125,
+    "BREAK": 52,
+    "REGEN": 110,
+    "P.DEF": 70,
+    "M.DEF": 80,
+    "total": 525,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "ice"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "ice"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4828,6 +7794,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h02",
     "h25"
+   ],
+   "chart": {
+    "HP": 90,
+    "ATK": 130,
+    "BREAK": 56,
+    "REGEN": 108,
+    "P.DEF": 78,
+    "M.DEF": 78,
+    "total": 540,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "grass"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "grass"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4883,6 +7871,28 @@ window.ANIIMO_DATA = {
    "items": [
     "h04",
     "h16"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 108,
+    "BREAK": 55,
+    "REGEN": 88,
+    "P.DEF": 81,
+    "M.DEF": 90,
+    "total": 522,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -4936,6 +7946,36 @@ window.ANIIMO_DATA = {
    "element": "electric",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 99,
+    "ATK": 130,
+    "BREAK": 50,
+    "REGEN": 105,
+    "P.DEF": 66,
+    "M.DEF": 70,
+    "total": 520,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "electric"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "electric"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "electric",
+      "light"
+     ],
+     "img": "f:fulmintis--prismana-form"
+    }
    ]
   },
   {
@@ -4989,7 +8029,36 @@ window.ANIIMO_DATA = {
    "afterCore": [],
    "flags": [],
    "element": "fire",
-   "items": []
+   "items": [],
+   "chart": {
+    "HP": 107,
+    "ATK": 113,
+    "BREAK": 50,
+    "REGEN": 99,
+    "P.DEF": 60,
+    "M.DEF": 88,
+    "total": 517,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "fire"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "fire"
+     ],
+     "img": null
+    },
+    {
+     "form": "Prismana",
+     "elements": [
+      "fire"
+     ],
+     "img": "f:sparkelf--v6999301"
+    }
+   ]
   },
   {
    "num": "99995",
@@ -5041,7 +8110,15 @@ window.ANIIMO_DATA = {
     "Not listed in the AniimoTools Aniilog"
    ],
    "element": null,
-   "items": []
+   "items": [],
+   "chart": null,
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [],
+     "img": null
+    }
+   ]
   },
   {
    "num": "99996",
@@ -5093,6 +8170,28 @@ window.ANIIMO_DATA = {
    "element": "light",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 116,
+    "BREAK": 64,
+    "REGEN": 90,
+    "P.DEF": 72,
+    "M.DEF": 72,
+    "total": 514,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "light"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "light"
+     ],
+     "img": null
+    }
    ]
   },
   {
@@ -5141,7 +8240,15 @@ window.ANIIMO_DATA = {
     "Not listed in the AniimoTools Aniilog"
    ],
    "element": null,
-   "items": []
+   "items": [],
+   "chart": null,
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [],
+     "img": null
+    }
+   ]
   },
   {
    "num": "99998",
@@ -5193,6 +8300,28 @@ window.ANIIMO_DATA = {
    "element": "light",
    "items": [
     "h02"
+   ],
+   "chart": {
+    "HP": 100,
+    "ATK": 116,
+    "BREAK": 64,
+    "REGEN": 90,
+    "P.DEF": 72,
+    "M.DEF": 72,
+    "total": 514,
+    "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026"
+   },
+   "innate": [
+    "light"
+   ],
+   "formInfo": [
+    {
+     "form": "Basic",
+     "elements": [
+      "light"
+     ],
+     "img": null
+    }
    ]
   }
  ],
@@ -7236,6 +10365,867 @@ window.ANIIMO_DATA = {
    "urls": [
     "https://aniimotools.dev/assets/held-items/icon-025.webp"
    ]
+  },
+  {
+   "key": "f:emberpup--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/emberpup-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/emberpup-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:emberpup--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/emberpup-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/emberpup-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:flameruff--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/flameruff-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/flameruff-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:flameruff--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/flameruff-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/flameruff-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:scorchhowl--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/scorchhowl-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/scorchhowl-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:scorchhowl--thunderstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/scorchhowl-a1005302.webp",
+    "https://aniimotools.dev/assets/creatures/forms/scorchhowl-a1005302-t.webp"
+   ]
+  },
+  {
+   "key": "f:scorchhowl--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/scorchhowl-a1005303.webp",
+    "https://aniimotools.dev/assets/creatures/forms/scorchhowl-a1005303-t.webp"
+   ]
+  },
+  {
+   "key": "f:scorchhowl--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/scorchhowl-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/scorchhowl-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:inferlupa--v1005503",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/inferlupa-a1005503.webp",
+    "https://aniimotools.dev/assets/creatures/forms/inferlupa-a1005503-t.webp"
+   ]
+  },
+  {
+   "key": "f:stellarys--rainstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/stellarys-a1001201.webp",
+    "https://aniimotools.dev/assets/creatures/forms/stellarys-a1001201-t.webp"
+   ]
+  },
+  {
+   "key": "f:stellarys--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/stellarys-a1001202.webp",
+    "https://aniimotools.dev/assets/creatures/forms/stellarys-a1001202-t.webp"
+   ]
+  },
+  {
+   "key": "f:chirpi--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/chirpi-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/chirpi-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:chirpi--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/chirpi-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/chirpi-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:tromber--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/tromber-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/tromber-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:tromber--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/tromber-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/tromber-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:cornet--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/cornet-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/cornet-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:cornet--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/cornet-a1018502.webp",
+    "https://aniimotools.dev/assets/creatures/forms/cornet-a1018502-t.webp"
+   ]
+  },
+  {
+   "key": "f:cornet--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/cornet-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/cornet-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:tubster--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/tubster-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/tubster-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:tubster--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/tubster-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/tubster-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:iris--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/iris-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/iris-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:iris--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/iris-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/iris-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:iris--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/iris-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/iris-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:iris--mudflat-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/iris-7.webp",
+    "https://aniimotools.dev/assets/creatures/forms/iris-7-t.webp"
+   ]
+  },
+  {
+   "key": "f:iris--rainstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/iris-6.webp",
+    "https://aniimotools.dev/assets/creatures/forms/iris-6-t.webp"
+   ]
+  },
+  {
+   "key": "f:iris--prismana",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/iris-5.webp",
+    "https://aniimotools.dev/assets/creatures/forms/iris-5-t.webp"
+   ]
+  },
+  {
+   "key": "f:irisal--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/irisal-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/irisal-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:irisal--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/irisal-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/irisal-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:irisal--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/irisal-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/irisal-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:irisal--mudflat-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/irisal-7.webp",
+    "https://aniimotools.dev/assets/creatures/forms/irisal-7-t.webp"
+   ]
+  },
+  {
+   "key": "f:irisal--rainstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/irisal-6.webp",
+    "https://aniimotools.dev/assets/creatures/forms/irisal-6-t.webp"
+   ]
+  },
+  {
+   "key": "f:irisal--prismana",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/irisal-5.webp",
+    "https://aniimotools.dev/assets/creatures/forms/irisal-5-t.webp"
+   ]
+  },
+  {
+   "key": "f:skippy--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/skippy-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/skippy-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:skippy--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/skippy-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/skippy-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:pranky--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pranky-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pranky-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:pranky--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pranky-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pranky-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:glacy--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/glacy-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/glacy-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:glacy--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/glacy-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/glacy-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:glacy--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/glacy-a1004303.webp",
+    "https://aniimotools.dev/assets/creatures/forms/glacy-a1004303-t.webp"
+   ]
+  },
+  {
+   "key": "f:nimbi--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/nimbi-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/nimbi-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:nimbi--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/nimbi-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/nimbi-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:nimbi--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/nimbi-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/nimbi-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:turbo--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/turbo-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/turbo-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:turbo--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/turbo-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/turbo-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:turbo--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/turbo-a1026204.webp",
+    "https://aniimotools.dev/assets/creatures/forms/turbo-a1026204-t.webp"
+   ]
+  },
+  {
+   "key": "f:turbo--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/turbo-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/turbo-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:hummin--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/hummin-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/hummin-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:hexxin--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/witchin-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/witchin-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:hexxin--v1020302",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/witchin-a1020302.webp",
+    "https://aniimotools.dev/assets/creatures/forms/witchin-a1020302-t.webp"
+   ]
+  },
+  {
+   "key": "f:tuckin--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/tuckin-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/tuckin-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:budclaw--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/budclaw-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/budclaw-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:budclaw--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/budclaw-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/budclaw-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:budclaw--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/budclaw-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/budclaw-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:shrubclaw--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/shrubclaw-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/shrubclaw-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:shrubclaw--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/shrubclaw-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/shrubclaw-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:shrubclaw--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/shrubclaw-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/shrubclaw-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:sparki--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/sparki-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/sparki-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:sparki--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/sparki-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/sparki-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:sparki--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/sparki-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/sparki-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:flamerion--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/flamerion-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/flamerion-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:flamerion--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/flamerion-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/flamerion-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:flamerion--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/flamerion-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/flamerion-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:flutternym--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/flutternym-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/flutternym-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:flutternym--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/flutternym-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/flutternym-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:flutternym--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/flutternym-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/flutternym-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:gracewing--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/gracewing-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/gracewing-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:gracewing--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/gracewing-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/gracewing-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:gracewing--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/gracewing-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/gracewing-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:budsquire--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/budsquire-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/budsquire-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:thornblade--rainstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/thornblade-a1032301.webp",
+    "https://aniimotools.dev/assets/creatures/forms/thornblade-a1032301-t.webp"
+   ]
+  },
+  {
+   "key": "f:thornblade--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/thornblade-a1032302.webp",
+    "https://aniimotools.dev/assets/creatures/forms/thornblade-a1032302-t.webp"
+   ]
+  },
+  {
+   "key": "f:thornblade--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/thornblade-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/thornblade-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:melloblum--v1032402",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/melloblum-a1032402.webp",
+    "https://aniimotools.dev/assets/creatures/forms/melloblum-a1032402-t.webp"
+   ]
+  },
+  {
+   "key": "f:pomegg--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pomegg-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pomegg-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:pomegg--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pomegg-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pomegg-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:pomegg--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pomegg-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pomegg-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:pomawk--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pomawk-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pomawk-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:pomawk--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pomawk-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pomawk-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:pomawk--thunderstorm",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pomawk-4.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pomawk-4-t.webp"
+   ]
+  },
+  {
+   "key": "f:wisptis--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/wisptis-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/wisptis-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:wisptis--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/wisptis-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/wisptis-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:ignitis--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/ignitis-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/ignitis-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:ignitis--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/ignitis-a1003202.webp",
+    "https://aniimotools.dev/assets/creatures/forms/ignitis-a1003202-t.webp"
+   ]
+  },
+  {
+   "key": "f:ignitis--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/ignitis-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/ignitis-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:bonesky--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/bonesky-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/bonesky-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:fenrier--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/fenrier-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/fenrier-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:glynsera--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/glynsera-a1013301.webp",
+    "https://aniimotools.dev/assets/creatures/forms/glynsera-a1013301-t.webp"
+   ]
+  },
+  {
+   "key": "f:glynsera--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/glynsera-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/glynsera-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:bolty--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/bolty-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/bolty-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:blazen--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/blazen-a1022201.webp",
+    "https://aniimotools.dev/assets/creatures/forms/blazen-a1022201-t.webp"
+   ]
+  },
+  {
+   "key": "f:blazen--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/blazen-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/blazen-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:susuta--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/susuta-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/susuta-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:popota--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/popota-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/popota-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:piopiota--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/piopiota-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/piopiota-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:panpanta--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/panpanta-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/panpanta-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:panpanta--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/panpanta-a1017402.webp",
+    "https://aniimotools.dev/assets/creatures/forms/panpanta-a1017402-t.webp"
+   ]
+  },
+  {
+   "key": "f:sherro--thunderstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/sherro-a1019401.webp",
+    "https://aniimotools.dev/assets/creatures/forms/sherro-a1019401-t.webp"
+   ]
+  },
+  {
+   "key": "f:sherro--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/sherro-a1019402.webp",
+    "https://aniimotools.dev/assets/creatures/forms/sherro-a1019402-t.webp"
+   ]
+  },
+  {
+   "key": "f:baleetle--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/baleetle-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/baleetle-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:waleetle--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/waleetle-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/waleetle-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:waleetle--v1045302",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/waleetle-a1045302.webp",
+    "https://aniimotools.dev/assets/creatures/forms/waleetle-a1045302-t.webp"
+   ]
+  },
+  {
+   "key": "f:bouldus--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/bouldus-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/bouldus-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:fenmane--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/fenmane-a1029301.webp",
+    "https://aniimotools.dev/assets/creatures/forms/fenmane-a1029301-t.webp"
+   ]
+  },
+  {
+   "key": "f:helmut--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/helmut-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/helmut-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:helmut--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/helmut-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/helmut-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:pawney--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pawney-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pawney-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:pawney--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pawney-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pawney-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:pawney--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/pawney-a1002603.webp",
+    "https://aniimotools.dev/assets/creatures/forms/pawney-a1002603-t.webp"
+   ]
+  },
+  {
+   "key": "f:rookey--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/rookey-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/rookey-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:rookey--mountain-woods-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/rookey-3.webp",
+    "https://aniimotools.dev/assets/creatures/forms/rookey-3-t.webp"
+   ]
+  },
+  {
+   "key": "f:jawling--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/jawling-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/jawling-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:helmwhelp--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/helmwhelp-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/helmwhelp-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:helgon--highland-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/helgon-2.webp",
+    "https://aniimotools.dev/assets/creatures/forms/helgon-2-t.webp"
+   ]
+  },
+  {
+   "key": "f:infergon--v1002503",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/infergon-a1002503.webp",
+    "https://aniimotools.dev/assets/creatures/forms/infergon-a1002503-t.webp"
+   ]
+  },
+  {
+   "key": "f:grizbo--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/grizbo-a1050301.webp",
+    "https://aniimotools.dev/assets/creatures/forms/grizbo-a1050301-t.webp"
+   ]
+  },
+  {
+   "key": "f:magmarex--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/magmarex-a1028301.webp",
+    "https://aniimotools.dev/assets/creatures/forms/magmarex-a1028301-t.webp"
+   ]
+  },
+  {
+   "key": "f:luminelle--rainstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/luminelle-a1014301.webp",
+    "https://aniimotools.dev/assets/creatures/forms/luminelle-a1014301-t.webp"
+   ]
+  },
+  {
+   "key": "f:luminelle--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/luminelle-a1014302.webp",
+    "https://aniimotools.dev/assets/creatures/forms/luminelle-a1014302-t.webp"
+   ]
+  },
+  {
+   "key": "f:reefish--rainstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/reefish-a1038103.webp",
+    "https://aniimotools.dev/assets/creatures/forms/reefish-a1038103-t.webp"
+   ]
+  },
+  {
+   "key": "f:coraliz--rainstorm-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/coraliz-a1038303.webp",
+    "https://aniimotools.dev/assets/creatures/forms/coraliz-a1038303-t.webp"
+   ]
+  },
+  {
+   "key": "f:glameep--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/glameep-a1058301.webp",
+    "https://aniimotools.dev/assets/creatures/forms/glameep-a1058301-t.webp"
+   ]
+  },
+  {
+   "key": "f:fulmintis--prismana-form",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/fulmintis-a1003305.webp",
+    "https://aniimotools.dev/assets/creatures/forms/fulmintis-a1003305-t.webp"
+   ]
+  },
+  {
+   "key": "f:sparkelf--v6999301",
+   "urls": [
+    "https://aniimotools.dev/assets/creatures/forms/sparkelf-a6999301.webp",
+    "https://aniimotools.dev/assets/creatures/forms/sparkelf-a6999301-t.webp"
+   ]
   }
  ],
  "assumptions": {
@@ -7603,11 +11593,70 @@ window.ANIIMO_DATA = {
    "source": "Not published in the sources checked; set under Settings."
   },
   {
+   "topic": "Family Ability Chart stats and each form's element",
+   "status": "verified",
+   "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026. Every form of an Aniimo has the same stats there."
+  },
+  {
+   "topic": "Chart data for Fennelun and Soleon",
+   "status": "unverified",
+   "source": "Not listed on AniimoTools. Needs an in-game screenshot that clearly shows the Aniimo's name."
+  },
+  {
+   "topic": "Somniwing's form",
+   "status": "unverified",
+   "source": "This site lists Prismana; AniimoTools lists Basic. Kept this site's version."
+  },
+  {
+   "topic": "Whether the stat screen's raw numbers already include personality bonuses",
+   "status": "unverified",
+   "source": "The calculator applies personality bonuses on top of the raw stats you enter. If the game already includes them, results are off by 2 to 6% on those stats."
+  },
+  {
    "topic": "Skill Might, hit counts and cooldowns for each Aniimo",
    "status": "unverified",
    "source": "Not in this site's data yet. The calculator uses the shares under Settings instead."
   }
  ],
- "teamSize": 3
+ "teamSize": 3,
+ "otherAniimo": [
+  {
+   "name": "Jabster",
+   "status": "not in game",
+   "source": "AniimoTools Aniilog (\"Not in game\")",
+   "chart": {
+    "hp": 104,
+    "break": 50,
+    "atk": 120,
+    "pdef": 80,
+    "mdef": 78,
+    "regen": 88
+   }
+  },
+  {
+   "name": "Morphling",
+   "status": "not in game",
+   "source": "AniimoTools Aniilog (\"Not in game\")",
+   "chart": {
+    "hp": 77,
+    "break": 50,
+    "atk": 77,
+    "pdef": 67,
+    "mdef": 67,
+    "regen": 100
+   }
+  }
+ ],
+ "chartMax": 130,
+ "importInfo": {
+  "source": "AniimoTools Aniilog stats table, downloaded 8 Oct 2026",
+  "formsInSource": 223,
+  "aniimoInSource": 100,
+  "formsOnSite": 223,
+  "noChart": [
+   "Fennelun",
+   "Soleon"
+  ]
+ }
 };
 if (typeof module !== "undefined") module.exports = window.ANIIMO_DATA;

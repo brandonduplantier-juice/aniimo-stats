@@ -293,6 +293,28 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
 .settingsgrid label{display:grid;gap:3px;font-size:12px;font-weight:800;color:var(--soft)}
 .settingsgrid select{background:var(--panel2);border:2px solid var(--frame);border-radius:11px;padding:5px 8px;font-weight:700}
 @media (max-width:600px){.inv{grid-template-columns:42px 1fr}.inv input{grid-column:1/-1}}
+
+.stage .elem{background:none;border:0;width:auto;height:auto;display:flex;gap:4px}
+.stage .elem .elc{width:34px;height:34px;border-radius:50%;background:#fff;border:2px solid var(--frame);display:grid;place-items:center}
+.stage .elem .elc img{width:24px;height:24px}
+.persbox{margin:10px 0 4px}
+.perstitle{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:800;color:var(--soft);margin-bottom:6px}
+.perstitle b{font:700 18px Fredoka,sans-serif;color:var(--deep);letter-spacing:3px}
+.paxis{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:4px 0}
+.pbtn{display:flex;gap:6px;align-items:center;text-align:left;background:var(--panel2);border:2px solid var(--frame);border-radius:11px;padding:3px 7px;font-size:11px;font-weight:800;color:var(--soft);cursor:pointer;line-height:1.2}
+.pbtn b{font:700 16px Fredoka,sans-serif;color:var(--deep);min-width:12px}
+.pbtn[aria-pressed=true]{background:#e8fbf2;border-color:var(--core);color:#16704c;box-shadow:0 0 0 1px var(--core)}
+.perschip{font-size:11px;font-weight:800;color:#16704c;background:#e6fbf2;border:1px solid var(--core);border-radius:8px;padding:0 6px}
+.famchart{margin:10px 0 4px;border-radius:18px;background:radial-gradient(circle at 50% 40%,#7ff3f8,#2fd6e6 75%);border:3px solid #fff;box-shadow:0 0 0 2px #29b9cc;padding:8px 6px 4px;text-align:center;color:#fff}
+.famchart h5{margin:0;font:700 17px Fredoka,sans-serif;text-shadow:0 1px 2px rgba(0,80,110,.45)}
+.famchart svg{width:100%;max-width:300px;height:auto;display:block;margin:0 auto}
+.famchart svg text{fill:#fff;font-family:Fredoka,sans-serif;font-weight:600;paint-order:stroke;stroke:rgba(0,90,120,.35);stroke-width:2px}
+.famchart small{display:block;font-size:10px;color:#e9fdff;font-weight:700;padding-bottom:4px}
+.famchart.none{background:#eef4fb;color:var(--soft);box-shadow:0 0 0 2px var(--frame);padding:14px;font-size:13px}
+.formrow{display:flex;flex-wrap:wrap;gap:8px}
+.fchip{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid #d3e3f6;border-radius:12px;padding:4px 8px;font-size:13px;font-weight:800;color:var(--deep)}
+.fchip .fimg{width:40px;height:40px;display:grid;place-items:center}.fchip .fimg img{max-width:40px;max-height:40px;object-fit:contain}
+.fchip .els{display:flex;gap:2px}.fchip .els img{width:16px;height:16px}
 </style>
 </head>
 <body>
@@ -316,6 +338,7 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
     <h2 id="pName"></h2>
     <div class="sub" id="pSub"></div>
     <div class="tags" id="pTags"></div>
+    <div id="pChart"></div>
     <div class="div"></div>
     <div class="field"><span>Aniimo</span><select id="pA"></select></div>
     <div class="field"><span>Form</span><select id="pForm"></select></div>
@@ -327,7 +350,8 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
     <div class="field"><span>Plan points by</span><select id="pMode"><option value="rules">Game-guide rules</option><option value="goal">Score for the Optimizer goal</option></select></div>
     <div class="field"><span>Start over (reset)</span><input id="pReset" type="checkbox"></div>
     <div class="field"><span>Capafruit used</span><input id="pCapa" type="checkbox"></div>
-    <div class="field"><span>Personality</span><input id="pPers" maxlength="4" placeholder="e.g. ESFJ"></div>
+    <input type="hidden" id="pPers" value="">
+    <div class="persbox"><div class="perstitle"><span>Personality (one from each pair)</span><b id="persOut">····</b></div><div id="persAxes"></div><p class="small" style="margin:4px 0 0">All four apply at once (GameWith). Tap a chosen letter again to clear it.</p></div>
     <div class="div"></div>
     <div class="heldbox"><h4>Held items the game recommends</h4><p class="small" style="margin:0 0 4px">Tap one to equip it above.</p><div id="pItems"></div></div>
   </aside>
@@ -485,9 +509,10 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>8 Oct 2026, v10.</b> Family Ability Chart for every Aniimo AniimoTools lists (Fennelun and Soleon have no verified numbers yet). Picture and element change with the form, and the detail panel lists every form with its elements. Personality is four switches, one per pair, and the board shows its stat bonuses. Fixes: Supreme Elixir +15 now grows with the defense points chosen; changing Aniimo updates the goal before calculating; team slots never use another Aniimo's stats; the data check knows Aniimo that aren't in the game.</p>
       <p><b>8 Oct 2026, v9.</b> Team optimizer: hands out items across 3 Aniimo, respecting the copies and levels you own, and counts Auspicious Bell's team crit.</p>
-      <p><b>8 Oct 2026, v8.</b> Optimizer compares all 25 held items in four kinds of fight, says whether the winner is clear, too close to call, or depends on a setting (and which one). Compare builds for one Aniimo: hit damage, BREAK gauge, crit, opener or finisher, Ultimate, skill effects and survival.</p>
-      <p><b>8 Oct 2026, v7.</b> Acquired can no longer push a stat past 20, and impossible point totals show a red error. Held item picker with item level (the +2 Potential needs +10). "Plan points by" can now calculate points for a goal. Optimizer compares the held items that change Potential, with points chosen for each item. Save, load, export and import builds. Settings and data panel: formula switches, every assumption with its range, data checks and what is confirmed. Data and calculations now live in their own files, with automated tests.</p>
+      <p><b>8 Oct 2026, v8.</b> Optimizer compares all 25 held items in four kinds of fight, says whether the winner is clear, too close to call, or depends on a setting (and which one). Compare builds for one Aniimo.</p>
+      <p><b>8 Oct 2026, v7.</b> Input checks, held item picker with item level, goal-based points, Optimizer for Potential items, saved builds, Settings and data panel, separate data and calculation files with tests.</p>
       <p><b>8 Oct 2026, v6.</b> Images load from the site's own images folder first, so the published version doesn't depend on other sites staying up.</p>
       <p><b>8 Oct 2026, v5.</b> Held items: the game's recommended items on every card, in each detail panel and in the planner (tap one to apply its +2 Potential), plus a held item guide for each role covering all 25 items.</p>
       <p><b>8 Oct 2026, v4.</b> Game-style frames, plates and buttons; element, role, stat and material icons from the game; a PowerShell script that bakes every image into the file so pictures show anywhere.</p>
@@ -538,7 +563,7 @@ const sid=s=>s.replace('.','');
 const IDX={};ASSETS.forEach(a=>IDX[a.key]=a);
 /* order: baked-in copy, then images/ folder next to the page (the published site), then each online source */
 const localSrc=key=>'images/'+key.replace(':','_')+'.webp';
-const srcList=key=>{const a=IDX[key];return [IMG[key],localSrc(key),...a.urls].filter(Boolean)};
+const srcList=key=>{const a=IDX[key];const L=[IMG[key],localSrc(key),...a.urls];if(key.startsWith('f:')){const p='p:'+key.slice(2).split('--')[0];if(IDX[p])L.push(...srcList(p))}return L.filter(Boolean)};
 function im(key,cls,alt){if(!IDX[key])return '';
   return `<img class="${cls||''}" alt="${esc(alt||'')}" src="${srcList(key)[0]}" data-key="${key}" data-n="0" onerror="imgFail(this)">`}
 window.imgFail=el=>{const L=srcList(el.dataset.key);const n=+el.dataset.n+1;
@@ -612,6 +637,8 @@ function openDetail(i){const x=DATA[i];
   <div class="dlgbody">
     <h4>Point order</h4><p>${esc(x.pointPlan)}</p>
     <h4>Why</h4><p>${esc(x.why)}</p>
+    <h4>Family Ability Chart</h4>${chartHtml(x)}
+    <h4>Forms</h4>${formsHtml(x)}
     <h4>Each stat</h4>${rows}
     <h4>Held items the game recommends</h4>${(x.items||[]).length?x.items.map(itemDetail).join(''):'<p>None listed in game yet.</p>'}
     <h4>Caps</h4><p>${esc(x.caps)}</p>${x.conditions?`<h4>Notes</h4><p>${esc(x.conditions)}</p>`:''}
@@ -639,7 +666,7 @@ const PERS={E:'ATK and BREAK +2%',I:'REGEN +4%',S:'damage +4%',N:'crit rate +5%'
 const cur=()=>DATA.find(x=>x.slug===$('pA').value)||released[0];
 function setForms(){const a=cur(),keep=$('pForm').value;$('pForm').innerHTML=a.forms.map(f=>`<option>${esc(f)}</option>`).join('');if(a.forms.includes(keep))$('pForm').value=keep;$('buildField').style.display=a.buildChoice?'grid':'none';
   $('who').style.setProperty('--rc',RC(a.role));$('pArt').innerHTML=portrait(a);$('pElem').innerHTML=elIco(a.element);$('pElem').style.display=a.element?'':'none';
-  $('pName').textContent=a.name;$('pSub').textContent=`#${a.num}  ${a.forms.length} form${a.forms.length>1?'s':''}`;
+  $('pName').textContent=a.name;formVisual();$('pChart').innerHTML=chartHtml(a);
   $('pItems').innerHTML=(a.items||[]).length?a.items.map(id=>{const it=ITEM[id];return `<button type="button" class="held" data-id="${id}" title="Tap to equip"><span class="slot">${itemIco(id)}</span><div><b>${esc(it.name)}</b><span>${esc(it.pot?'At +10: '+it.t10:it.core)}</span></div></button>`}).join(''):'<span style="color:var(--faint);font-size:13px">None listed in game yet.</span>';
   markHeld();
   const ri=roleIco(a.role);
@@ -698,7 +725,7 @@ function plan(){
     const add=v.d-v.d0,c=m.caps[s];let capTxt='';
     if(c){if(v.raw==null)capTxt=`Effect cap ${c.toLocaleString()}: enter raw stat`;else{const ev=Math.round(v.raw*M(e)/M(e0));
       capTxt=v.raw>=c?`<span class="ok">At cap (${v.raw.toLocaleString()})</span>`:ev>c?`<span class="over">About ${(ev-c).toLocaleString()} past cap (estimate)</span>`:`Raw about ${ev.toLocaleString()} of ${c.toLocaleString()} cap (estimate)`}}
-    $('meta_'+sid(s)).innerHTML=`<span>${add?`<b style="color:#16704c">+${add}</b> → `:''}${v.d} shown, ${e} effective</span><span>Stat +${((M(e)-1)*100).toFixed(1)}%</span>${capTxt?`<span>${capTxt}</span>`:''}`;
+    $('meta_'+sid(s)).innerHTML=`<span>${add?`<b style="color:#16704c">+${add}</b> → `:''}${v.d} shown, ${e} effective</span><span>Potential +${((M(e)-1)*100).toFixed(1)}%</span>${persLetters().filter(l=>(PSTAT[l]||[]).includes(s)).map(l=>`<span class="perschip">Personality +${PPCT[l]}% (${l})</span>`).join('')}${capTxt?`<span>${capTxt}</span>`:''}`;
     const pri=rec.includes(s);$('row_'+sid(s)).classList.toggle('pri',pri&&st.mode!=='goal');
     $('lbl_'+sid(s)).textContent=st.mode==='goal'?'':pri?'priority':(G[1]||[]).includes(s)?'next':'';}
   const order=[...G.flat(),...STATS].filter((s,i,arr)=>arr.indexOf(s)===i).filter(s=>V[s].d>V[s].d0);
@@ -710,7 +737,7 @@ function plan(){
     <div class="sum"><div class="mats">${mat('dust',mats.dust)}${mat('sand',mats.sand)}${mat('ess',mats.ess)}</div></div>`;
   if(maxD<20)notes.push(`At level ${lv} each stat stops at ${maxD} (level gates).`);
   const pers=[...new Set(($('pPers').value||'').toUpperCase().replace(/[^EISNTFJP]/g,''))].map(c=>`${c}: ${PERS[c]}`).join(', ');
-  if(pers)notes.push('Personality bonuses: '+pers+'.');
+  const pOther=persLetters().filter(l=>'SNP'.includes(l));if(pOther.length)notes.push('Personality: '+pOther.map(c=>`${c}: ${PERS[c]}`).join(', ')+'. These don\'t change a stat bar but are counted in the Optimizer.');
   if(a.flags&&a.flags.length)notes.push('Check in game: '+a.flags.join('; ')+'.');
   $('notes').innerHTML=est.map(n=>`<div class="note est"><span class="chip assumption">Estimate</span> ${n}</div>`).join('')+notes.map(n=>`<div class="note">${n}</div>`).join('');
   $('advice').innerHTML=`<b>Default advice:</b> ${esc(a.pointPlan)}${m.cond?' '+esc(m.cond):''}`;
@@ -719,10 +746,47 @@ function plan(){
 function markHeld(){const v=$('pItem').value;document.querySelectorAll('#pItems .held').forEach(b=>b.classList.toggle('on',!!v&&b.dataset.id===v))}
 $('pItems').addEventListener('click',e=>{const b=e.target.closest('.held');if(!b)return;$('pItem').value=$('pItem').value===b.dataset.id?'':b.dataset.id;markHeld();plan()});
 $('pItem').addEventListener('input',markHeld);
-window.pickAniimo=slug=>{$('pA').value=slug;setForms();plan();$('planner').scrollIntoView({behavior:'smooth'})};
-$('pA').addEventListener('change',()=>{setForms();plan()});
+function changeAniimo(){setForms();setGoalFor(cur());plan()}
+window.pickAniimo=slug=>{$('pA').value=slug;changeAniimo();$('planner').scrollIntoView({behavior:'smooth'})};
+$('pA').addEventListener('change',changeAniimo);
+$('pForm').addEventListener('input',formVisual);
 ['pForm','pBuild','pLevel','pRank','pItem','pItemLv','pMode','pCapa','pPers','pReset'].forEach(id=>$(id).addEventListener('input',plan));
 $('statRows').addEventListener('input',plan);
+
+
+/* ---------- v10: forms, elements, Family Ability Chart, personality switches ---------- */
+const ELN=e=>e==='electric'?'Lightning':e.charAt(0).toUpperCase()+e.slice(1);
+const formOf=(a,f)=>(a.formInfo||[]).find(x=>x.form===f)||null;
+const formPic=(a,f,cls)=>{const fi=formOf(a,f);return fi&&fi.img?im(fi.img,cls||'pic',a.name):im('p:'+a.slug,cls||'pic',a.name)};
+function formVisual(){const a=cur(),f=$('pForm').value||a.forms[0],fi=formOf(a,f),els=fi&&fi.elements.length?fi.elements:(a.element?[a.element]:[]);
+  $('pArt').innerHTML=formPic(a,f);$('pElem').innerHTML=els.map(e=>`<span class="elc" title="${ELN(e)}">${elIco(e)}</span>`).join('');$('pElem').style.display=els.length?'':'none';
+  $('pSub').textContent=`#${a.num}  ${f}${f==='Basic'?'':' form'}  ${els.map(ELN).join(', ')}`}
+const CH_AX=[['HP',-90],['ATK',-30],['P.DEF',30],['REGEN',90],['M.DEF',150],['BREAK',210]];
+function chartHtml(a){
+  if(!a.chart)return `<div class="famchart none"><b>Family Ability Chart</b><br>No verified stats for ${esc(a.name)}. AniimoTools doesn't list it, and this site only adds numbers from a clearly named in-game screen.</div>`;
+  const cx=160,cy=150,R=88,mx=GAME.chartMax,pt=(ang,r)=>[cx+r*Math.cos(ang*Math.PI/180),cy+r*Math.sin(ang*Math.PI/180)];
+  const ring=f=>CH_AX.map(([,g])=>pt(g,R*f).map(n=>n.toFixed(1)).join(',')).join(' ');
+  const poly=CH_AX.map(([k,g])=>pt(g,R*Math.max(0.06,a.chart[k]/mx)).map(n=>n.toFixed(1)).join(',')).join(' ');
+  const lab=CH_AX.map(([k,g])=>{const[x,y]=pt(g,R+30);const top=g===-90,bot=g===90;
+    return top?`<text x="${x}" y="${y-14}" text-anchor="middle" font-size="14">${k}</text><text x="${x}" y="${y+4}" text-anchor="middle" font-size="19">${a.chart[k]}</text>`
+      :bot?`<text x="${x}" y="${y-4}" text-anchor="middle" font-size="19">${a.chart[k]}</text><text x="${x}" y="${y+14}" text-anchor="middle" font-size="14">${k}</text>`
+      :`<text x="${x}" y="${y-6}" text-anchor="middle" font-size="13">${k}</text><text x="${x}" y="${y+14}" text-anchor="middle" font-size="18">${a.chart[k]}</text>`}).join('');
+  return `<div class="famchart" role="img" aria-label="${esc(a.name)} Family Ability Chart: ${CH_AX.map(([k])=>k+' '+a.chart[k]).join(', ')}"><h5>Family Ability Chart</h5>
+    <svg viewBox="0 0 320 300"><polygon points="${ring(1)}" fill="rgba(255,255,255,.22)" stroke="rgba(255,255,255,.6)" stroke-width="2"/><polygon points="${ring(.66)}" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.35)"/><polygon points="${ring(.33)}" fill="none" stroke="rgba(255,255,255,.3)"/>
+    ${CH_AX.map(([,g])=>{const[x,y]=pt(g,R);return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.3)"/>`}).join('')}
+    <polygon points="${poly}" fill="#fff" fill-opacity=".95" stroke="#fff" stroke-linejoin="round" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="4" fill="#7f8fd6"/>${lab}</svg>
+    <small>Base stats, the same for every form. Total ${a.chart.total}. Source: AniimoTools, 8 Oct 2026.</small></div>`}
+function formsHtml(a){return `<div class="formrow">${(a.formInfo||a.forms.map(f=>({form:f,elements:[]}))).map(f=>`<div class="fchip"><span class="fimg">${formPic(a,f.form,'')}</span><div>${esc(f.form)}<div class="els">${f.elements.map(e=>elIco(e)).join('')}<span class="small" style="margin-left:4px">${f.elements.map(ELN).join(', ')}</span></div></div></div>`).join('')}</div>`}
+const AXES=[['E','I'],['S','N'],['T','F'],['J','P']];
+const PSTAT={E:['ATK','BREAK'],I:['REGEN'],T:['P.DEF'],F:['M.DEF'],J:['HP']};
+const PPCT={E:2,I:4,T:6,F:6,J:4};
+const persLetters=()=>[...new Set(($('pPers').value||'').toUpperCase().replace(/[^EISNTFJP]/g,''))];
+function renderPers(){const L=persLetters();
+  $('persAxes').innerHTML=AXES.map(ax=>`<div class="paxis">${ax.map(l=>`<button type="button" class="pbtn" data-l="${l}" aria-pressed="${L.includes(l)}"><b>${l}</b>${esc(PERS[l])}</button>`).join('')}</div>`).join('');
+  $('persOut').textContent=AXES.map(ax=>ax.find(l=>L.includes(l))||'·').join('')}
+$('persAxes').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b)return;const l=b.dataset.l,ax=AXES.find(x=>x.includes(l));
+  let L=persLetters().filter(x=>!ax.includes(x));if(b.getAttribute('aria-pressed')!=='true')L.push(l);
+  $('pPers').value=AXES.map(x=>x.find(y=>L.includes(y))||'').join('');renderPers();plan()});
 
 /* ---------- optimizer ---------- */
 $('pItem').innerHTML='<option value="">None</option>'+ITEMS.map(it=>`<option value="${it.id}">${esc(it.name)}</option>`).join('');
@@ -818,15 +882,16 @@ function initTeam(){$('tSlots').innerHTML=[0,1,2].map(slotHtml).join('');
   refreshSlotSources()}
 function refreshSlotSources(){const builds=LS.get('aniimo.builds.v1',[]);const saved=LS.get('aniimo.team.v1',null);
   [...$('tSlots').children].forEach((el,i)=>{const s=el.querySelector('[data-k=src]'),keep=s.value||(saved&&saved[i]&&saved[i].src)||'def';
-    s.innerHTML='<option value="def">Defaults below</option><option value="planner">Planner inputs</option>'+builds.map((b,j)=>`<option value="b${j}">Saved: ${esc(b.name)}</option>`).join('');s.value=[...s.options].some(o=>o.value===keep)?keep:'def'})}
-$('tSlots').addEventListener('input',e=>{const el=e.target.closest('.slot3');if(e.target.dataset.k==='a')el.querySelector('[data-k=g]').value=E.defaultGoal(E.bySlug[e.target.value]);
+    s.innerHTML='<option value="def">Defaults below</option><option value="planner">Planner inputs (same Aniimo only)</option>'+builds.map((b,j)=>[b,j]).filter(([b])=>b.state.planner.slug===el.querySelector('[data-k=a]').value).map(([b,j])=>`<option value="b${j}">Saved: ${esc(b.name)}</option>`).join('');s.value=[...s.options].some(o=>o.value===keep)?keep:'def'})}
+$('tSlots').addEventListener('input',e=>{const el=e.target.closest('.slot3');if(e.target.dataset.k==='a'){el.querySelector('[data-k=g]').value=E.defaultGoal(E.bySlug[e.target.value]);refreshSlotSources()}
   LS.set('aniimo.team.v1',[...$('tSlots').children].map(x=>({a:x.querySelector('[data-k=a]').value,src:x.querySelector('[data-k=src]').value,g:x.querySelector('[data-k=g]').value,w:x.querySelector('[data-k=w]').value})));markStale()});
 function slotState(el){const slug=el.querySelector('[data-k=a]').value,src=el.querySelector('[data-k=src]').value,a=E.bySlug[slug];
-  if(src==='planner'){const s=engineState();return {...s,slug,form:slug===s.slug?s.form:a.forms[0]}}
-  if(src[0]==='b'){const b=LS.get('aniimo.builds.v1',[])[+src.slice(1)];if(b){const p=b.state.planner;return {slug:p.slug,form:p.form,build:p.build,level:p.level,rank:p.rank,capa:p.capa,pers:p.pers,reset:p.reset,stats:p.stats}}}
+  if(src==='planner'){const s=engineState();if(s.slug===slug)return s;TEAMNOTES.push(`${a.name}: the planner is showing ${E.bySlug[s.slug].name}, so this slot used the defaults.`)}
+  if(src[0]==='b'){const b=LS.get('aniimo.builds.v1',[])[+src.slice(1)];if(b&&b.state.planner.slug===slug){const p=b.state.planner;return {slug:p.slug,form:p.form,build:p.build,level:p.level,rank:p.rank,capa:p.capa,pers:p.pers,reset:p.reset,stats:p.stats}}if(b)TEAMNOTES.push(`${a.name}: the saved build "${b.name}" is for another Aniimo, so this slot used the defaults.`)}
   return {slug,level:+$('tLevel').value||60,rank:+$('tRank').value,stats:Object.fromEntries(STATS.map(s=>[s,{inn:0,aq:0,raw:null}]))}}
+let TEAMNOTES=[];
 function runTeam(){
-  const els=[...$('tSlots').children];const members=els.map(el=>({st:slotState(el),goal:el.querySelector('[data-k=g]').value,weight:+el.querySelector('[data-k=w]').value}));
+  TEAMNOTES=[];const els=[...$('tSlots').children];const members=els.map(el=>({st:slotState(el),goal:el.querySelector('[data-k=g]').value,weight:+el.querySelector('[data-k=w]').value}));
   const owned=$('oItems').value==='owned';const pool=poolNow();
   if(!pool.length){$('oTeam').innerHTML='<p class="banner">No items to hand out. Add the items you own under My items, or switch to "Every item at +15".</p>';return}
   const r=E.optimizeTeam(members,SET,{inventory:owned?INV:null,allowDuplicates:!owned&&$('tDup').checked,poolFor:()=>pool});
@@ -844,6 +909,7 @@ function runTeam(){
     let why=owned?'there aren\'t enough copies to give each Aniimo its own favourite':!$('tDup').checked&&dup.length?'some Aniimo want the same item, and duplicates are switched off':'the team pick scores higher once team effects are counted';
     if(owned){const need={};ids.forEach(id=>need[id]=(need[id]||0)+1);const short=Object.keys(need).filter(id=>(INV[id]||[]).length<need[id]);if(!short.length)why='the team pick scores higher once team effects and item levels are counted'}
     html+=`<p class="note">Giving each Aniimo its own best item would be: ${r.naive.map((x,i)=>`${esc(E.bySlug[members[i].st.slug].name)}: ${x.id?esc(ITEM[x.id].name):'none'}`).join(', ')}. The team pick differs because ${why}.</p>`}
+  TEAMNOTES.forEach(n=>html+=`<p class="note">${esc(n)}</p>`);
   r.notes.forEach(n=>html+=`<p class="note">${esc(n)}</p>`);
   html+=`<p class="small"><b>What "team" counts today:</b> item limits (copies and levels you own), Auspicious Bell's team crit, and each slot's importance. Buffs, debuffs, BREAK windows and healing between Aniimo come from skills, and skill numbers aren't in this site's data yet, so they are not counted. Results are estimates.</p>`;
   $('oTeam').innerHTML=html;
@@ -866,7 +932,7 @@ function applyState(s){const p=s.planner;if(!E.bySlug[p.slug]){$('sMsg').textCon
   $('pItem').value=p.item||'';$('pItemLv').value=p.itemLv==null?15:p.itemLv;$('pMode').value=p.mode||'rules';
   for(const k of STATS){const x=p.stats[k]||{};$('in_'+sid(k)).value=x.inn||0;$('aq_'+sid(k)).value=x.aq||0;$('rw_'+sid(k)).value=x.raw==null?'':x.raw}
   if(s.goal&&GAME.goals[s.goal])$('oGoal').value=s.goal;if(s.scenario&&SET.scenarios[s.scenario]){SET.scenario=s.scenario;$('oFight').value=s.scenario}
-  syncGoal();markHeld();plan()}
+  syncGoal();renderPers();markHeld();plan()}
 $('sList').addEventListener('click',e=>{const b=LS.get('aniimo.builds.v1',[]);const l=e.target.closest('[data-load]'),d=e.target.closest('[data-del]');
   if(l){const x=b[+l.dataset.load];applyState(x.state);$('sMsg').textContent=`Loaded "${x.name}".${x.dataVersion!==GAME.version?` It was saved with data from ${x.dataVersion}; the data is now ${GAME.version}, so check the plan.`:''}`;$('planner').scrollIntoView({behavior:'smooth'})}
   if(d){const x=b.splice(+d.dataset.del,1)[0];LS.set('aniimo.builds.v1',b);$('sMsg').textContent=`Deleted "${x.name}".`;listSaved()}});
@@ -909,8 +975,7 @@ function renderData(){const ch=E.checkData();$('dVer').textContent=GAME.version;
   const flagged=GAME.aniimo.filter(a=>a.flags&&a.flags.length);
   $('dVerify').innerHTML='<tr><th>Topic</th><th>Status</th><th>Source</th></tr>'+GAME.verification.map(v=>`<tr><td>${esc(v.topic)}</td><td><span class="chip ${v.status}">${v.status}</span></td><td class="why">${esc(v.source)}</td></tr>`).join('')+
     `<tr><td>Aniimo with a point to check in game</td><td><span class="chip unverified">${flagged.length}</span></td><td class="why">${flagged.map(a=>esc(a.name)).join(', ')}</td></tr>`}
-setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
-$('pA').addEventListener('change',()=>setGoalFor(cur()));
+renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
 setForms();plan();
 </script>
 </body>

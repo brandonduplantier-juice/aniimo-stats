@@ -138,7 +138,7 @@ E.itemEffects = function (id, lvl, c, sc) {
       case 'dr': fx.dr.push(r); P(`damage taken −${r.v * 100}%${r.kind !== 'all' ? ` (${r.kind === 'phys' ? 'physical' : 'magic'})` : ''}${r.if15 ? ` while ${r.if15} Potential is above 15` : ''}`); break;
       case 'drWhen': { const sh = av(r.share) / 100; fx.dr.push({ v: r.v * sh, kind: 'all' }); P(`−${r.v * 100}% damage taken, active ${Math.round(sh * 100)}% of the time (assumed)`); break; }
       case 'hpOne': fx.hpOne = true; fx.final += r.v; P(`+${r.v * 100}% final damage, but max HP becomes 1`); break;
-      case 'finalPerDef': { const d = Math.max(c.S['P.DEF'].rawUsed, c.S['M.DEF'].rawUsed), v = Math.min(r.max, d / r.per / 100); fx.final += v; if (!c.S['P.DEF'].entered && !c.S['M.DEF'].entered) use('rawPlaceholder'); P(`+1% final damage per ${r.per} defense, up to ${r.max * 100}%: +${(v * 100).toFixed(1)}%`); break; }
+      case 'finalPerDef': { fx.finalPerDef = { per: r.per, max: r.max }; if (!c.S['P.DEF'].entered && !c.S['M.DEF'].entered) use('rawPlaceholder'); P(`+1% final damage per ${r.per} P.DEF or M.DEF (the higher one, after the points are spent), up to ${r.max * 100}%`); break; }
       case 'teamCrit': fx.team.push({ kind: 'critRate', v: r.v * r.stacks * av('luckUptime') / 100 }); P(`team crit rate +${r.v * 100}% per Luck stack (max ${r.stacks}), at full stacks ${A.luckUptime.v}% of the time`); break;
       case 'utility': fx.unscored.push(`${tag}: ${r.text}`); break;
       default: fx.unscored.push(`${tag}: ${r.type}`);
@@ -196,6 +196,12 @@ function makeTerms(c, fx, opt) {
     },
     R(dR) { const f = Math.log(cdrAt(dR)); return { hit: f, gauge: f, kit: kitLog(c, fx, 'REGEN', dR) }; },
     HP(d) { return { surv: fx.hpOne ? 0 : Math.log(statAt(c, fx, 'HP', d)), kit: kitLog(c, fx, 'HP', d) }; },
+    DEFS(dP, dM) { // both defenses together: Supreme Elixir +15 reads the higher one
+      const p = T.DEF('P.DEF', dP), m = T.DEF('M.DEF', dM); const out = { surv: p.surv + m.surv, kit: p.kit + m.kit, hit: 0, gauge: 0 };
+      if (fx.finalPerDef) { const d = Math.max(statAt(c, fx, 'P.DEF', dP), statAt(c, fx, 'M.DEF', dM)), b = Math.min(fx.finalPerDef.max, d / fx.finalPerDef.per / 100);
+        out.hit = Math.log((finalM + b) / finalM); if (set.ampToGauge) out.gauge = out.hit; }
+      return out;
+    },
     DEF(s, d) {
       const sh = s === 'P.DEF' ? A.physShare.v / 100 : 1 - A.physShare.v / 100;
       const base0 = statAt(c, noItem, s, c.S[s].dNow), EA = A.enemyAtkRatio.v * base0, def = statAt(c, fx, s, d);
@@ -231,7 +237,12 @@ E.allocate = function (c, fx, opt) {
       if (!best[cost] || val > best[cost].val) best[cost] = { val, d: { ATK: dA, BREAK: dB } }; }
     groups.push(best); }
   const one = (s, f) => { const best = {}; for (let d = S[s].d0; d <= top(s); d++) { const cost = d - S[s].d0; if (cost > B) break; best[cost] = { val: W(w, f(d)) - tiny * matScore(S[s].d0, d), d: { [s]: d } }; } groups.push(best); };
-  one('REGEN', d => T.R(d)); one('HP', d => T.HP(d)); one('P.DEF', d => T.DEF('P.DEF', d)); one('M.DEF', d => T.DEF('M.DEF', d));
+  one('REGEN', d => T.R(d)); one('HP', d => T.HP(d));
+  { const best = {}; for (let dP = S['P.DEF'].d0; dP <= top('P.DEF'); dP++) for (let dM = S['M.DEF'].d0; dM <= top('M.DEF'); dM++) {
+      const cost = dP - S['P.DEF'].d0 + dM - S['M.DEF'].d0; if (cost > B) continue;
+      const val = W(w, T.DEFS(dP, dM)) - tiny * (matScore(S['P.DEF'].d0, dP) + matScore(S['M.DEF'].d0, dM));
+      if (!best[cost] || val > best[cost].val) best[cost] = { val, d: { 'P.DEF': dP, 'M.DEF': dM } }; }
+    groups.push(best); }
   // knapsack
   let dp = [{ val: 0, pick: [] }];
   for (const best of groups) {
@@ -249,8 +260,8 @@ E.allocate = function (c, fx, opt) {
 /* score an allocation on every axis (so builds made for one goal can be compared on all) */
 E.evaluate = function (c, fx, d, opt) {
   const T = makeTerms(c, fx, { ...opt, ampAffectsAB: true });
-  const ab = T.AB(d.ATK, d.BREAK), r = T.R(d.REGEN), hp = T.HP(d.HP), pd = T.DEF('P.DEF', d['P.DEF']), md = T.DEF('M.DEF', d['M.DEF']);
-  return { hit: ab.hit + r.hit, gauge: ab.gauge + r.gauge, surv: hp.surv + pd.surv + md.surv, kit: ab.kit + r.kit + hp.kit + pd.kit + md.kit };
+  const ab = T.AB(d.ATK, d.BREAK), r = T.R(d.REGEN), hp = T.HP(d.HP), df = T.DEFS(d['P.DEF'], d['M.DEF']);
+  return { hit: ab.hit + r.hit + df.hit, gauge: ab.gauge + r.gauge + df.gauge, surv: hp.surv + df.surv, kit: ab.kit + r.kit + hp.kit + df.kit };
 };
 
 /* ---------- goals, scenarios, settings ---------- */
@@ -396,6 +407,17 @@ E.checkData = function (game) {
   const badStat = g.aniimo.filter(a => STATS.some(s => !['core', 'flex', 'avoid', 'hardno'].includes(a.stats[s]))).map(a => a.name);
   ok('Every Aniimo rates all six stats', !badStat.length, badStat.join(', '));
   const noRules = g.items.filter(i => !i.rules || !i.rules.core).map(i => i.name); ok('Every item has calculation rules', !noRules.length, noRules.join(', '));
+  const known = new Set(g.aniimo.map(a => a.name)), other = new Set((g.otherAniimo || []).map(o => o.name));
+  const unknownRefs = [], notInGame = [];
+  g.items.forEach(i => (i.for || []).forEach(n => { if (other.has(n)) notInGame.push(`${n} (${i.name})`); else if (!known.has(n)) unknownRefs.push(`${n} (${i.name})`); }));
+  ok('Every Aniimo an item names is known', !unknownRefs.length, unknownRefs.length ? 'Not found anywhere: ' + unknownRefs.join(', ') : (notInGame.length ? 'Named but not in game: ' + notInGame.join(', ') : ''));
+  const noForms = g.aniimo.filter(a => a.formInfo && a.formInfo.length !== a.forms.length).map(a => a.name);
+  ok('Every form has element and picture info', !noForms.length, noForms.join(', '));
+  const noChart = g.aniimo.filter(a => !a.chart).map(a => a.name), expected = (g.importInfo && g.importInfo.noChart) || [];
+  ok('Stat chart for every Aniimo except the known gaps', noChart.every(n => expected.includes(n)), noChart.length ? 'No chart data: ' + noChart.join(', ') : '');
+  const badKeys = (g.assets || []).filter(x => (x.key.match(/:/g) || []).length !== 1).map(x => x.key);
+  ok('Image names are valid', !badKeys.length, badKeys.slice(0, 5).join(', '));
+  if (g.importInfo) ok('Form count matches the source', g.importInfo.formsOnSite <= g.importInfo.formsInSource, `${g.importInfo.formsOnSite} on this site, ${g.importInfo.formsInSource} in the source (includes Aniimo that aren't in game)`);
   ok('Allowance at level 60, rank 6 is 43', E.allowance(60, 6) === 43);
   return out;
 };

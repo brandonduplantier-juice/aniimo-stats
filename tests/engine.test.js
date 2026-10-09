@@ -74,6 +74,26 @@ t('ranking runs for every released Aniimo with every item, no NaN', () => { for 
 t('sensitivity reports a verdict and lists flips', () => { const r = E.sensitivity(st('emberpup'), set(), 'hit', all15()); assert(['clear', 'tie', 'depends'].includes(r.verdict)); assert(r.tested > 10); });
 t('builds compare for a DPS, a Break and a Support Aniimo', () => { for (const n of ['Emberpup', 'Popota', 'Bolty']) { const a = GAME.aniimo.find(x => x.name === n); const r = E.compareBuilds(st(a.slug), set(), all15); assert(r.builds.length >= 3, n); r.builds.forEach(b => assert(Number.isFinite(b.axes.hit))); } });
 
+/* v10 */
+t('Supreme Elixir +15 grows with the DEF points chosen (raw DEF 200, under the cap)', () => { const S = set(), s0 = st('emberpup'); s0.stats['P.DEF'].raw = 200; s0.stats['M.DEF'].raw = 200; const c = E.context(s0, S), sc = S.scenarios.full, fx = E.itemEffects('h08', 15, c, sc), nofx = E.itemEffects(null, 0, c, sc);
+  const opt = { weights: { hit: 1 }, noItemFx: nofx }, base = { ATK: 0, BREAK: 0, REGEN: 0, HP: 0, 'P.DEF': 0, 'M.DEF': 0 };
+  const lo = E.evaluate(c, fx, base, opt).hit, hi = E.evaluate(c, fx, { ...base, 'P.DEF': 20 }, opt).hit; assert(hi > lo, `${hi} vs ${lo}`); });
+t('Supreme Elixir +15 caps at 15%', () => { const S = set(), s = st('emberpup'); s.stats['P.DEF'].raw = 5000; const c = E.context(s, S), sc = S.scenarios.full, fx = E.itemEffects('h08', 15, c, sc), nofx = E.itemEffects(null, 0, c, sc);
+  const opt = { weights: { hit: 1 }, noItemFx: nofx }, z = { ATK: 0, BREAK: 0, REGEN: 0, HP: 0, 'P.DEF': 0, 'M.DEF': 0 };
+  near(E.evaluate(c, fx, z, opt).hit, E.evaluate(c, fx, { ...z, 'P.DEF': 20 }, opt).hit, 1e-12); });
+t('point search matches brute force with Supreme Elixir (hit damage only)', () => {
+  const s = st('emberpup', { level: 30, rank: 5 }), S = set(), c = E.context(s, S), sc = S.scenarios.full, fx = E.itemEffects('h08', 15, c, sc), nofx = E.itemEffects(null, 0, c, sc);
+  const w = { hit: 1 }, opt = { weights: w, noItemFx: nofx }, al = E.allocate(c, fx, opt), val = d => E.evaluate(c, fx, d, opt).hit;
+  let best = -Infinity; const d = {}; const rec = (i, left) => { if (i === 6) { best = Math.max(best, val(d)); return; } for (let x = 0; x <= Math.min(c.gate, left); x++) { d[E.STATS[i]] = x; rec(i + 1, left - x); } };
+  rec(0, c.budget); near(val(al.d), best, 1e-6, 'optimum'); });
+t('Morphling and Jabster count as not in game, not as bad data', () => { const r = E.checkData().find(x => x.name.startsWith('Every Aniimo an item names')); assert(r.pass); assert(/Morphling/.test(r.detail) && /Jabster/.test(r.detail)); });
+t('an item naming an unknown Aniimo fails the data check', () => { const g = JSON.parse(JSON.stringify(GAME)); g.items[0].for = [...g.items[0].for, 'Nobodymon']; assert(!E.checkData(g).find(x => x.name.startsWith('Every Aniimo an item names')).pass); });
+t('stat charts: every Aniimo except Fennelun and Soleon, six values each', () => { GAME.aniimo.forEach(a => { if (['Fennelun', 'Soleon'].includes(a.name)) assert(!a.chart); else E.STATS.forEach(k => assert(a.chart[k] > 0, a.name + ' ' + k)); }); });
+t('Emberpup chart matches AniimoTools (67/90/40/68/60/57)', () => { const c = GAME.aniimo.find(a => a.name === 'Emberpup').chart; assert.deepStrictEqual([c.HP, c.ATK, c.BREAK, c.REGEN, c['P.DEF'], c['M.DEF']], [67, 90, 40, 68, 60, 57]); });
+t('every form has elements; regional forms have their own picture', () => { GAME.aniimo.forEach(a => a.formInfo.forEach((f, i) => { if (a.chart && !f.unmatched) { assert(f.elements.length, a.name + ' ' + f.form); if (i > 0) assert(f.img, a.name + ' ' + f.form); } })); });
+t('Scorchhowl Thunderstorm form is Fire and Lightning', () => { const f = GAME.aniimo.find(a => a.name === 'Scorchhowl').formInfo.find(x => x.form === 'Thunderstorm'); assert.deepStrictEqual(f.elements, ['fire', 'electric']); });
+t('Somniwing form disagreement is kept and flagged', () => { const a = GAME.aniimo.find(x => x.name === 'Somniwing'); assert.deepStrictEqual(a.forms, ['Prismana']); assert(a.flags.some(f => /AniimoTools lists Basic/.test(f))); });
+
 /* team */
 const mem = (n, goal) => { const a = GAME.aniimo.find(x => x.name === n); return { st: st(a.slug), goal: goal || E.defaultGoal(a), weight: 1 }; };
 t('owned mode: one Fang can only go to one Aniimo', () => { const m = [mem('Emberpup'), mem('Emberpup'), mem('Popota')];
