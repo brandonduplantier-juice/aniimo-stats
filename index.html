@@ -347,9 +347,48 @@ table.mult{display:block;overflow-x:auto;max-width:100%}
 .persres{margin-top:8px;font-size:12px;color:var(--soft)}
 .persres .big{font:700 20px Fredoka,sans-serif;color:var(--deep);letter-spacing:2px}
 .persres ul{margin:4px 0;padding-left:18px}
+
+#fx{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.wrap{position:relative;z-index:1}
+.events{display:block;padding:8px 14px;margin:-8px 0 22px}
+.evline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--soft);font-weight:700}
+.evline .evnow{flex:1;min-width:200px}
+.evline .evnow b{color:var(--deep)}
+.themepick{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--soft)}
+.themepick select{background:var(--panel2);border:2px solid var(--frame);border-radius:10px;padding:2px 6px;font-weight:700}
+#evMore{margin-top:8px}
+#evMore .evrow{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.themetag{display:none;align-items:center;gap:6px;font:800 12px Nunito,sans-serif;color:#fff;background:linear-gradient(90deg,var(--plateA,#5e9cf0),var(--plateB,#3f78cf));border-radius:10px;padding:2px 10px;margin-bottom:6px;text-shadow:0 1px 1px rgba(0,0,0,.25)}
+#themeArt{display:none}
+body[data-theme] .themetag{display:inline-flex}
+body[data-theme] .intro{position:relative;overflow:hidden;padding-right:190px;min-height:150px}
+body[data-theme] .intro .stack{display:none}
+body[data-theme] #themeArt{display:block;position:absolute;right:8px;bottom:-6px;width:180px;height:160px}
+#themeArt .main img{position:absolute;right:0;bottom:0;max-width:170px;max-height:160px;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(30,50,90,.3))}
+#themeArt .side img{position:absolute;left:-6px;bottom:6px;max-width:70px;max-height:70px;object-fit:contain;opacity:.9;filter:drop-shadow(0 3px 5px rgba(30,50,90,.25))}
+#themeArt::before{content:"";position:absolute;inset:10px 0 0 20px;border-radius:50%;background:radial-gradient(circle,var(--glow,rgba(255,255,255,.9)) 0,transparent 68%)}
+body[data-theme] .frame{border-color:var(--tframe)}
+body[data-theme] .plate{background:linear-gradient(180deg,var(--plateA),var(--plateB));box-shadow:0 0 0 3px var(--tframe2),0 0 0 5px var(--tring),0 5px 0 5px rgba(44,74,124,.2);text-shadow:0 1px 2px rgba(0,0,0,.3)}
+body[data-theme=prismana] .frame{border-color:transparent;background:linear-gradient(var(--panel),var(--panel)) padding-box,linear-gradient(115deg,#ff9ad5,#ffd36e,#8ff5c8,#7fc8ff,#c6a0ff,#ff9ad5) border-box;background-size:100% 100%,300% 300%;animation:iri 14s linear infinite}
+body[data-theme=prismana] .plate{background:linear-gradient(90deg,#7b5cf0,#c94489,#d9821a,#239a6a,#2d86c9,#7b5cf0);background-size:300% 100%;animation:iri2 10s linear infinite}
+@keyframes iri{to{background-position:0 0,300% 0}}
+@keyframes iri2{to{background-position:300% 0}}
+.fx-streak{position:absolute;left:0;height:2px;width:38vw;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);animation:gust linear infinite}
+@keyframes gust{from{transform:translateX(-45vw)}to{transform:translateX(125vw)}}
+.fx-feather{position:absolute;top:-40px;width:26px;height:26px;animation:drift linear infinite}
+@keyframes drift{from{transform:translate(0,-5vh) rotate(-20deg)}to{transform:translate(28vw,110vh) rotate(320deg)}}
+.fx-spark{position:absolute;width:18px;height:18px;animation:twinkle ease-in-out infinite}
+@keyframes twinkle{0%,100%{transform:scale(.3) rotate(0);opacity:.15}50%{transform:scale(1) rotate(45deg);opacity:.95}}
+.fx-glow{position:absolute;width:55vw;height:55vw;border-radius:50%;filter:blur(10px);opacity:.45}
+.fx-beam{position:absolute;top:-12vh;width:20vw;height:125vh;transform-origin:top center;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0) 78%);animation:sway ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+#fx .sec{opacity:.45}
+@media (max-width:600px){body[data-theme] .intro{padding-right:96px;min-height:0}body[data-theme] #themeArt{width:96px;height:96px;right:2px;bottom:-4px}#themeArt .main img{max-width:92px;max-height:92px}#themeArt .side{display:none}.fx-streak{width:60vw}}
+@media (prefers-reduced-motion:reduce){#fx *{animation:none!important}body[data-theme] .frame,body[data-theme] .plate{animation:none!important}}
 </style>
 </head>
 <body>
+<div id="fx" aria-hidden="true"></div>
 <div class="wrap">
 <div class="bar">
   <a class="logo" href="#top" id="top"><span class="gem" id="logoGem"></span>Potential Planner</a>
@@ -358,10 +397,12 @@ table.mult{display:block;overflow-x:auto;max-width:100%}
 
 <div class="frame intro">
   <div>
+    <span class="themetag" id="themeTag"></span>
     <h1>Spend every Awakening point where it counts</h1>
     <p>Pick an Aniimo, enter the Innate Potential from your copy, and the bars fill the same way the Capability Awakening screen does. Updated 8 Oct 2026 for game version 1.1.</p>
   </div>
   <div class="stack" id="introItems"></div>
+  <div id="themeArt" aria-hidden="true"></div>
 </div>
 
 <div class="frame events" id="events" aria-live="polite"></div>
@@ -545,6 +586,7 @@ table.mult{display:block;overflow-x:auto;max-width:100%}
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>8 Oct 2026, v10.4.</b> Event themes. The page dresses up for what's running in the game: Windchaser's Departure brings a teal and gold sky with drifting feathers and Irisalis in the header; Prismana events bring rainbow borders, sparkles and the featured Prismana form; Glamour Star brings stage lights. Overlapping events mix, with the strongest one leading. Themes switch on official event dates, can be picked by hand (Theme menu), stay still for anyone who has reduced motion turned on, and never change any numbers. The events line is now one row, with Details to expand.</p>
       <p><b>8 Oct 2026, v10.3.</b> Events now banner with the current and upcoming events (official dates, roadmap ones marked). Star Up ranks your level can't reach are greyed out and lowered automatically. The board shows Acquired points used out of the total, the most possible at your level, and the absolute max of 78. Each stat row says where the next ×4 breakpoint is and whether you can reach it. Best personality for this setup: tries all 16 and shows the runner-up, GameWith's default, and what each letter is worth.</p>
       <p><b>8 Oct 2026, v10.2.</b> Alpha and Item contract settings. They switch the enhanced core skill on or off (wild Alpha, or a contract on the equipped +15 Legendary item) and never change the six stats or the chart. Tromber's ATK 800 and HP 16,000 caps now apply only when its enhanced skill is active. Each stat row spells out Potential past 20, e.g. 20 (max) + 4 bonus = 24 effective.</p>
       <p><b>8 Oct 2026, v10.1.</b> Personality and the game's recommended items moved under the stat bars, so the page is shorter and both columns line up. A personality with both letters of a pair (from an old save) now counts that pair as unknown instead of applying both. The raw stat warning about personality sits next to the inputs. Stricter form-count check. Phone layout tightened.</p>
@@ -843,12 +885,49 @@ $('persAxes').addEventListener('click',e=>{const b=e.target.closest('[data-l]');
 function nowDate(){const q=new URLSearchParams(location.search).get('date');const d=q?new Date(q):new Date();return isNaN(d)?new Date():d}
 const evWhen=iso=>{const m=iso.match(/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)/);const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1];return `${mon} ${+m[3]}, ${m[4]}:${m[5]}`};
 const evLeft=ms=>{const d=Math.floor(ms/864e5),h=Math.floor(ms/36e5)%24;return d>=1?`${d} day${d>1?'s':''}${h?` ${h} h`:''}`:`${Math.max(1,Math.floor(ms/36e5))} h`};
+
+/* ---------- event themes: decoration only, never touches calculations ---------- */
+const evShort=ms=>{const d=Math.floor(ms/864e5);return d>=1?`${d} d left`:`${Math.max(1,Math.floor(ms/36e5))} h left`};
 function renderEvents(){const now=nowDate(),L=(GAME.events&&GAME.events.list)||[];
   const cur=L.filter(e=>new Date(e.start)<=now&&now<new Date(e.end)).sort((a,b)=>new Date(a.end)-new Date(b.end));
   const soon=L.filter(e=>new Date(e.start)>now&&new Date(e.start)-now<14*864e5).sort((a,b)=>new Date(a.start)-new Date(b.start)).slice(0,4);
-  const card=(e,isNow)=>`<div class="ev ${isNow?'now':'soon'}"><span class="art">${e.art?im(e.art,'',e.name):'<span class="star">★</span>'}</span><div><b>${esc(e.name)}</b>${esc(e.desc)}<div class="when">${isNow?`Ends ${evWhen(e.end)} · ${evLeft(new Date(e.end)-now)} left`:`Starts ${evWhen(e.start)}`}</div>${e.official?'':'<span class="chip assumption">roadmap, not official</span>'}</div></div>`;
-  $('events').innerHTML=`<h3>Events now <small>Americas server, times in UTC-4. Dates last checked ${esc(GAME.events.updated)}.</small></h3><div class="evrow">${cur.map(e=>card(e,true)).join('')||'<span class="small">No events on record right now.</span>'}${soon.map(e=>card(e,false)).join('')}</div>`+
-    `<p class="small" style="margin:2px 0 0;flex-basis:100%">Official dates from the game's update notices; anything marked roadmap comes from Prima Games and may change.</p>`}
+  const card=(e,isNow)=>`<div class="ev ${isNow?'now':'soon'}"><span class="art">${e.art?im(e.art,'',e.name):'<span class="star">★</span>'}</span><div><b>${esc(e.name)}</b>${esc(e.desc)}<div class="when">${isNow?`Ends ${evWhen(e.end)} (UTC-4) · ${evLeft(new Date(e.end)-now)} left`:`Starts ${evWhen(e.start)} (UTC-4)`}</div>${e.official?'':'<span class="chip assumption">roadmap, not official</span>'}</div></div>`;
+  const line=cur.length?cur.map(e=>`${esc(e.name.replace(/^Vein Abundance: |^Legendary Journey: /,''))} <span style="color:#16704c">(${evShort(new Date(e.end)-now)})</span>`).join(' · '):'No events on record right now.';
+  const opts=[['auto','Automatic'],['default','Default'],...Object.entries(GAME.themes||{}).map(([k,t])=>[k,t.label])];
+  $('events').innerHTML=`<div class="evline"><span class="evnow">✦ <b>Now:</b> ${line}</span><button class="linkbtn" type="button" id="evToggle" aria-expanded="false" aria-controls="evMore">Details</button>
+    <label class="themepick">Theme <select id="themeSel">${opts.map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join('')}</select></label></div>
+    <div id="evMore" hidden><div class="evrow">${cur.map(e=>card(e,true)).join('')}${soon.map(e=>card(e,false)).join('')}</div>
+    <p class="small" style="margin:4px 0 0">Americas server, times in UTC-4, last checked ${esc(GAME.events.updated)}. Official dates from the game's update notices; roadmap ones come from Prima Games and may change. ${esc(GAME.events.themeRule||'')}</p></div>`;
+  $('themeSel').value=LS.get('aniimo.theme.v1','auto');
+  $('themeSel').oninput=()=>{LS.set('aniimo.theme.v1',$('themeSel').value);applyTheme()};
+  $('evToggle').onclick=()=>{const m=$('evMore'),o=m.hidden;m.hidden=!o;$('evToggle').setAttribute('aria-expanded',o);$('evToggle').textContent=o?'Hide details':'Details'}}
+function activeThemes(){const now=nowDate(),by={};
+  ((GAME.events&&GAME.events.list)||[]).filter(e=>e.theme&&e.official&&GAME.themes[e.theme]&&new Date(e.start)<=now&&now<new Date(e.end)).forEach(e=>{const t=by[e.theme]||(by[e.theme]={key:e.theme,art:null});if(!t.art&&e.art)t.art=e.art});
+  return Object.values(by).sort((a,b)=>GAME.themes[b.key].priority-GAME.themes[a.key].priority)}
+const rnd=seed=>()=>{seed=(seed*9301+49297)%233280;return seed/233280};
+const FEATHER=c=>`<svg viewBox="0 0 24 24"><path d="M20 3C12 4 6 9 4 20l1 1C7 15 10 12 14 10 10 13 8 16 7 19c7-2 11-8 13-16z" fill="#fff" stroke="${c}" stroke-width="1.2"/></svg>`;
+const STAR=c=>`<svg viewBox="0 0 24 24"><path d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0z" fill="${c}"/></svg>`;
+function fxLayer(motif,sec){const r=rnd(motif.length*97+(sec?7:1)),n=x=>sec?Math.ceil(x/2):x,cls=sec?' sec':'';let h='';
+  if(motif==='wind'){for(let i=0;i<n(6);i++)h+=`<div class="fx-streak${cls}" style="top:${(8+r()*80).toFixed(1)}%;animation-duration:${(7+r()*7).toFixed(1)}s;animation-delay:-${(r()*12).toFixed(1)}s"></div>`;
+    for(let i=0;i<n(8);i++)h+=`<div class="fx-feather${cls}" style="left:${(r()*90).toFixed(1)}%;animation-duration:${(18+r()*14).toFixed(1)}s;animation-delay:-${(r()*30).toFixed(1)}s">${FEATHER(i%2?'#d9a514':'#2f9f8f')}</div>`}
+  if(motif==='prismana'){h+=sec?'':`<div class="fx-glow" style="left:-15vw;top:-10vw;background:radial-gradient(circle,#ffb6e1,transparent 70%)"></div><div class="fx-glow" style="right:-18vw;top:30vh;background:radial-gradient(circle,#9fd8ff,transparent 70%)"></div>`;
+    const hues=['#ff7fc8','#ffc94d','#6fe3b0','#6fb9ff','#b38bff'];for(let i=0;i<n(16);i++)h+=`<div class="fx-spark${cls}" style="left:${(r()*96).toFixed(1)}%;top:${(r()*92).toFixed(1)}%;animation-duration:${(2.4+r()*2.6).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s">${STAR(hues[i%5])}</div>`}
+  if(motif==='glamour'){for(let i=0;i<n(3);i++)h+=`<div class="fx-beam${cls}" style="left:${10+i*32}%;animation-duration:${(8+r()*4).toFixed(1)}s;animation-delay:-${(r()*6).toFixed(1)}s"></div>`;
+    for(let i=0;i<n(10);i++)h+=`<div class="fx-spark${cls}" style="left:${(r()*96).toFixed(1)}%;top:${(r()*92).toFixed(1)}%;animation-duration:${(2.4+r()*2.6).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s">${STAR('#ffcf3d')}</div>`}
+  return h}
+function applyTheme(){const pick=LS.get('aniimo.theme.v1','auto'),T=GAME.themes||{};
+  let L=pick==='auto'?activeThemes():pick==='default'||!T[pick]?[]:[{key:pick,art:null}];
+  const p=L[0],sec=L.slice(1),root=document.documentElement.style,b=document.body;
+  ['--sky1','--sky2','--tframe','--tframe2','--plateA','--plateB','--tring'].forEach(v=>root.removeProperty(v));
+  if(!p){b.removeAttribute('data-theme');b.removeAttribute('data-sec');$('fx').innerHTML='';$('themeArt').innerHTML='';$('themeTag').textContent='';return}
+  const t=T[p.key],c=t.colors;
+  root.setProperty('--sky1',c.sky1);root.setProperty('--sky2',c.sky2);root.setProperty('--tframe',c.frame);root.setProperty('--tframe2',c.frame2);root.setProperty('--plateA',c.plateA);root.setProperty('--plateB',c.plateB);root.setProperty('--tring',c.ring);
+  b.dataset.theme=p.key;b.dataset.sec=sec.map(x=>x.key).join(' ');
+  $('fx').innerHTML=fxLayer(t.motif,false)+sec.map(x=>fxLayer(T[x.key].motif,true)).join('');
+  const artOf=x=>x.art||T[x.key].art||T[x.key].fallbackArt;const a1=artOf(p),a2=sec.map(artOf).find(Boolean);
+  $('themeArt').innerHTML=(a1?`<span class="main">${im(a1,'',t.label)}</span>`:'')+(a2&&a2!==a1?`<span class="side">${im(a2,'','')}</span>`:'');
+  $('themeTag').textContent='✦ '+[t.label,...sec.map(x=>T[x.key].label)].join(' + ')+(pick==='auto'?' event theme':' theme')}
+
 /* ---------- best personality for this setup ---------- */
 $('persBest').onclick=()=>{const g=$('oGoal').value,r=E.rankPersonalities(engineState(),SET,g,{custom:customW()}),a=cur(),b=r.best,ru=r.runnerUp;
   const pc=x=>(x*100).toFixed(1)+'%';
@@ -1046,7 +1125,7 @@ function renderData(){const ch=E.checkData();$('dVer').textContent=GAME.version;
   const flagged=GAME.aniimo.filter(a=>a.flags&&a.flags.length);
   $('dVerify').innerHTML='<tr><th>Topic</th><th>Status</th><th>Source</th></tr>'+GAME.verification.map(v=>`<tr><td>${esc(v.topic)}</td><td><span class="chip ${v.status}">${v.status}</span></td><td class="why">${esc(v.source)}</td></tr>`).join('')+
     `<tr><td>Aniimo with a point to check in game</td><td><span class="chip unverified">${flagged.length}</span></td><td class="why">${flagged.map(a=>esc(a.name)).join(', ')}</td></tr>`}
-renderEvents();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
+renderEvents();applyTheme();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
 setForms();plan();
 </script>
 </body>

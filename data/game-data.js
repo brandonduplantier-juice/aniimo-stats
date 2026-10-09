@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-08d",
+ "version": "2026-10-08e",
  "aniimo": [
   {
    "num": "001",
@@ -11711,7 +11711,8 @@ window.ANIIMO_DATA = {
     "desc": "Irisalis debut and Blessing Gifts.",
     "source": "Official update notice, aniimo.com (21 Sep 2026)",
     "official": true,
-    "art": "p:irisalis"
+    "art": "p:irisalis",
+    "theme": "windchaser"
    },
    {
     "name": "Glamour Star",
@@ -11720,7 +11721,8 @@ window.ANIIMO_DATA = {
     "desc": "Dress Aniimo to a theme and get scored for rewards.",
     "source": "Official update notice, aniimo.com (21 Sep 2026)",
     "official": true,
-    "art": null
+    "art": null,
+    "theme": "glamour"
    },
    {
     "name": "Aniimo Discovery",
@@ -11738,7 +11740,8 @@ window.ANIIMO_DATA = {
     "desc": "Prismana Form Melloblum appears at Rosetower Woods.",
     "source": "Official update notice, aniimo.com (21 Sep 2026)",
     "official": true,
-    "art": "f:melloblum--v1032402"
+    "art": "f:melloblum--v1032402",
+    "theme": "prismana"
    },
    {
     "name": "Vein Abundance: Berylline Vale",
@@ -11747,7 +11750,8 @@ window.ANIIMO_DATA = {
     "desc": "Prismana Form Waleetle appears at Berylline Vale.",
     "source": "Official update notice, aniimo.com (21 Sep 2026)",
     "official": true,
-    "art": "f:waleetle--v1045302"
+    "art": "f:waleetle--v1045302",
+    "theme": "prismana"
    },
    {
     "name": "Journey Chronicles",
@@ -11765,7 +11769,8 @@ window.ANIIMO_DATA = {
     "desc": "Dress Aniimo to a theme and get scored for rewards.",
     "source": "Prima Games roadmap (not official; dates only)",
     "official": false,
-    "art": null
+    "art": null,
+    "theme": "glamour"
    },
    {
     "name": "Eggceleration",
@@ -11783,7 +11788,8 @@ window.ANIIMO_DATA = {
     "desc": "Prismana Inferlupa featured.",
     "source": "Prima Games roadmap (not official; dates only)",
     "official": false,
-    "art": "f:inferlupa--v1005503"
+    "art": "f:inferlupa--v1005503",
+    "theme": "prismana"
    },
    {
     "name": "Who's That Aniimo?",
@@ -11819,7 +11825,8 @@ window.ANIIMO_DATA = {
     "desc": "Prismana forms featured.",
     "source": "Prima Games roadmap (not official; dates only)",
     "official": false,
-    "art": null
+    "art": null,
+    "theme": "prismana"
    },
    {
     "name": "Eggceleration",
@@ -11837,9 +11844,11 @@ window.ANIIMO_DATA = {
     "desc": "Dress Aniimo to a theme and get scored for rewards.",
     "source": "Prima Games roadmap (not official; dates only)",
     "official": false,
-    "art": null
+    "art": null,
+    "theme": "glamour"
    }
-  ]
+  ],
+  "themeRule": "Themes switch automatically on official event dates only. Roadmap events can be picked by hand."
  },
  "rankLevels": {
   "2": 35,
@@ -11870,6 +11879,59 @@ window.ANIIMO_DATA = {
    "ISTJ",
    "INTJ"
   ]
+ },
+ "themes": {
+  "windchaser": {
+   "label": "Windchaser's Departure",
+   "priority": 1,
+   "motif": "wind",
+   "art": "p:irisalis",
+   "fallbackArt": "p:irisalis",
+   "colors": {
+    "sky1": "#bdeee3",
+    "sky2": "#effcf6",
+    "frame": "#6fcdbd",
+    "frame2": "#2f9f8f",
+    "plateA": "#46c9b5",
+    "plateB": "#1f978a",
+    "ring": "#d9a514"
+   },
+   "about": "Teal and gold sky, drifting feathers and wind. Irisalis is the event's legendary Aniimo."
+  },
+  "prismana": {
+   "label": "Prismana",
+   "priority": 3,
+   "motif": "prismana",
+   "art": null,
+   "fallbackArt": "f:waleetle--v1045302",
+   "colors": {
+    "sky1": "#ddd3ff",
+    "sky2": "#f6f1ff",
+    "frame": "#b7a2f2",
+    "frame2": "#7b5cf0",
+    "plateA": "#8a6cf5",
+    "plateB": "#d0559b",
+    "ring": "#ffcf3d"
+   },
+   "about": "Iridescent borders, rainbow light and sparkles, with the featured Prismana form."
+  },
+  "glamour": {
+   "label": "Glamour Star",
+   "priority": 2,
+   "motif": "glamour",
+   "art": null,
+   "fallbackArt": null,
+   "colors": {
+    "sky1": "#ffd6ea",
+    "sky2": "#fff3f9",
+    "frame": "#f3a6c8",
+    "frame2": "#d0559b",
+    "plateA": "#f07bb2",
+    "plateB": "#c94489",
+    "ring": "#ffcf3d"
+   },
+   "about": "Stage spotlights and gold sparkles for the audition event."
+  }
  }
 };
 if (typeof module !== "undefined") module.exports = window.ANIIMO_DATA;

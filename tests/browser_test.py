@@ -8,7 +8,7 @@ def check(name, ok, detail=''):
 
 with sync_playwright() as p:
     b = p.chromium.launch()
-    for ver in ('10.3',):
+    for ver in ('10.4',):
         ctx = b.new_context(viewport={'width': 1280, 'height': 900})
         ctx.route('http*://**/*', lambda r: r.abort())   # sandbox has no internet; images fall back
         pg = ctx.new_page(); errs = []
@@ -127,5 +127,33 @@ with sync_playwright() as p:
         sw = pg.evaluate('document.documentElement.scrollWidth')
         check(f'v{ver} no sideways scroll on a phone', sw <= 390, sw)
         ctx.close()
+
+    # v10.4 event themes
+    def page_at(date, motion='no-preference'):
+        c = b.new_context(viewport={'width': 1280, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort())
+        pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+        pg.goto('file:///home/claude/work/site_v10.4/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
+    c, pg, errs = page_at('2026-10-08T12:00:00-04:00')
+    check('v10.4 Oct 8: Prismana leads, Windchaser mixed in', pg.evaluate("document.body.dataset.theme") == 'prismana' and 'windchaser' in pg.evaluate("document.body.dataset.sec"), pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]"))
+    check('v10.4 header art and tag shown', pg.locator('#themeArt .main').count() == 1 and 'Prismana + Windchaser' in pg.text_content('#themeTag'), pg.text_content('#themeTag'))
+    check('v10.4 effects drawn, behind the page and not clickable', pg.locator('#fx .fx-spark').count() >= 16 and pg.locator('#fx .fx-feather').count() >= 4 and pg.evaluate("getComputedStyle(document.getElementById('fx')).pointerEvents") == 'none')
+    check('v10.4 one-line banner, details hidden until asked', pg.is_visible('#evMore') is False and 'Berylline Vale' in pg.inner_text('.evnow'))
+    pg.click('#evToggle'); check('v10.4 details expand', pg.is_visible('#evMore'))
+    before = pg.text_content('#spendLine') + pg.text_content('#sumBox')
+    pg.select_option('#themeSel', 'glamour'); pg.wait_for_timeout(100)
+    check('v10.4 manual theme pick', pg.evaluate("document.body.dataset.theme") == 'glamour' and pg.locator('#fx .fx-beam').count() == 3)
+    check('v10.4 theme never changes the numbers', before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
+    pg.reload(); pg.wait_for_timeout(300); check('v10.4 theme choice remembered', pg.input_value('#themeSel') == 'glamour' and pg.evaluate("document.body.dataset.theme") == 'glamour')
+    pg.select_option('#themeSel', 'default'); pg.wait_for_timeout(100)
+    check('v10.4 Default removes the theme', pg.evaluate("document.body.dataset.theme") is None and pg.locator('#fx *').count() == 0)
+    pg.select_option('#themeSel', 'auto'); check('v10.4 no script errors', not errs, errs); c.close()
+    c, pg, errs = page_at('2026-10-20T12:00:00-04:00')
+    check('v10.4 Oct 20: roadmap-only Prismana does not theme automatically; Windchaser does', pg.evaluate("document.body.dataset.theme") == 'windchaser' and not pg.evaluate("document.body.dataset.sec"), pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]")); c.close()
+    c, pg, errs = page_at('2026-12-20T12:00:00-05:00')
+    check('v10.4 after all events: normal sky', pg.evaluate("document.body.dataset.theme") is None and 'No events on record' in pg.inner_text('.evnow')); c.close()
+    c, pg, errs = page_at('2026-09-26T12:00:00-04:00')
+    check('v10.4 Sep 26: Glamour Star (official) leads Windchaser', pg.evaluate("document.body.dataset.theme") == 'glamour' and pg.evaluate("document.body.dataset.sec") == 'windchaser', pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]")); c.close()
+    c, pg, errs = page_at('2026-10-08T12:00:00-04:00', 'reduce')
+    check('v10.4 reduced motion stops all animation', pg.evaluate("[...document.querySelectorAll('#fx *, .frame, .plate')].every(e=>getComputedStyle(e).animationName==='none')")); c.close()
     b.close()
 print(f'\n{sum(res)} passed, {len(res) - sum(res)} failed')
