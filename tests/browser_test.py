@@ -8,7 +8,7 @@ def check(name, ok, detail=''):
 
 with sync_playwright() as p:
     b = p.chromium.launch()
-    for ver in ('10.8',):
+    for ver in ('10.9',):
         ctx = b.new_context(viewport={'width': 1280, 'height': 900})
         ctx.route('http*://**/*', lambda r: r.abort())   # sandbox has no internet; images fall back
         pg = ctx.new_page(); errs = []
@@ -131,7 +131,7 @@ with sync_playwright() as p:
     def page_at(date, motion='no-preference'):
         c = b.new_context(viewport={'width': 1280, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort() if 'localhost' not in r.request.url else r.continue_())
         pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/work/site_v10.8/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
+        pg.goto('file:///home/claude/work/site_v10.9/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
     c, pg, errs = page_at('2026-10-08T12:00:00-04:00')
     check('v10.6 Oct 8: Windchaser leads, Prismana is the accent', pg.evaluate("document.body.dataset.theme") == 'windchaser' and pg.evaluate("document.body.dataset.sec") == 'prismana', pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]"))
     check('v10.7 Subtle event layer: petals and wind, at most 5 + 2 accent pieces', pg.locator('#fx .fx-petal').count() >= 2 and pg.locator('#fx .fx-streak').count() >= 1 and pg.locator('#fx > *:not(.fx-glow)').count() <= 7, pg.locator('#fx > *').count())
@@ -157,7 +157,7 @@ with sync_playwright() as p:
     # trimming: serve a copy over http with padded test portraits
     import subprocess, shutil, os, time
     from PIL import Image, ImageDraw
-    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.8', T); os.makedirs(T + '/images', exist_ok=True)
+    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.9', T); os.makedirs(T + '/images', exist_ok=True)
     def mk(n, W, H, box):
         im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); ImageDraw.Draw(im).ellipse(box, fill=(200, 80, 160, 255)); im.save(T + '/images/' + n, 'PNG')
     mk('p_inferlupa.webp', 1000, 1000, (380, 420, 620, 580)); Image.new('RGBA', (600, 1200), (230, 90, 40, 255)).save(T + '/images/p_flameruff.webp', 'PNG'); mk('p_emberpup.webp', 800, 800, (100, 100, 700, 700))
@@ -176,29 +176,30 @@ with sync_playwright() as p:
         srv.terminate()
     # v10.7 Living Idyll
     ANIM = "(()=>{let n=0;document.querySelectorAll('#scene *, #fx *, #roam *').forEach(e=>{const s=getComputedStyle(e);if(s.animationName!=='none'&&s.display!=='none'&&e.closest('svg')===null)n++});return n+document.querySelectorAll('#scene .bloom.pulse').length})()"
-    def look(vis=None, tod=None, date='2026-10-08T12:00:00-04:00', hour=None, w=1600, motion='no-preference'):
+    def look(vis=None, tod=None, date='2026-10-08T12:00:00-04:00', hour=None, w=1600, motion='no-preference', drawn=False):
         c = b.new_context(viewport={'width': w, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort())
         pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/work/site_v10.8/index.html?date=' + date + ('&hour=' + str(hour) if hour is not None else '')); pg.wait_for_timeout(200)
+        pg.goto('file:///home/claude/work/site_v10.9/index.html?date=' + date + ('&hour=' + str(hour) if hour is not None else '')); pg.wait_for_timeout(200)
         if vis: pg.evaluate(f"localStorage.setItem('aniimo.visual.v1',JSON.stringify('{vis}'))")
         if tod: pg.evaluate(f"localStorage.setItem('aniimo.tod.v1',JSON.stringify('{tod}'))")
         if vis or tod: pg.reload(); pg.wait_for_timeout(300)
+        if drawn: pg.evaluate("GAME.scene.art=null;renderScene();applyTheme()")
         return c, pg, errs
     for vis, cap in (('full', 42), ('subtle', 16), ('minimal', 0), ('off', 0)):
         for hour in (12, 23):
             c, pg, errs = look(vis if vis != 'subtle' else None, hour=hour); n = pg.evaluate(ANIM)
             check(f'v10.7 {vis} at {hour}:00: {n} moving things, cap {cap}', n <= cap and (n > 0) == (cap > 0), n)
             if vis == 'subtle' and hour == 12: check('v10.7 Subtle is the default', pg.evaluate("document.body.dataset.vis") == 'subtle')
-            if vis == 'minimal' and hour == 12: check('v10.7 Minimal keeps still scenery and still petals', pg.locator('#scene .land').count() == 1 and pg.locator('#fx .still').count() >= 1 and pg.locator('#scene .cloud').count() == 4)
+            if vis == 'minimal' and hour == 12: check('v10.9 Minimal keeps the picture and still petals, no twinkles or shooting stars', pg.locator('#scene .sky.art').count() == 1 and pg.locator('#fx .still').count() >= 1 and pg.locator('#scene .tw, #scene .shoot').count() == 0)
             if vis == 'off' and hour == 12: check('v10.7 Off: no scenery, no effects', pg.evaluate("document.getElementById('scene').hidden") and pg.locator('#fx *').count() == 0)
             if vis == 'off' and hour == 23: check('v10.7 Off: no night styling', not pg.evaluate("document.body.classList.contains('night')"))
             check(f'v10.7 {vis} {hour}:00 no script errors', not errs, errs); c.close()
-    c, pg, errs = look(hour=12); check('v10.7 noon is day', not pg.evaluate("document.body.classList.contains('night')") and pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") == '#8fd3ff'); c.close()
-    c, pg, errs = look(hour=23); check('v10.7 23:00 is night, sky not black', pg.evaluate("document.body.classList.contains('night')") and pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") == '#3b5293'); c.close()
-    c, pg, errs = look(hour=19); check('v10.7 19:00 is a blend (dusk)', pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") not in ('#8fd3ff', '#3b5293')); c.close()
-    c, pg, errs = look(tod='day', hour=23); check('v10.7 "Always day" overrides the clock', not pg.evaluate("document.body.classList.contains('night')")); c.close()
+    c, pg, errs = look(hour=12, drawn=True); check('v10.7 drawn landscape: noon is day', not pg.evaluate("document.body.classList.contains('night')") and pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") == '#8fd3ff'); c.close()
+    c, pg, errs = look(hour=23, drawn=True); check('v10.7 drawn landscape: 23:00 is night, sky not black', pg.evaluate("document.body.classList.contains('night')") and pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") == '#3b5293'); c.close()
+    c, pg, errs = look(hour=19, drawn=True); check('v10.7 drawn landscape: 19:00 is a blend (dusk)', pg.evaluate("getComputedStyle(document.getElementById('scene')).getPropertyValue('--sk1').trim()") not in ('#8fd3ff', '#3b5293')); c.close()
+    c, pg, errs = look(tod='day', hour=23, drawn=True); check('v10.7 drawn landscape: "Always day" overrides the clock', not pg.evaluate("document.body.classList.contains('night')")); c.close()
     c, pg, errs = look(hour=23, motion='reduce'); check('v10.7 reduced motion: nothing moves', pg.evaluate(ANIM) == 0); check('v10.7 reduced motion: no wanderers', pg.evaluate("roamNow()") is False); c.close()
-    c, pg, errs = look(w=390); n = pg.evaluate(ANIM); check(f'v10.7 phone: {n} moving things, cap 8, no wanderers, no sideways scroll', n <= 8 and pg.evaluate("roamNow()") is False and pg.evaluate("document.documentElement.scrollWidth") <= 390, n); c.close()
+    c, pg, errs = look(w=390); n = pg.evaluate(ANIM); check(f'v10.9 phone: {n} moving things, cap 10, no wanderers, no sideways scroll', n <= 10 and pg.evaluate("roamNow()") is False and pg.evaluate("document.documentElement.scrollWidth") <= 390, n); c.close()
     c, pg, errs = look(w=1600)
     check('v10.7 a wanderer appears in the side margin, clear of the page', pg.evaluate("roamNow(true)") and pg.evaluate("(()=>{const r=document.querySelector('#roam .roamer').getBoundingClientRect(),w=document.querySelector('.wrap').getBoundingClientRect();return r.right<=w.left||r.left>=w.right})()"))
     check('v10.7 decoration layers never take clicks', pg.evaluate("['scene','fx','roam'].every(id=>getComputedStyle(document.getElementById(id)).pointerEvents==='none')"))
@@ -212,10 +213,19 @@ with sync_playwright() as p:
     check('v10.7 visual settings never change the numbers', before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
     check('v10.7 prismana panel borders stay still', True)
     check('v10.7 no script errors', not errs, errs); c.close()
+    # v10.9 background picture
+    c, pg, errs = look()
+    check('v10.9 background picture set and found', 'idyll-night.webp' in pg.evaluate("getComputedStyle(document.querySelector('#scene .sky')).backgroundImage") and pg.evaluate("new Promise(r=>{const i=new Image();i.onload=()=>r(i.naturalWidth);i.onerror=()=>r(0);i.src='data/art/idyll-night.webp'})") == 1672)
+    check('v10.9 Subtle: 5 twinkles, 1 shooting star, 3 fireflies', pg.locator('#scene .tw').count() == 5 and pg.locator('#scene .shoot').count() == 1 and pg.locator('#scene .firefly').count() == 3)
+    check('v10.9 drawn hills and sun are off with the picture', pg.locator('#scene .land, #scene .sun').count() == 0)
+    check('v10.9 light text outside panels on the dark picture', pg.evaluate("document.body.classList.contains('night')") and pg.evaluate("getComputedStyle(document.querySelector('.sechead p')).color") == 'rgb(244, 247, 255)')
+    check('v10.9 no script errors', not errs, errs); c.close()
+    c, pg, errs = look(vis='full'); check('v10.9 Full: 14 twinkles, 2 shooting stars', pg.locator('#scene .tw').count() == 14 and pg.locator('#scene .shoot').count() == 2); c.close()
+    c, pg, errs = look(w=390); check('v10.9 phone uses the small picture', 'idyll-night-small.webp' in pg.evaluate("getComputedStyle(document.querySelector('#scene .sky')).backgroundImage")); c.close()
     # v10.8 Team Lab
     c = b.new_context(viewport={'width': 1400, 'height': 1000}); c.route('http*://**/*', lambda r: r.abort())
     pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-    pg.goto('file:///home/claude/work/site_v10.8/index.html?date=2026-10-08T12:00:00-04:00'); pg.wait_for_timeout(400)
+    pg.goto('file:///home/claude/work/site_v10.9/index.html?date=2026-10-08T12:00:00-04:00'); pg.wait_for_timeout(400)
     check('v10.8 Team Lab: 3 slots with checked moves for Stellarys, Rookey, Fragrancier', pg.locator('#tlSlots .tl-slot').count() == 3 and 'Shooting Stars' in pg.inner_html('#tlSlots') and 'Secret Fragrance Mark' in pg.inner_html('#tlSlots'))
     plan_before = pg.text_content('#spendLine') + pg.text_content('#sumBox')
     pg.select_option('#pA', 'emberpup'); pg.fill('#rw_ATK', '1200'); pg.dispatch_event('#rw_ATK', 'input'); pg.select_option('#pItem', 'h02'); pg.fill('#pItemLv', '15'); pg.dispatch_event('#pItemLv', 'input')
@@ -251,7 +261,7 @@ with sync_playwright() as p:
     pg.select_option('#pA', 'emberpup'); pg.fill('#rw_ATK', ''); pg.dispatch_event('#rw_ATK', 'input'); pg.select_option('#pItem', ''); pg.wait_for_timeout(100)
     check('v10.8 Team Lab never changes the planner\'s numbers', plan_before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
     check('v10.8 no script errors', not errs, errs); c.close()
-    c = b.new_context(viewport={'width': 390, 'height': 844}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); pg.goto('file:///home/claude/work/site_v10.8/index.html'); pg.wait_for_timeout(300)
+    c = b.new_context(viewport={'width': 390, 'height': 844}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); pg.goto('file:///home/claude/work/site_v10.9/index.html'); pg.wait_for_timeout(300)
     pg.click('#tlTabs [data-t=fight]'); pg.click('#tlRun'); pg.wait_for_timeout(200)
     check('v10.8 phone: Team Lab fits, no sideways page scroll', pg.evaluate("document.documentElement.scrollWidth") <= 390, pg.evaluate("document.documentElement.scrollWidth")); c.close()
     b.close()

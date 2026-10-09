@@ -472,6 +472,18 @@ body.night footer a{color:#d6e7ff}
 .tl-log td.err{color:var(--no2);font-weight:800}
 .tl-mods{columns:2;font-size:12px;margin:4px 0;padding-left:18px}
 @media (max-width:600px){.tl-mods{columns:1}.tl-grid{grid-template-columns:1fr 1fr}}
+
+#scene .sky.art{background:var(--art) center 62%/cover no-repeat}
+@media (max-width:700px){#scene .sky.art{background-image:var(--art-sm);background-position:58% 60%}}
+body.artbg[data-theme] #scene .tint{opacity:.1}
+#scene .tw{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px rgba(215,225,255,.9);animation:tw ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.4)}}
+#scene .shoot{position:absolute;width:150px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(230,235,255,.9) 70%,#fff);transform-origin:100% 50%;opacity:0;animation:shoot linear infinite}
+@keyframes shoot{0%{opacity:0;transform:translate(0,0) rotate(155deg)}2%{opacity:1}9%{opacity:0;transform:translate(-34vw,16vw) rotate(155deg)}100%{opacity:0;transform:translate(-34vw,16vw) rotate(155deg)}}
+body.artbg #scene .firefly{opacity:1}
+body.artbg .sechead p,body.artbg .key,body.artbg footer,body.artbg .logo,body.artbg .tools .count{color:#f4f7ff;text-shadow:0 1px 3px rgba(10,20,50,.8)}
+body.artbg footer a{color:#d6e7ff}
+@media (prefers-reduced-motion:reduce){#scene .shoot{display:none}}
 </style>
 </head>
 <body>
@@ -651,7 +663,7 @@ body.night footer a{color:#d6e7ff}
       </div>
       <p class="small">None of these is confirmed in game. The "Compare" check in the Optimizer tells you whether flipping one changes the answer.</p>
     </div></details>
-    <details class="frame"><summary>Look</summary><div><div class="settingsgrid"><label>Theme<select id="xTheme"></select></label><label>Visual intensity<select id="xVis"></select></label><label>Time of day<select id="xTod"><option value="auto">Automatic (your device's clock)</option><option value="day">Always day</option><option value="night">Always night</option></select></label></div><p class="small">Automatic dresses the page for events running in the game, on official dates only (Windchaser's Departure runs until 9 Dec). It changes colors and decorations only, never numbers. Visual intensity sets how much moves: Subtle keeps the scenery and lets only a few things drift; Minimal keeps everything still; Off shows the plain sky. Time of day follows your device's clock, not the game's day and night cycle. Reduced-motion settings on your device always stop the movement.</p></div></details>
+    <details class="frame"><summary>Look</summary><div><div class="settingsgrid"><label>Theme<select id="xTheme"></select></label><label>Visual intensity<select id="xVis"></select></label><label>Time of day<select id="xTod"><option value="auto">Automatic (your device's clock)</option><option value="day">Always day</option><option value="night">Always night</option></select></label></div><p class="small">Automatic dresses the page for events running in the game, on official dates only (Windchaser's Departure runs until 9 Dec). It changes colors and decorations only, never numbers. Visual intensity sets how much moves: Subtle keeps the scenery and lets only a few things drift; Minimal keeps everything still; Off shows the plain sky. The background is a night landscape with twinkling and shooting stars; Time of day only applies to the drawn landscape used when no background picture is set. Reduced-motion settings on your device always stop the movement.</p></div></details>
     <details class="frame"><summary>Assumptions</summary><div>
       <p class="small"><span class="chip placeholder">placeholder</span> not from the game. <span class="chip assumption">assumption</span> a reasonable guess. Low and high are the ends tested by the "what changes the winner" check.</p>
       <div class="scroll"><table class="atab" id="aTable"></table></div>
@@ -711,6 +723,7 @@ body.night footer a{color:#d6e7ff}
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>9 Oct 2026, v10.9.</b> New background: a night landscape of floating ruins, a moonlit lake and glowing flowers, with twinkling stars, shooting stars and fireflies (amounts follow Visual intensity; nothing moves with reduced motion turned on).</p>
       <p><b>9 Oct 2026, v10.8.</b> Team Lab: build a team of 3 from your saved builds (or the planner, or a quick setup), set up an Alpha and a rotation, and see the damage hit by hit, each hit with its time, source, every modifier and how sure the site is about it. The way Might turns into damage isn't confirmed, so two labelled experimental models are offered. Target states Normal, BREAK and Recovery with multipliers you enter. Test reports: record a run, type in the damage you saw, and the site flags differences and groups repeated evidence; export as JSON or CSV. Thirteen move presets checked against AniimoTools. Crit is now capped at ×3, as documented.</p>
       <p><b>8 Oct 2026, v10.7.</b> Living Idyll: the page now sits in an illustrated Aniimo landscape (sky, clouds, a floating ruin, rolling hills, wildflowers, glowing Blooms) that follows your device's time of day, with stars and fireflies at night. Nimbi, Chirpi and Skippy sometimes wander through the empty side margins. Event themes now dress up the landscape instead of replacing it. New Look settings: visual intensity (Full, Subtle, Minimal, Off; Subtle by default, each with a cap on how much moves) and time of day. Panels never move; ambience pauses and dims while you type, calculate or read a detail panel.</p>
       <p><b>8 Oct 2026, v10.6.</b> Portraits are trimmed of empty space so every Aniimo fills its box about the same. Header art fits inside the header. The leading event theme is now a featured event if one is marked, otherwise the longest-running confirmed event (total length, not time left); shorter events add accents. Right now that is Windchaser's Departure (Irisalis) with petals, wind and light motes, with Prismana sparkles as the accent. The events line is gone; the Theme choice moved to Settings and data, under Look.</p>
@@ -1091,14 +1104,14 @@ function initThemePick(){const opts=[['auto','Automatic (follows official event 
 const VIS=()=>{const L=GAME.visual.levels,k=LS.get('aniimo.visual.v1',GAME.visual.default||'subtle');return Object.assign({key:L[k]?k:'subtle'},L[k]||L.subtle)};
 const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches,SMALL=()=>innerWidth<=600;
 function lim(){const v=VIS(),o={...v};
-  if(SMALL()){o.event=Math.ceil(o.event/2);o.eventSec=Math.floor(o.eventSec/2);o.clouds=Math.min(o.clouds,1);o.blooms=Math.min(o.blooms,1);o.fire=Math.ceil(o.fire/2);o.roam=false;o.sway=false;o.maxAnimated=Math.ceil(o.maxAnimated/2)}
-  if(RM()){o.staticEvent=o.event?Math.min(4,o.event):o.staticEvent;o.clouds=o.blooms=o.fire=o.event=o.eventSec=0;o.roam=false;o.sway=false;o.maxAnimated=0}
+  if(SMALL()){o.event=Math.ceil(o.event/2);o.eventSec=Math.floor(o.eventSec/2);o.clouds=Math.min(o.clouds,1);o.blooms=Math.min(o.blooms,1);o.fire=Math.ceil(o.fire/2);o.twinkle=Math.ceil((o.twinkle||0)/2);o.roam=false;o.sway=false;o.maxAnimated=Math.ceil(o.maxAnimated/2)+(o.maxAnimated?2:0)}
+  if(RM()){o.staticEvent=o.event?Math.min(4,o.event):o.staticEvent;o.clouds=o.blooms=o.fire=o.event=o.eventSec=o.twinkle=o.shoot=0;o.roam=false;o.sway=false;o.maxAnimated=0}
   return o}
 function todT(){const mode=LS.get('aniimo.tod.v1','auto');if(mode==='day')return 0;if(mode==='night')return 1;
   const q=new URLSearchParams(location.search).get('hour'),d=new Date(),h=q!=null&&q!==''?+q:d.getHours()+d.getMinutes()/60;
   if(h>=8&&h<17)return 0;if(h>=21||h<5)return 1;return h<8?1-(h-5)/3:(h-17)/4}
 const mixC=(a,b,t)=>'#'+[1,3,5].map(i=>Math.round(parseInt(a.substr(i,2),16)*(1-t)+parseInt(b.substr(i,2),16)*t).toString(16).padStart(2,'0')).join('');
-function updateTime(){const t=todT(),sc=$('scene').style;
+function updateTime(){if(GAME.scene&&GAME.scene.art&&typeof GAME.scene.art==='object'){document.body.classList.toggle('night',VIS().key!=='off');return}const t=todT(),sc=$('scene').style;
   sc.setProperty('--sk1',mixC('#8fd3ff','#3b5293',t));sc.setProperty('--sk2',mixC('#eaf8ff','#8193cc',t));
   sc.setProperty('--h1',mixC('#bfe6a8','#5d7d9a',t));sc.setProperty('--h2',mixC('#94d382','#4b6d8a',t));sc.setProperty('--h3',mixC('#6cbf66','#3c5d79',t));
   sc.setProperty('--ruin',mixC('#9db7c9','#41577a',t));sc.setProperty('--sunO',String(1-t));sc.setProperty('--moonO',String(t));sc.setProperty('--starO',String(t));sc.setProperty('--fireO',t>0.5?'1':'0');
@@ -1107,8 +1120,13 @@ const CLOUD=`<svg viewBox="0 0 240 80"><g fill="#fff"><ellipse cx="70" cy="52" r
 const BLOOM=`<svg viewBox="0 0 40 40"><g fill="#bff7ea" stroke="#5fd0c0" stroke-width="1"><circle cx="20" cy="9" r="7"/><circle cx="31" cy="17" r="7"/><circle cx="27" cy="30" r="7"/><circle cx="13" cy="30" r="7"/><circle cx="9" cy="17" r="7"/></g><circle cx="20" cy="20" r="6" fill="#fff6b0"/></svg>`;
 const FLOWERS=`<svg viewBox="0 0 240 90" preserveAspectRatio="xMinYMax meet">${Array.from({length:14},(_,i)=>{const x=8+i*16+(i%3)*3,h=26+((i*37)%40),c=['#ff9fc8','#ffd36e','#c9a8ff','#ffffff','#ff8a8a'][i%5];return `<path d="M${x} 90 Q${x+4} ${90-h/2} ${x+2} ${90-h}" stroke="#4f9d55" stroke-width="2" fill="none"/><g fill="${c}"><circle cx="${x+2}" cy="${86-h}" r="4"/><circle cx="${x+7}" cy="${90-h}" r="4"/><circle cx="${x+2}" cy="${94-h}" r="4"/><circle cx="${x-3}" cy="${90-h}" r="4"/></g><circle cx="${x+2}" cy="${90-h}" r="2.4" fill="#fff3a0"/>`}).join('')}</svg>`;
 function renderScene(){const v=VIS(),L=lim(),sc=$('scene');document.body.dataset.vis=v.key;
-  if(v.key==='off'){sc.innerHTML='';sc.hidden=true;document.body.classList.remove('night');return}
-  sc.hidden=false;const r=rnd(42),art=GAME.scene&&GAME.scene.art;
+  if(v.key==='off'){sc.innerHTML='';sc.hidden=true;document.body.classList.remove('night','artbg');return}
+  sc.hidden=false;const r=rnd(42),art=GAME.scene&&GAME.scene.art;document.body.classList.toggle('artbg',!!art);
+  if(art&&typeof art==='object'){let h=`<div class="sky art" style="--art:url('${esc(art.large)}');--art-sm:url('${esc(art.small||art.large)}')"></div><div class="tint"></div>`;
+    h+=Array.from({length:L.twinkle||0},()=>`<i class="tw" style="left:${(4+r()*92).toFixed(1)}%;top:${(2+r()*34).toFixed(1)}%;animation-duration:${(2.5+r()*3).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s"></i>`).join('');
+    h+=Array.from({length:L.shoot||0},(_,i)=>`<i class="shoot" style="left:${(62+r()*30).toFixed(1)}%;top:${(4+r()*18).toFixed(1)}%;animation-duration:${(16+i*9+r()*6).toFixed(1)}s;animation-delay:${(2+i*5+r()*4).toFixed(1)}s"></i>`).join('');
+    h+=Array.from({length:L.fire||0},(_,i)=>`<div class="firefly" style="left:${(i%2?78+r()*20:r()*22).toFixed(1)}%;top:${(68+r()*28).toFixed(1)}%;animation-duration:${(6+r()*6).toFixed(1)}s;animation-delay:-${(r()*6).toFixed(1)}s"></div>`).join('');
+    sc.innerHTML=h;document.body.classList.toggle('night',true);return}
   let h=`<div class="sky${art?' art':''}"${art?` style="background-image:url('${esc(localSrc(art))}')"`:''}></div><div class="tint"></div>`;
   if(!art){h+=`<div class="sun"></div><div class="moon"></div><div class="stars">${Array.from({length:SMALL()?18:40},()=>`<i style="left:${(r()*100).toFixed(1)}%;top:${(r()*42).toFixed(1)}%"></i>`).join('')}</div>`;
     h+=[[8,4],[22,30],[12,58],[30,82]].map(([top,left],i)=>`<div class="cloud${i<L.clouds?' anim':''}" style="top:${top}%;left:${left}%;${i<L.clouds?`animation-duration:${150+i*45}s;animation-delay:-${i*60}s;`:''}">${CLOUD}</div>`).join('');

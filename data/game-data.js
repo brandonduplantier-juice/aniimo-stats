@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-09a",
+ "version": "2026-10-09b",
  "aniimo": [
   {
    "num": "001",
@@ -11950,8 +11950,10 @@ window.ANIIMO_DATA = {
      14,
      26
     ],
-    "fire": 10,
-    "maxAnimated": 42
+    "fire": 8,
+    "maxAnimated": 42,
+    "twinkle": 14,
+    "shoot": 2
    },
    "subtle": {
     "label": "Subtle",
@@ -11967,8 +11969,10 @@ window.ANIIMO_DATA = {
      25,
      40
     ],
-    "fire": 4,
-    "maxAnimated": 16
+    "fire": 3,
+    "maxAnimated": 16,
+    "twinkle": 5,
+    "shoot": 1
    },
    "minimal": {
     "label": "Minimal",
@@ -11985,7 +11989,9 @@ window.ANIIMO_DATA = {
      0
     ],
     "fire": 0,
-    "maxAnimated": 0
+    "maxAnimated": 0,
+    "twinkle": 0,
+    "shoot": 0
    },
    "off": {
     "label": "Off",
@@ -12002,14 +12008,20 @@ window.ANIIMO_DATA = {
      0
     ],
     "fire": 0,
-    "maxAnimated": 0
+    "maxAnimated": 0,
+    "twinkle": 0,
+    "shoot": 0
    }
   },
   "about": "Counts are the most moving things on screen at once for each level; phones get about half. Reduced-motion settings stop all movement whatever the level."
  },
  "scene": {
-  "art": null,
-  "about": "Illustrated Idyll landscape drawn by the site. Set \"art\" to an image key to use real environment art instead."
+  "art": {
+   "large": "data/art/idyll-night.webp",
+   "small": "data/art/idyll-night-small.webp",
+   "night": true
+  },
+  "about": "Background picture supplied by the site owner (night landscape). Set \"art\" to null to go back to the drawn landscape."
  },
  "roamers": [
   {
