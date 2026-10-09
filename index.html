@@ -385,6 +385,13 @@ body[data-theme=prismana] .plate{background:linear-gradient(90deg,#7b5cf0,#c9448
 #fx .sec{opacity:.45}
 @media (max-width:600px){body[data-theme] .intro{padding-right:96px;min-height:0}body[data-theme] #themeArt{width:96px;height:96px;right:2px;bottom:-4px}#themeArt .main img{max-width:92px;max-height:92px}#themeArt .side{display:none}.fx-streak{width:60vw}}
 @media (prefers-reduced-motion:reduce){#fx *{animation:none!important}body[data-theme] .frame,body[data-theme] .plate{animation:none!important}}
+
+.stage .art img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;object-position:center}
+.dlghead .pic{position:relative;overflow:hidden}
+.dlghead .pic img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);max-width:none;max-height:none;object-fit:contain}
+.card .art img.pic{width:86%;height:104px;max-width:none;max-height:none;object-fit:contain}
+.mcard .pic img,.fchip .fimg img,.ev .art img{width:100%;height:100%;object-fit:contain}
+@media (max-width:600px){.card .art img.pic{height:82px}}
 </style>
 </head>
 <body>
@@ -586,6 +593,7 @@ body[data-theme=prismana] .plate{background:linear-gradient(90deg,#7b5cf0,#c9448
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>8 Oct 2026, v10.5.</b> Portraits always fit their box. Tall or wide artwork (Flameruff, Inferlupa and others) was running past the edge of the planner picture and the detail panel; every picture now shrinks to fit, whatever its shape.</p>
       <p><b>8 Oct 2026, v10.4.</b> Event themes. The page dresses up for what's running in the game: Windchaser's Departure brings a teal and gold sky with drifting feathers and Irisalis in the header; Prismana events bring rainbow borders, sparkles and the featured Prismana form; Glamour Star brings stage lights. Overlapping events mix, with the strongest one leading. Themes switch on official event dates, can be picked by hand (Theme menu), stay still for anyone who has reduced motion turned on, and never change any numbers. The events line is now one row, with Details to expand.</p>
       <p><b>8 Oct 2026, v10.3.</b> Events now banner with the current and upcoming events (official dates, roadmap ones marked). Star Up ranks your level can't reach are greyed out and lowered automatically. The board shows Acquired points used out of the total, the most possible at your level, and the absolute max of 78. Each stat row says where the next ×4 breakpoint is and whether you can reach it. Best personality for this setup: tries all 16 and shows the runner-up, GameWith's default, and what each letter is worth.</p>
       <p><b>8 Oct 2026, v10.2.</b> Alpha and Item contract settings. They switch the enhanced core skill on or off (wild Alpha, or a contract on the equipped +15 Legendary item) and never change the six stats or the chart. Tromber's ATK 800 and HP 16,000 caps now apply only when its enhanced skill is active. Each stat row spells out Potential past 20, e.g. 20 (max) + 4 bonus = 24 effective.</p>
