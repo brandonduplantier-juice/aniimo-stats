@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-08b",
+ "version": "2026-10-08d",
  "aniimo": [
   {
    "num": "001",
@@ -672,10 +672,6 @@ window.ANIIMO_DATA = {
     "ATK",
     "HP"
    ],
-   "capMap": {
-    "ATK": 800,
-    "HP": 16000
-   },
    "conditions": "Enhanced Waltz/March is available from Alpha or a contracted +15 Legendary Held Item; the HP cap is for the skill effect, not survivability.",
    "formOverrides": {},
    "lastVerified": "2026-10-08",
@@ -724,7 +720,13 @@ window.ANIIMO_DATA = {
      ],
      "img": "f:tromber--mountain-woods-form"
     }
-   ]
+   ],
+   "enhancedCaps": {
+    "ATK": 800,
+    "HP": 16000
+   },
+   "capMap": {},
+   "enhancedSkill": "Enhanced Waltz/March"
   },
   {
    "num": "009",
@@ -11616,6 +11618,46 @@ window.ANIIMO_DATA = {
    "topic": "Skill Might, hit counts and cooldowns for each Aniimo",
    "status": "unverified",
    "source": "Not in this site's data yet. The calculator uses the shares under Settings instead."
+  },
+  {
+   "topic": "Held item contract: a Legendary held item at +15 can enhance one family's signature skill (34 families)",
+   "status": "verified",
+   "source": "AniimoTools held items guide. It describes only the skill enhancement, no stat change."
+  },
+  {
+   "topic": "Alphas caught in the overworld have the enhanced core skill without an item; Alphas do not change the six stats",
+   "status": "verified",
+   "source": "Aniimo Guide (aniimoguide.com), pact and Alpha article."
+  },
+  {
+   "topic": "Alphas hatched from eggs do not have the enhanced core skill",
+   "status": "unverified",
+   "source": "One creator's statement reported by Aniimo Guide; not shown on screen."
+  },
+  {
+   "topic": "A contract on an Alpha adds nothing further",
+   "status": "unverified",
+   "source": "Community testing (Reddit). The creator in the Aniimo Guide article never formed a contract on an Alpha."
+  },
+  {
+   "topic": "Blue Potential bonuses count past 20 (e.g. 20 + 4 = 24, another ×4 breakpoint)",
+   "status": "verified",
+   "source": "MOANIIMO Capability Awakening guide; a Reddit stat-screen test agrees."
+  },
+  {
+   "topic": "Star Up rank level requirements: ranks 2 and 3 at level 35, 4 at 40, 5 at 50, 6 at 60, 7 at 65",
+   "status": "verified",
+   "source": "MOANIIMO Star Up (Resonance) guide."
+  },
+  {
+   "topic": "Event dates in the Events now banner",
+   "status": "verified",
+   "source": "Official update notice for events through 29 Oct 2026. Later events marked \"roadmap\" come from Prima Games and are not official."
+  },
+  {
+   "topic": "GameWith personality picks: role default, then S becomes N if \"crit\" is in the skills or trait",
+   "status": "verified",
+   "source": "GameWith personality guide."
   }
  ],
  "teamSize": 3,
@@ -11656,6 +11698,177 @@ window.ANIIMO_DATA = {
   "noChart": [
    "Fennelun",
    "Soleon"
+  ]
+ },
+ "events": {
+  "region": "Americas (UTC-4)",
+  "updated": "2026-10-08",
+  "list": [
+   {
+    "name": "Legendary Journey: Windchaser's Departure",
+    "start": "2026-09-25T10:00:00-04:00",
+    "end": "2026-12-09T19:59:00-04:00",
+    "desc": "Irisalis debut and Blessing Gifts.",
+    "source": "Official update notice, aniimo.com (21 Sep 2026)",
+    "official": true,
+    "art": "p:irisalis"
+   },
+   {
+    "name": "Glamour Star",
+    "start": "2026-09-25T04:00:00-04:00",
+    "end": "2026-10-02T03:59:00-04:00",
+    "desc": "Dress Aniimo to a theme and get scored for rewards.",
+    "source": "Official update notice, aniimo.com (21 Sep 2026)",
+    "official": true,
+    "art": null
+   },
+   {
+    "name": "Aniimo Discovery",
+    "start": "2026-09-25T04:00:00-04:00",
+    "end": "2026-10-09T03:59:00-04:00",
+    "desc": "Search the field for a newly sighted Aniimo.",
+    "source": "Official update notice, aniimo.com (21 Sep 2026)",
+    "official": true,
+    "art": null
+   },
+   {
+    "name": "Vein Abundance: Rosetower Woods",
+    "start": "2026-09-28T04:00:00-04:00",
+    "end": "2026-10-05T03:59:00-04:00",
+    "desc": "Prismana Form Melloblum appears at Rosetower Woods.",
+    "source": "Official update notice, aniimo.com (21 Sep 2026)",
+    "official": true,
+    "art": "f:melloblum--v1032402"
+   },
+   {
+    "name": "Vein Abundance: Berylline Vale",
+    "start": "2026-10-05T04:00:00-04:00",
+    "end": "2026-10-12T03:59:00-04:00",
+    "desc": "Prismana Form Waleetle appears at Berylline Vale.",
+    "source": "Official update notice, aniimo.com (21 Sep 2026)",
+    "official": true,
+    "art": "f:waleetle--v1045302"
+   },
+   {
+    "name": "Journey Chronicles",
+    "start": "2026-10-01T04:00:00-04:00",
+    "end": "2026-10-29T03:59:00-04:00",
+    "desc": "Log in on several days for travel gifts.",
+    "source": "Official update notice, aniimo.com (21 Sep 2026)",
+    "official": true,
+    "art": null
+   },
+   {
+    "name": "Glamour Star",
+    "start": "2026-10-09T00:00:00-04:00",
+    "end": "2026-10-15T23:59:00-04:00",
+    "desc": "Dress Aniimo to a theme and get scored for rewards.",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": null
+   },
+   {
+    "name": "Eggceleration",
+    "start": "2026-10-09T00:00:00-04:00",
+    "end": "2026-10-11T23:59:00-04:00",
+    "desc": "Faster egg hatching (per the roadmap).",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": null
+   },
+   {
+    "name": "Vein Abundance: Prismana Inferlupa UP",
+    "start": "2026-10-12T00:00:00-04:00",
+    "end": "2026-10-18T23:59:00-04:00",
+    "desc": "Prismana Inferlupa featured.",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": "f:inferlupa--v1005503"
+   },
+   {
+    "name": "Who's That Aniimo?",
+    "start": "2026-10-16T00:00:00-04:00",
+    "end": "2026-10-22T23:59:00-04:00",
+    "desc": "Roadmap event.",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": null
+   },
+   {
+    "name": "Idyll Ecological Investigation",
+    "start": "2026-10-16T00:00:00-04:00",
+    "end": "2026-10-22T23:59:00-04:00",
+    "desc": "Roadmap event.",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": null
+   },
+   {
+    "name": "Eggceleration",
+    "start": "2026-10-16T00:00:00-04:00",
+    "end": "2026-10-18T23:59:00-04:00",
+    "desc": "Faster egg hatching (per the roadmap).",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": null
+   },
+   {
+    "name": "Vein Abundance: Prismana Carnival",
+    "start": "2026-10-19T00:00:00-04:00",
+    "end": "2026-10-25T23:59:00-04:00",
+    "desc": "Prismana forms featured.",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": null
+   },
+   {
+    "name": "Eggceleration",
+    "start": "2026-10-23T00:00:00-04:00",
+    "end": "2026-10-25T23:59:00-04:00",
+    "desc": "Faster egg hatching (per the roadmap).",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": null
+   },
+   {
+    "name": "Glamour Star",
+    "start": "2026-10-23T00:00:00-04:00",
+    "end": "2026-10-29T23:59:00-04:00",
+    "desc": "Dress Aniimo to a theme and get scored for rewards.",
+    "source": "Prima Games roadmap (not official; dates only)",
+    "official": false,
+    "art": null
+   }
+  ]
+ },
+ "rankLevels": {
+  "2": 35,
+  "3": 35,
+  "4": 40,
+  "5": 50,
+  "6": 60,
+  "7": 65
+ },
+ "personalityBaseline": {
+  "DPS": [
+   "ESTJ",
+   "ENTJ"
+  ],
+  "Break": [
+   "ISTP",
+   "INTP"
+  ],
+  "Support": [
+   "ISTJ",
+   "INTJ"
+  ],
+  "Heal": [
+   "ISTJ",
+   "INTJ"
+  ],
+  "Regen": [
+   "ISTJ",
+   "INTJ"
   ]
  }
 };

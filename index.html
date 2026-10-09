@@ -315,6 +315,38 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
 .fchip{display:flex;align-items:center;gap:6px;background:var(--panel2);border:2px solid #d3e3f6;border-radius:12px;padding:4px 8px;font-size:13px;font-weight:800;color:var(--deep)}
 .fchip .fimg{width:40px;height:40px;display:grid;place-items:center}.fchip .fimg img{max-width:40px;max-height:40px;object-fit:contain}
 .fchip .els{display:flex;gap:2px}.fchip .els img{width:16px;height:16px}
+
+.boardextra{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:14px}
+.boardextra>div{background:var(--panel2);border:2px solid #d3e3f6;border-radius:16px;padding:10px 12px}
+.boardextra .persbox{margin:0}
+.boardextra .heldbox .held{background:#fff}
+.rawnote{margin:0 0 4px;font-size:12px;color:var(--soft)}
+.rawnote b{color:#8a6400}
+@media (max-width:700px){.boardextra{grid-template-columns:1fr}}
+table.mult{display:block;overflow-x:auto;max-width:100%}
+@media (max-width:600px){.statrow{grid-template-columns:1fr;gap:6px}.statrow .sname{font-size:15px}.statrow .ins{grid-column:auto}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card .art{height:92px}.card .art img.pic{max-height:82px}.card .body{padding:6px 8px 0;gap:6px}.card .nm{font-size:15px;flex-wrap:wrap}.pips{gap:2px}.pip{padding:2px 0 1px}.pip span{font-size:9px}.pip img{width:13px;height:13px}.card .rec{font-size:11px}
+  .who{padding:14px 12px}.board{padding:14px 12px}.stage{height:160px}.famchart svg{max-width:260px}.summary{grid-template-columns:1fr 1fr}.sum.left{grid-column:1/-1}.mats{flex-wrap:wrap}.statrow{padding:8px}.optbar>label,.optbar select{width:100%}.optbar .gbtn{width:100%}}
+
+.enhout{font-size:12px;font-weight:800;border-radius:12px;padding:6px 10px;margin:4px 0 6px;background:#f1f5fb;border:2px solid #d9e3f1;color:var(--soft)}
+.enhout b{display:block;font:700 14px Fredoka,sans-serif}
+.enhout.on{background:#fff6d6;border-color:var(--gold);color:#6b4500}
+.enhout span{display:block;font-weight:700;font-size:11px;margin-top:2px}
+
+.events{display:flex;gap:12px;align-items:stretch;padding:12px 14px;margin:-8px 0 22px;flex-wrap:wrap}
+.events h3{margin:0;font-size:17px;color:var(--deep);flex-basis:100%;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.events h3 small{font:800 11px Nunito,sans-serif;color:var(--faint)}
+.evrow{display:flex;gap:10px;overflow-x:auto;flex-basis:100%;padding-bottom:4px}
+.ev{flex:0 0 230px;display:grid;grid-template-columns:56px 1fr;gap:8px;align-items:center;background:var(--panel2);border:2px solid #d3e3f6;border-radius:14px;padding:6px 8px;font-size:12px;color:var(--soft)}
+.ev.now{border-color:var(--gold);background:#fffbea}
+.ev .art{width:56px;height:56px;border-radius:12px;background:radial-gradient(circle at 50% 40%,#fff,#e3eefb);display:grid;place-items:center;overflow:hidden}
+.ev .art img{max-width:54px;max-height:54px;object-fit:contain}
+.ev .art .star{font:700 26px Fredoka,sans-serif;color:var(--gold2)}
+.ev b{display:block;font:600 14px/1.2 Fredoka,sans-serif;color:var(--deep)}
+.ev .when{font-weight:800;color:#16704c}.ev.soon .when{color:var(--frame2)}
+.persres{margin-top:8px;font-size:12px;color:var(--soft)}
+.persres .big{font:700 20px Fredoka,sans-serif;color:var(--deep);letter-spacing:2px}
+.persres ul{margin:4px 0;padding-left:18px}
 </style>
 </head>
 <body>
@@ -332,6 +364,8 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
   <div class="stack" id="introItems"></div>
 </div>
 
+<div class="frame events" id="events" aria-live="polite"></div>
+
 <section id="planner" class="planner">
   <aside class="frame who" id="who">
     <div class="stage"><div class="art" id="pArt"></div><div class="elem" id="pElem"></div></div>
@@ -347,13 +381,13 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
     <div class="field"><span>Star Up rank</span><select id="pRank"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option selected>6</option><option>7</option></select></div>
     <div class="field"><span>Held item</span><select id="pItem"></select></div>
     <div class="field"><span>Item level</span><input id="pItemLv" type="number" min="0" max="15" value="15"></div>
+    <div class="field"><span>Alpha</span><select id="pAlpha"><option value="no">No</option><option value="wild">Yes, caught in the wild</option><option value="egg">Yes, hatched from an egg</option></select></div>
+    <div class="field"><span>Item contract</span><select id="pContract"><option value="none">Not bound</option><option value="this">Bound to this family</option><option value="other">Bound to another family</option></select></div>
+    <div class="enhout" id="enhOut" aria-live="polite"></div>
     <div class="field"><span>Plan points by</span><select id="pMode"><option value="rules">Game-guide rules</option><option value="goal">Score for the Optimizer goal</option></select></div>
     <div class="field"><span>Start over (reset)</span><input id="pReset" type="checkbox"></div>
     <div class="field"><span>Capafruit used</span><input id="pCapa" type="checkbox"></div>
     <input type="hidden" id="pPers" value="">
-    <div class="persbox"><div class="perstitle"><span>Personality (one from each pair)</span><b id="persOut">····</b></div><div id="persAxes"></div><p class="small" style="margin:4px 0 0">All four apply at once (GameWith). Tap a chosen letter again to clear it.</p></div>
-    <div class="div"></div>
-    <div class="heldbox"><h4>Held items the game recommends</h4><p class="small" style="margin:0 0 4px">Tap one to equip it above.</p><div id="pItems"></div></div>
   </aside>
 
   <div class="frame board">
@@ -362,10 +396,12 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
     <div class="errbox" id="errBox" role="alert"></div>
     <div class="summary" id="sumBox"></div>
     <p class="spendline" id="spendLine"></p>
+    <p class="rawnote">Raw stat is optional: the number on the stat screen. <b>Not confirmed:</b> whether that number already includes personality. The planner adds personality on top, so if the game already does, those stats count it twice (2 to 6%).</p>
     <div id="statRows"></div>
     <div class="legend">
       <span><i style="background:var(--innate)"></i>Innate</span><span><i style="background:var(--acq)"></i>Already acquired</span><span><i style="background:var(--add)"></i>Add now</span><span><i style="background:var(--blue)"></i>Blue bonus</span><span><i style="background:var(--deep);width:4px;opacity:.6"></i>+4% breakpoint</span><span><i class="cell lock" style="display:inline-block"></i>Locked by level</span>
     </div>
+    <div class="boardextra"><div class="persbox"><div class="perstitle"><span>Personality (one from each pair)</span><b id="persOut">····</b></div><div id="persAxes"></div><p class="small" style="margin:4px 0 0">All four apply at once (GameWith). Tap a chosen letter again to set that pair to unknown.</p><div class="row"><button class="gbtn blue sm" type="button" id="persBest">Best personality for this setup</button></div><div class="persres" id="persRes"></div></div><div class="heldbox"><h4>Held items the game recommends</h4><p class="small" style="margin:0 0 4px">Tap one to equip it (sets Held item on the left).</p><div id="pItems"></div></div></div>
     <div class="notes" id="notes"></div>
     <p class="advice" id="advice"></p>
   </div>
@@ -486,7 +522,7 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
     </div></details>
     <details class="frame"><summary>Blue bonuses and breakpoints</summary><div>
       <p>Effective Potential is the displayed number plus the blue bonus. Star Up ranks 5, 6 and 7 add +1, +1 and +2 to all six stats; a +10 held item adds +2 to one stat (Giant Tortoise Shell adds +2 to both defenses).</p>
-      <p>With a blue bonus of <select id="bpBonus"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option></select> the breakpoints land on displayed <b id="bpOut"></b>. Displayed stops at 20, so with +2 the last breakpoint is 18.</p>
+      <p>With a blue bonus of <select id="bpBonus"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option></select> the breakpoints land on displayed <b id="bpOut"></b>. Displayed stops at 20, so with +2 the last breakpoint is 18. The blue bonus keeps counting past 20: displayed 20 with +4 is 24 effective, which reaches another ×4 breakpoint, and 20 with +6 is 26 (MOANIIMO). The planner and Optimizer count it the same way.</p>
     </div></details>
     <details class="frame"><summary>Which stat a hit uses</summary><div>
       <p class="strong">DPS and Break: max(ATK, 0.85 × BREAK). Support, Regen and Heal: 10.5 × level.</p>
@@ -509,6 +545,9 @@ textarea{width:100%;min-height:70px;border:2px solid var(--frame);border-radius:
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>8 Oct 2026, v10.3.</b> Events now banner with the current and upcoming events (official dates, roadmap ones marked). Star Up ranks your level can't reach are greyed out and lowered automatically. The board shows Acquired points used out of the total, the most possible at your level, and the absolute max of 78. Each stat row says where the next ×4 breakpoint is and whether you can reach it. Best personality for this setup: tries all 16 and shows the runner-up, GameWith's default, and what each letter is worth.</p>
+      <p><b>8 Oct 2026, v10.2.</b> Alpha and Item contract settings. They switch the enhanced core skill on or off (wild Alpha, or a contract on the equipped +15 Legendary item) and never change the six stats or the chart. Tromber's ATK 800 and HP 16,000 caps now apply only when its enhanced skill is active. Each stat row spells out Potential past 20, e.g. 20 (max) + 4 bonus = 24 effective.</p>
+      <p><b>8 Oct 2026, v10.1.</b> Personality and the game's recommended items moved under the stat bars, so the page is shorter and both columns line up. A personality with both letters of a pair (from an old save) now counts that pair as unknown instead of applying both. The raw stat warning about personality sits next to the inputs. Stricter form-count check. Phone layout tightened.</p>
       <p><b>8 Oct 2026, v10.</b> Family Ability Chart for every Aniimo AniimoTools lists (Fennelun and Soleon have no verified numbers yet). Picture and element change with the form, and the detail panel lists every form with its elements. Personality is four switches, one per pair, and the board shows its stat bonuses. Fixes: Supreme Elixir +15 now grows with the defense points chosen; changing Aniimo updates the goal before calculating; team slots never use another Aniimo's stats; the data check knows Aniimo that aren't in the game.</p>
       <p><b>8 Oct 2026, v9.</b> Team optimizer: hands out items across 3 Aniimo, respecting the copies and levels you own, and counts Auspicious Bell's team crit.</p>
       <p><b>8 Oct 2026, v8.</b> Optimizer compares all 25 held items in four kinds of fight, says whether the winner is clear, too close to call, or depends on a setting (and which one). Compare builds for one Aniimo.</p>
@@ -582,7 +621,7 @@ function bp(){const b=+$('bpBonus').value;$('bpOut').textContent=[4,8,12,16,20,2
 $('bpBonus').onchange=bp;bp();
 
 /* ---------- Aniilog ---------- */
-const capOf=(x,k)=>x.capMap&&x.capMap[k];
+const capOf=(x,k)=>(x.capMap&&x.capMap[k])||(x.enhancedCaps&&x.enhancedCaps[k]);
 function pip(x,k){const v=x.stats[k],c=v==='core'&&capOf(x,k);return `<div class="pip ${v}" title="${esc(k+': '+x.targets[k])}">${attrIco(k)||SHORT[k]}<span>${c?(c>=10000?c/1000+'k':c):LBL[v]}</span></div>`}
 function recText(x){const g=x.gameRecommended||[],e=(x.recommended||[]).filter(s=>!g.includes(s));
   return [g.length?'👍 '+g.join(', '):'',e.length?'Kit: '+e.join(', '):''].filter(Boolean).join('   ')||'No priority confirmed'}
@@ -678,11 +717,19 @@ const num=id=>{const v=$(id).value;return v===''?null:Math.max(0,Number(v)||0)};
 
 function readState(){const a=cur(),stats={};for(const s of STATS)stats[s]={inn:num('in_'+sid(s))||0,aq:num('aq_'+sid(s))||0,raw:num('rw_'+sid(s))};
   return {slug:a.slug,form:$('pForm').value||a.forms[0],build:$('pBuild').value,level:+$('pLevel').value||1,rank:+$('pRank').value,capa:$('pCapa').checked,pers:$('pPers').value,reset:$('pReset').checked,stats,
-    item:$('pItem').value,itemLv:Math.min(15,Math.max(0,Math.round(+$('pItemLv').value||0))),mode:$('pMode').value}}
+    item:$('pItem').value,itemLv:Math.min(15,Math.max(0,Math.round(+$('pItemLv').value||0))),mode:$('pMode').value,alpha:$('pAlpha').value,contract:$('pContract').value}}
 function goalAlloc(st){const goal=$('oGoal').value,c=E.context(st,SET),sc=SET.scenarios[SET.scenario];const nofx=E.itemEffects(null,0,c,sc),fx=st.item?E.itemEffects(st.item,st.itemLv,c,sc):nofx;
   if(fx.blocked)return {blocked:fx.blocked};return {c,fx,goal,al:E.allocate(c,fx,{weights:E.goalWeights(goal,customW()),noItemFx:nofx})}}
 function plan(){
-  const a=cur(),st=readState(),m=meta(a,st.form),val=E.validate(st);
+  {const mr=E.maxRank(Math.min(70,Math.max(1,Math.round(+$('pLevel').value||1))));const LV=GAME.rankLevels||{};[...$('pRank').options].forEach((o,i)=>{const r=i+1;o.value=String(r);o.disabled=r>mr;o.textContent=r>1&&LV[r]?`${r} (needs Lv ${LV[r]})`:String(r)});if(+$('pRank').value>mr)$('pRank').value=String(mr)}
+  const a=cur(),st=readState(),enh=E.enhanced(st),m=E.meta(a,st.form,enh.active),val=E.validate(st);
+  {const it0=st.item?ITEM[st.item]:null;let t='',c='';
+    if(enh.why==='Alpha'){t='Enhanced core skill: ACTIVE (Alpha)';c='on';if(st.contract==='this')t+='<span>A contract on an Alpha adds nothing more (community testing, not confirmed).</span>'}
+    else if(enh.why==='contract'){t=`Enhanced core skill: ACTIVE (contract on ${esc(it0.name)} +${st.itemLv})`;c='on'}
+    else if(enh.why==='needs15')t='Enhanced core skill: inactive<span>A contract needs a Legendary held item at +15 equipped.</span>';
+    else if(enh.why==='egg')t='Enhanced core skill: inactive<span>Alphas hatched from eggs reportedly don\'t have it (one creator\'s report, not confirmed).</span>';
+    else t='Enhanced core skill: inactive';
+    $('enhOut').className='enhout '+c;$('enhOut').innerHTML=t.replace(/^([^<]*)/,'<b>$1</b>')+'<span>Changes the core skill only, not the six stats or the chart.</span>'}
   const lv=val.lv,rk=val.rk,maxD=gate(lv),budget=val.budget,blue0=rankBlue(rk),V={},notes=[],est=[];
   const it=st.item?ITEM[st.item]:null,potOn=!!(it&&it.pot&&st.itemLv>=10);
   for(const s of STATS){const x=val.stats[s];$('aq_'+sid(s)).max=20-x.inn;
@@ -725,19 +772,22 @@ function plan(){
     const add=v.d-v.d0,c=m.caps[s];let capTxt='';
     if(c){if(v.raw==null)capTxt=`Effect cap ${c.toLocaleString()}: enter raw stat`;else{const ev=Math.round(v.raw*M(e)/M(e0));
       capTxt=v.raw>=c?`<span class="ok">At cap (${v.raw.toLocaleString()})</span>`:ev>c?`<span class="over">About ${(ev-c).toLocaleString()} past cap (estimate)</span>`:`Raw about ${ev.toLocaleString()} of ${c.toLocaleString()} cap (estimate)`}}
-    $('meta_'+sid(s)).innerHTML=`<span>${add?`<b style="color:#16704c">+${add}</b> → `:''}${v.d} shown, ${e} effective</span><span>Potential +${((M(e)-1)*100).toFixed(1)}%</span>${persLetters().filter(l=>(PSTAT[l]||[]).includes(s)).map(l=>`<span class="perschip">Personality +${PPCT[l]}% (${l})</span>`).join('')}${capTxt?`<span>${capTxt}</span>`:''}`;
+    $('meta_'+sid(s)).innerHTML=`<span>${add?`<b style="color:#16704c">+${add}</b> → `:''}${v.d}${v.d>=20?' (max)':''} shown${v.blue?` + ${v.blue} bonus`:''} = ${e} effective${e%4===0&&e>0?' ✓':''}${e>=4?` · ×4 reached at ${Math.floor(e/4)*4}`:''}${(()=>{const nx=Math.floor(e/4)*4+4,top=Math.min(20,maxD)+v.blue;return nx<=top?` · next ×4 at ${nx} (shown ${nx-v.blue})`:` · next ×4 at ${nx}: out of reach with current bonuses`})()}</span><span>Potential +${((M(e)-1)*100).toFixed(1)}%</span>${persLetters().filter(l=>(PSTAT[l]||[]).includes(s)).map(l=>`<span class="perschip">Personality +${PPCT[l]}% (${l})</span>`).join('')}${capTxt?`<span>${capTxt}</span>`:''}`;
     const pri=rec.includes(s);$('row_'+sid(s)).classList.toggle('pri',pri&&st.mode!=='goal');
     $('lbl_'+sid(s)).textContent=st.mode==='goal'?'':pri?'priority':(G[1]||[]).includes(s)?'next':'';}
   const order=[...G.flat(),...STATS].filter((s,i,arr)=>arr.indexOf(s)===i).filter(s=>V[s].d>V[s].d0);
   $('spendLine').innerHTML=order.length?'Add: '+order.map(s=>`<strong>${s} +${V[s].d-V[s].d0}</strong>`).join(' '):'Nothing left to add.';
   const mat=(k,n)=>`<span class="mat">${im('item:'+k,'',k)}${n}</span>`;
-  $('sumBox').innerHTML=`<div class="sum"><div><b>${budget}</b><span>points at level ${lv}, rank ${rk}</span></div></div>
+  $('sumBox').innerHTML=`<div class="sum"><div><b>${spent} / ${budget}</b><span>Acquired points used at Lv ${lv}, rank ${rk}. ${budget-spent} remaining</span></div></div>
     <div class="sum"><div><b>${budget-spent-rem}</b><span>to spend now ${st.reset?'(reset: starting from Innate)':`(${spent} already used)`}</span></div></div>
     ${rem?`<div class="sum left"><div><b>${rem}</b><span>with nowhere useful to go</span></div></div>`:''}
-    <div class="sum"><div class="mats">${mat('dust',mats.dust)}${mat('sand',mats.sand)}${mat('ess',mats.ess)}</div></div>`;
+    <div class="sum"><div class="mats">${mat('dust',mats.dust)}${mat('sand',mats.sand)}${mat('ess',mats.ess)}</div></div>
+    <div class="sum"><div><span>Most possible at Lv ${lv}: <b style="display:inline;font-size:16px">${E.allowance(lv,E.maxRank(lv))}</b><br>Absolute max: 78 (Lv 70, rank 7)</span></div></div>`;
   if(maxD<20)notes.push(`At level ${lv} each stat stops at ${maxD} (level gates).`);
   const pers=[...new Set(($('pPers').value||'').toUpperCase().replace(/[^EISNTFJP]/g,''))].map(c=>`${c}: ${PERS[c]}`).join(', ');
   const pOther=persLetters().filter(l=>'SNP'.includes(l));if(pOther.length)notes.push('Personality: '+pOther.map(c=>`${c}: ${PERS[c]}`).join(', ')+'. These don\'t change a stat bar but are counted in the Optimizer.');
+  if(a.enhancedCaps){const cs=Object.entries(a.enhancedCaps).map(([k,v])=>`${k} ${v.toLocaleString()}`).join(' and ');
+    notes.push(enh.active?`${esc(a.enhancedSkill||'The enhanced skill')} is active, so its caps (${cs}) apply.`:`${esc(a.name)}'s ${cs} caps belong to ${esc(a.enhancedSkill||'its enhanced skill')}, which is inactive here, so they aren't applied. Set Alpha or Item contract if yours has it.`)}
   if(a.flags&&a.flags.length)notes.push('Check in game: '+a.flags.join('; ')+'.');
   $('notes').innerHTML=est.map(n=>`<div class="note est"><span class="chip assumption">Estimate</span> ${n}</div>`).join('')+notes.map(n=>`<div class="note">${n}</div>`).join('');
   $('advice').innerHTML=`<b>Default advice:</b> ${esc(a.pointPlan)}${m.cond?' '+esc(m.cond):''}`;
@@ -750,7 +800,7 @@ function changeAniimo(){setForms();setGoalFor(cur());plan()}
 window.pickAniimo=slug=>{$('pA').value=slug;changeAniimo();$('planner').scrollIntoView({behavior:'smooth'})};
 $('pA').addEventListener('change',changeAniimo);
 $('pForm').addEventListener('input',formVisual);
-['pForm','pBuild','pLevel','pRank','pItem','pItemLv','pMode','pCapa','pPers','pReset'].forEach(id=>$(id).addEventListener('input',plan));
+['pForm','pBuild','pLevel','pRank','pItem','pItemLv','pMode','pCapa','pPers','pReset','pAlpha','pContract'].forEach(id=>$(id).addEventListener('input',plan));
 $('statRows').addEventListener('input',plan);
 
 
@@ -780,13 +830,34 @@ function formsHtml(a){return `<div class="formrow">${(a.formInfo||a.forms.map(f=
 const AXES=[['E','I'],['S','N'],['T','F'],['J','P']];
 const PSTAT={E:['ATK','BREAK'],I:['REGEN'],T:['P.DEF'],F:['M.DEF'],J:['HP']};
 const PPCT={E:2,I:4,T:6,F:6,J:4};
-const persLetters=()=>[...new Set(($('pPers').value||'').toUpperCase().replace(/[^EISNTFJP]/g,''))];
+const persLetters=()=>E.normPers($('pPers').value).letters;
 function renderPers(){const L=persLetters();
   $('persAxes').innerHTML=AXES.map(ax=>`<div class="paxis">${ax.map(l=>`<button type="button" class="pbtn" data-l="${l}" aria-pressed="${L.includes(l)}"><b>${l}</b>${esc(PERS[l])}</button>`).join('')}</div>`).join('');
   $('persOut').textContent=AXES.map(ax=>ax.find(l=>L.includes(l))||'·').join('')}
 $('persAxes').addEventListener('click',e=>{const b=e.target.closest('[data-l]');if(!b)return;const l=b.dataset.l,ax=AXES.find(x=>x.includes(l));
   let L=persLetters().filter(x=>!ax.includes(x));if(b.getAttribute('aria-pressed')!=='true')L.push(l);
   $('pPers').value=AXES.map(x=>x.find(y=>L.includes(y))||'').join('');renderPers();plan()});
+
+
+/* ---------- Events now banner (Americas, UTC-4) ---------- */
+function nowDate(){const q=new URLSearchParams(location.search).get('date');const d=q?new Date(q):new Date();return isNaN(d)?new Date():d}
+const evWhen=iso=>{const m=iso.match(/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)/);const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1];return `${mon} ${+m[3]}, ${m[4]}:${m[5]}`};
+const evLeft=ms=>{const d=Math.floor(ms/864e5),h=Math.floor(ms/36e5)%24;return d>=1?`${d} day${d>1?'s':''}${h?` ${h} h`:''}`:`${Math.max(1,Math.floor(ms/36e5))} h`};
+function renderEvents(){const now=nowDate(),L=(GAME.events&&GAME.events.list)||[];
+  const cur=L.filter(e=>new Date(e.start)<=now&&now<new Date(e.end)).sort((a,b)=>new Date(a.end)-new Date(b.end));
+  const soon=L.filter(e=>new Date(e.start)>now&&new Date(e.start)-now<14*864e5).sort((a,b)=>new Date(a.start)-new Date(b.start)).slice(0,4);
+  const card=(e,isNow)=>`<div class="ev ${isNow?'now':'soon'}"><span class="art">${e.art?im(e.art,'',e.name):'<span class="star">★</span>'}</span><div><b>${esc(e.name)}</b>${esc(e.desc)}<div class="when">${isNow?`Ends ${evWhen(e.end)} · ${evLeft(new Date(e.end)-now)} left`:`Starts ${evWhen(e.start)}`}</div>${e.official?'':'<span class="chip assumption">roadmap, not official</span>'}</div></div>`;
+  $('events').innerHTML=`<h3>Events now <small>Americas server, times in UTC-4. Dates last checked ${esc(GAME.events.updated)}.</small></h3><div class="evrow">${cur.map(e=>card(e,true)).join('')||'<span class="small">No events on record right now.</span>'}${soon.map(e=>card(e,false)).join('')}</div>`+
+    `<p class="small" style="margin:2px 0 0;flex-basis:100%">Official dates from the game's update notices; anything marked roadmap comes from Prima Games and may change.</p>`}
+/* ---------- best personality for this setup ---------- */
+$('persBest').onclick=()=>{const g=$('oGoal').value,r=E.rankPersonalities(engineState(),SET,g,{custom:customW()}),a=cur(),b=r.best,ru=r.runnerUp;
+  const pc=x=>(x*100).toFixed(1)+'%';
+  const sw=r.swaps.map(s=>s.tie?`<li>${s.keep} or ${s.instead}: no difference for this goal</li>`:`<li>${s.keep} over ${s.instead}: ${s.instead} would cost ${pc(s.loss)}</li>`).join('');
+  const bl=r.baseline?`<div>GameWith default for ${esc(a.role)}: <b>${r.baseline[0]}</b> (${r.baselineRel[0]>0.9995?'scores the same':pc(1-r.baselineRel[0])+' behind'}), or <b>${r.baseline[1]}</b> if its skills mention crit (${r.baselineRel[1]>0.9995?'scores the same':pc(1-r.baselineRel[1])+' behind'}).</div>`:'';
+  $('persRes').innerHTML=`<div>Best for this setup (${esc(GAME.goals[g].label.toLowerCase())}, ${esc(SET.scenarios[SET.scenario].label.toLowerCase())}):</div><div class="big">${r.label} <button class="gbtn sm" type="button" id="persUse">Use ${b.pers}</button></div>
+    ${r.swaps.some(s=>s.tie)?'<div>Where it shows two letters, either one scores the same for this goal.</div>':''}${ru?`<div>Runner-up: <b>${ru.pers}</b>, ${pc(1-ru.rel)} behind.</div>`:''}${bl}<ul>${sw}</ul>
+    <div>Depends on the crit rate, crit damage and incoming damage split under Settings and data${r.list.length&&cur()&&E.context(engineState(),SET).usesPlaceholder.length?', and on the placeholder for blank raw stats':''}.</div>`;
+  $('persUse').onclick=()=>{$('pPers').value=b.pers;renderPers();plan()}};
 
 /* ---------- optimizer ---------- */
 $('pItem').innerHTML='<option value="">None</option>'+ITEMS.map(it=>`<option value="${it.id}">${esc(it.name)}</option>`).join('');
@@ -811,7 +882,7 @@ const parseLv=s=>String(s||'').split(/[ ,;]+/).map(x=>Math.round(+x)).filter(x=>
 function poolNow(){const ids=FEATURES.allItems?ITEMS.map(i=>i.id):GAME.itemGroups.potential;
   if($('oItems').value==='all')return ids.map(id=>({id,lvl:15}));
   const out=[];ids.forEach(id=>[...new Set(INV[id]||[])].forEach(l=>out.push({id,lvl:l})));return out}
-function engineState(){const s=readState();return {slug:s.slug,form:s.form,build:s.build,level:s.level,rank:s.rank,capa:s.capa,pers:s.pers,reset:s.reset,stats:s.stats}}
+function engineState(){const s=readState();return {slug:s.slug,form:s.form,build:s.build,level:s.level,rank:s.rank,capa:s.capa,pers:s.pers,reset:s.reset,stats:s.stats,item:s.item,itemLv:s.itemLv,alpha:s.alpha,contract:s.contract}}
 let lastTab='best';
 function markStale(){$('oStale').textContent=done[lastTab]?'Inputs changed: press Calculate to update.':''}
 const done={};
@@ -887,7 +958,7 @@ $('tSlots').addEventListener('input',e=>{const el=e.target.closest('.slot3');if(
   LS.set('aniimo.team.v1',[...$('tSlots').children].map(x=>({a:x.querySelector('[data-k=a]').value,src:x.querySelector('[data-k=src]').value,g:x.querySelector('[data-k=g]').value,w:x.querySelector('[data-k=w]').value})));markStale()});
 function slotState(el){const slug=el.querySelector('[data-k=a]').value,src=el.querySelector('[data-k=src]').value,a=E.bySlug[slug];
   if(src==='planner'){const s=engineState();if(s.slug===slug)return s;TEAMNOTES.push(`${a.name}: the planner is showing ${E.bySlug[s.slug].name}, so this slot used the defaults.`)}
-  if(src[0]==='b'){const b=LS.get('aniimo.builds.v1',[])[+src.slice(1)];if(b&&b.state.planner.slug===slug){const p=b.state.planner;return {slug:p.slug,form:p.form,build:p.build,level:p.level,rank:p.rank,capa:p.capa,pers:p.pers,reset:p.reset,stats:p.stats}}if(b)TEAMNOTES.push(`${a.name}: the saved build "${b.name}" is for another Aniimo, so this slot used the defaults.`)}
+  if(src[0]==='b'){const b=LS.get('aniimo.builds.v1',[])[+src.slice(1)];if(b&&b.state.planner.slug===slug){const p=b.state.planner;return {slug:p.slug,form:p.form,build:p.build,level:p.level,rank:p.rank,capa:p.capa,pers:p.pers,reset:p.reset,stats:p.stats,item:p.item,itemLv:p.itemLv,alpha:p.alpha,contract:p.contract}}if(b)TEAMNOTES.push(`${a.name}: the saved build "${b.name}" is for another Aniimo, so this slot used the defaults.`)}
   return {slug,level:+$('tLevel').value||60,rank:+$('tRank').value,stats:Object.fromEntries(STATS.map(s=>[s,{inn:0,aq:0,raw:null}]))}}
 let TEAMNOTES=[];
 function runTeam(){
@@ -928,8 +999,8 @@ $('sSave').onclick=()=>{const b=LS.get('aniimo.builds.v1',[]),a=cur();const name
   b.push({name,savedAt:Date.now(),dataVersion:GAME.version,state:snapshot()});$('sMsg').textContent=LS.set('aniimo.builds.v1',b)?`Saved "${name}".`:'Your browser blocked saving. Use Export to keep a copy.';$('sName').value='';listSaved()};
 function applyState(s){const p=s.planner;if(!E.bySlug[p.slug]){$('sMsg').textContent='That Aniimo is not in the current data.';return}
   $('pA').value=p.slug;setForms();if(p.form)$('pForm').value=p.form;if(p.build)$('pBuild').value=p.build;
-  $('pLevel').value=p.level;$('pRank').value=p.rank;$('pCapa').checked=!!p.capa;$('pPers').value=p.pers||'';$('pReset').checked=!!p.reset;
-  $('pItem').value=p.item||'';$('pItemLv').value=p.itemLv==null?15:p.itemLv;$('pMode').value=p.mode||'rules';
+  $('pLevel').value=p.level;$('pRank').value=p.rank;$('pCapa').checked=!!p.capa;{const np=E.normPers(p.pers);$('pPers').value=np.str;if(np.conflicts.length)setTimeout(()=>{$('sMsg').textContent+=` Its personality had both ${np.conflicts.join(' and ')}, which the game doesn't allow, so that pair was set to unknown.`},0)}$('pReset').checked=!!p.reset;
+  $('pItem').value=p.item||'';$('pAlpha').value=p.alpha||'no';$('pContract').value=p.contract||'none';$('pItemLv').value=p.itemLv==null?15:p.itemLv;$('pMode').value=p.mode||'rules';
   for(const k of STATS){const x=p.stats[k]||{};$('in_'+sid(k)).value=x.inn||0;$('aq_'+sid(k)).value=x.aq||0;$('rw_'+sid(k)).value=x.raw==null?'':x.raw}
   if(s.goal&&GAME.goals[s.goal])$('oGoal').value=s.goal;if(s.scenario&&SET.scenarios[s.scenario]){SET.scenario=s.scenario;$('oFight').value=s.scenario}
   syncGoal();renderPers();markHeld();plan()}
@@ -975,7 +1046,7 @@ function renderData(){const ch=E.checkData();$('dVer').textContent=GAME.version;
   const flagged=GAME.aniimo.filter(a=>a.flags&&a.flags.length);
   $('dVerify').innerHTML='<tr><th>Topic</th><th>Status</th><th>Source</th></tr>'+GAME.verification.map(v=>`<tr><td>${esc(v.topic)}</td><td><span class="chip ${v.status}">${v.status}</span></td><td class="why">${esc(v.source)}</td></tr>`).join('')+
     `<tr><td>Aniimo with a point to check in game</td><td><span class="chip unverified">${flagged.length}</span></td><td class="why">${flagged.map(a=>esc(a.name)).join(', ')}</td></tr>`}
-renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
+renderEvents();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
 setForms();plan();
 </script>
 </body>

@@ -16,6 +16,7 @@ E.init = game => { G = game; E.G = game; E.bySlug = {}; game.aniimo.forEach(a =>
 E.M = (p, model) => model === 'add' ? 1 + 0.008 * p + 0.04 * Math.floor(p / 4)
                                     : (1 + 0.008 * p) * (1 + 0.04 * Math.floor(p / 4));
 E.allowance = (lv, rk) => (lv >= 70 ? 55 : lv >= 65 ? 40 : lv >= 60 ? 30 : lv >= 55 ? 20 : lv >= 45 ? 10 : 5) + (rk >= 7 ? 23 : rk >= 6 ? 13 : rk >= 5 ? 5 : 0);
+E.maxRank = lv => { const L = (G && G.rankLevels) || { 2: 35, 3: 35, 4: 40, 5: 50, 6: 60, 7: 65 }; let r = 1; for (let k = 2; k <= 7; k++) if (lv >= L[k]) r = k; return r; };
 E.rankBlue = rk => rk >= 7 ? 4 : rk >= 6 ? 2 : rk >= 5 ? 1 : 0;
 E.gate = lv => lv >= 60 ? 20 : lv >= 55 ? 19 : lv >= 50 ? 15 : lv >= 40 ? 12 : 10;
 E.pointCost = p => p <= 4 ? ['dust', p] : p <= 8 ? ['sand', p - 4] : p <= 13 ? ['ess', p - 8] : ['ess', 5];
@@ -24,14 +25,20 @@ E.materials = (from, to) => { const m = { dust: 0, sand: 0, ess: 0 }; for (let p
 E.rarityFor = lvl => lvl > 10 ? 'Gold' : lvl > 5 ? 'Purple' : 'Blue';
 E.tierOf = lvl => lvl >= 15 ? 2 : lvl >= 10 ? 1 : 0;
 
+/* personality: at most one letter from each pair; a pair with both letters counts as unknown */
+const PAIRS = [['E', 'I'], ['S', 'N'], ['T', 'F'], ['J', 'P']];
+E.normPers = str => { const L = new Set(String(str || '').toUpperCase().replace(/[^EISNTFJP]/g, '')), letters = [], conflicts = [];
+  PAIRS.forEach(([a, b]) => { if (L.has(a) && L.has(b)) conflicts.push(a + '/' + b); else if (L.has(a)) letters.push(a); else if (L.has(b)) letters.push(b); });
+  return { letters, conflicts, str: PAIRS.map(p => p.find(x => letters.includes(x)) || '').join('') }; };
 const int = (v, d) => { const n = Math.round(Number(v)); return Number.isFinite(n) ? n : d; };
 
 /* ---------- input checks ----------
    st = {slug, form, level, rank, capa, reset, build, pers, stats:{ATK:{inn,aq,raw},...}} */
 E.validate = function (st) {
   const errors = [], warnings = [];
-  const lv = Math.min(70, Math.max(1, int(st.level, 60))), rk = Math.min(7, Math.max(1, int(st.rank, 1)));
+  const lv = Math.min(70, Math.max(1, int(st.level, 60))); let rk = Math.min(7, Math.max(1, int(st.rank, 1)));
   if (int(st.level, 60) !== lv) warnings.push(`Level must be 1 to 70, so ${lv} was used.`);
+  if (rk > E.maxRank(lv)) { warnings.push(`Star Up rank ${rk} needs a higher level than ${lv}, so rank ${E.maxRank(lv)} was used.`); rk = E.maxRank(lv); }
   const stats = {}; let spent = 0;
   for (const s of STATS) {
     const x = (st.stats && st.stats[s]) || {};
@@ -47,14 +54,23 @@ E.validate = function (st) {
     if (innEff + aq > E.gate(lv)) warnings.push(`${s}: ${innEff + aq} points is above the level ${lv} gate of ${E.gate(lv)}. That is possible only if level gates count Acquired points alone (not yet confirmed).`);
     spent += aq;
   }
+  const np = E.normPers(st.pers);
+  if (np.conflicts.length) warnings.push(`Personality had both letters of ${np.conflicts.join(' and ')}, which the game doesn't allow, so that pair was treated as unknown.`);
   const budget = E.allowance(lv, rk);
   if (spent > budget) errors.push(`You entered ${spent} Acquired points in total, but level ${lv} at Star Up rank ${rk} only gives ${budget}. Check the numbers against the game screen.`);
   return { errors, warnings, lv, rk, stats, budget, spent };
 };
 
 /* ---------- context: everything about one Aniimo setup ---------- */
-function meta(a, form) {
-  const m = { rec: [...(a.recommended || [])], caps: { ...(a.capMap || {}) } };
+/* enhanced core skill: wild Alpha, or a contract on the equipped +15 item. It never changes the six stats;
+   it only switches on rules that belong to the enhanced skill (enhancedCaps in the data). */
+E.enhanced = st => {
+  if (st.alpha === 'wild') return { active: true, why: 'Alpha' };
+  if (st.contract === 'this' && st.item && (st.itemLv || 0) >= 15) return { active: true, why: 'contract' };
+  return { active: false, why: st.alpha === 'egg' ? 'egg' : st.contract === 'this' ? 'needs15' : 'none' };
+};
+function meta(a, form, enh) {
+  const m = { rec: [...(a.recommended || [])], caps: { ...(a.capMap || {}), ...(enh && a.enhancedCaps ? a.enhancedCaps : {}) } };
   const o = (a.formOverrides || {})[form];
   if (o && o.capMap) Object.assign(m.caps, o.capMap);
   return m;
@@ -63,12 +79,12 @@ E.meta = meta;
 const PERS_MULT = { E: { ATK: 1.02, BREAK: 1.02 }, I: { REGEN: 1.04 }, T: { 'P.DEF': 1.06 }, F: { 'M.DEF': 1.06 }, J: { HP: 1.04 } };
 E.context = function (st, set) {
   const a = E.bySlug[st.slug]; if (!a) throw new Error('Unknown Aniimo ' + st.slug);
-  const v = E.validate(st), A = set.A, form = st.form || a.forms[0], m = meta(a, form);
-  const pers = [...new Set(String(st.pers || '').toUpperCase().replace(/[^EISNTFJP]/g, ''))];
+  const v = E.validate(st), A = set.A, form = st.form || a.forms[0], enh = E.enhanced(st), m = meta(a, form, enh.active);
+  const pers = E.normPers(st.pers).letters;
   const blue = E.rankBlue(v.rk), S = {};
   for (const s of STATS) {
     const x = v.stats[s]; let pm = 1; pers.forEach(c => { if (PERS_MULT[c] && PERS_MULT[c][s]) pm *= PERS_MULT[c][s]; });
-    S[s] = { inn: x.inn, aq: x.aq, d0: st.reset ? x.inn : x.d0, dNow: x.d0, raw: x.raw, rawUsed: (x.raw != null ? x.raw : A.rawPlaceholder.v) * pm, entered: x.raw != null, blue };
+    S[s] = { inn: x.inn, aq: x.aq, d0: st.reset ? x.inn : x.d0, dNow: x.d0, raw: x.raw, rawUsed: (x.raw != null ? x.raw : A.rawPlaceholder.v) * pm, pm, entered: x.raw != null, blue };
   }
   const budget = st.reset ? v.budget : Math.max(0, v.budget - v.spent);
   // which stat drives hit damage
@@ -79,7 +95,7 @@ E.context = function (st, set) {
   const hitByLevel = ['Support', 'Heal', 'Regen'].includes(a.role);
   const kitStats = STATS.filter(s => m.caps[s] || (hitByLevel && m.rec.includes(s)));
   const usesPlaceholder = STATS.filter(s => !S[s].entered);
-  return { a, st, v, set, A, form, m, S, budget, gate: E.gate(v.lv), lv: v.lv, rk: v.rk, pers, attack, bothRaw, hitByLevel, kitStats, usesPlaceholder };
+  return { a, st, v, set, A, form, m, S, enh, budget, gate: E.gate(v.lv), lv: v.lv, rk: v.rk, pers, attack, bothRaw, hitByLevel, kitStats, usesPlaceholder };
 };
 
 /* ---------- held item effects ----------
@@ -181,7 +197,7 @@ function makeTerms(c, fx, opt) {
     const atk = statAt(c, fx2, 'ATK', dA), brk = 0.85 * statAt(c, fx2, 'BREAK', dB);
     return c.attack === 'ATK' ? atk : c.attack === 'BREAK' ? brk : Math.max(atk, brk);
   };
-  const att0 = attackOf(noItem, c.S.ATK.dNow, c.S.BREAK.dNow), tdef = A.targetDefPct.v / 100 * att0;
+  const att0 = attackOf(noItem, c.S.ATK.dNow, c.S.BREAK.dNow) / (c.hitByLevel ? 1 : c.S.ATK.pm), tdef = A.targetDefPct.v / 100 * att0;
   const ampAt = dA => 1 + A.otherAmp.v / 100 + ampConst + fx.amp.filter(r => r.double15).reduce((t, r) => t + r.v * (above15(c, r.double15, dA, c.S[r.double15].blue + (fx.blue[r.double15] || 0)) ? 2 : 1), 0);
   const cdrAt = dR => { let cdr = 0; fx.cdr.forEach(r => cdr += r.v * (r.double15 && above15(c, r.double15, dR, c.S.REGEN.blue + (fx.blue.REGEN || 0)) ? 2 : 1)); const sh = A.cdShare.v / 100; return (1 - sh) + sh / (1 - Math.min(0.9, cdr)); };
   const gaugeAmp = set.ampToGauge ? constHit : 1;
@@ -204,7 +220,7 @@ function makeTerms(c, fx, opt) {
     },
     DEF(s, d) {
       const sh = s === 'P.DEF' ? A.physShare.v / 100 : 1 - A.physShare.v / 100;
-      const base0 = statAt(c, noItem, s, c.S[s].dNow), EA = A.enemyAtkRatio.v * base0, def = statAt(c, fx, s, d);
+      const base0 = statAt(c, noItem, s, c.S[s].dNow) / c.S[s].pm, EA = A.enemyAtkRatio.v * base0, def = statAt(c, fx, s, d);
       let dr = 0; fx.dr.forEach(r => { if ((r.kind === 'all' || (r.kind === 'phys') === (s === 'P.DEF')) && (!r.if15 || (r.if15 === s && above15(c, s, d, c.S[s].blue + (fx.blue[s] || 0))))) dr += r.v; });
       const taken = Math.max(EA - def, 0.1 * EA) * (1 - Math.min(0.9, dr)) * (c.pers.includes('P') ? 0.96 : 1);
       return { surv: -sh * Math.log(taken), kit: kitLog(c, fx, s, d) };
@@ -285,8 +301,10 @@ E.rankItems = function (st, set, goal, pool, extra) {
   const c = E.context(st, set), sc = set.scenarios[set.scenario], weights = extra.weights || E.goalWeights(goal, extra.custom);
   const noFx = E.itemEffects(null, 0, c, sc);
   const opt = { weights, noItemFx: noFx, teamCrit: extra.teamCrit || 0 };
-  const run = (id, lvl) => { const fx = id ? E.itemEffects(id, lvl, c, sc) : noFx; if (fx.blocked) return { id, lvl, blocked: fx.blocked, fx };
-    const al = E.allocate(c, fx, opt); const ev = E.evaluate(c, fx, al.d, opt); return { id, lvl, fx, al, ev, log: W(weights, ev) }; };
+  const bound = st.contract === 'this' ? st.item : null;
+  const ctxFor = (id, lvl) => (bound || st.item) && st.alpha !== 'wild' ? E.context({ ...st, item: id === bound ? id : null, itemLv: lvl }, set) : c;
+  const run = (id, lvl) => { const c2 = ctxFor(id, lvl), fx = id ? E.itemEffects(id, lvl, c2, sc) : noFx; if (fx.blocked) return { id, lvl, blocked: fx.blocked, fx };
+    const al = E.allocate(c2, fx, opt); const ev = E.evaluate(c2, fx, al.d, opt); return { id, lvl, fx, al, ev, log: W(weights, ev), enh: c2.enh }; };
   const base = run(null, 0), all = pool.map(p => run(p.id, p.lvl));
   const rows = [base, ...all.filter(r => !r.blocked)], blocked = all.filter(r => r.blocked);
   rows.forEach(r => { r.rel = Math.exp(r.log - base.log); r.axes = {}; ['hit', 'gauge', 'surv', 'kit'].forEach(k => r.axes[k] = Math.exp(r.ev[k] - base.ev[k])); r.uses = r.fx ? [...r.fx.uses] : []; });
@@ -395,6 +413,25 @@ E.optimizeTeam = function (members, set, opts) {
   return { best, naive, cands, notes };
 };
 
+/* ---------- personality: try all 16 for this setup ---------- */
+E.rankPersonalities = function (st, set, goal, extra) {
+  extra = extra || {}; const weights = extra.weights || E.goalWeights(goal, extra.custom), sc = set.scenarios[set.scenario], out = [];
+  for (const a of 'EI') for (const b of 'SN') for (const c3 of 'TF') for (const d of 'JP') {
+    const pers = a + b + c3 + d, c = E.context({ ...st, pers }, set), nofx = E.itemEffects(null, 0, c, sc), fx = st.item ? E.itemEffects(st.item, st.itemLv || 0, c, sc) : nofx;
+    const f = fx.blocked ? nofx : fx, opt = { weights, noItemFx: nofx }, al = E.allocate(c, f, opt), ev = E.evaluate(c, f, al.d, opt);
+    out.push({ pers, log: W(weights, ev), al });
+  }
+  out.sort((x, y) => y.log - x.log);
+  const best = out[0], find = p => out.find(x => x.pers === p);
+  out.forEach(x => x.rel = Math.exp(x.log - best.log));
+  const swaps = PAIRS.map((pair, i) => { const other = pair.find(l => l !== best.pers[i]), p2 = best.pers.slice(0, i) + other + best.pers.slice(i + 1); return { keep: best.pers[i], instead: other, loss: 1 - find(p2).rel }; });
+  swaps.forEach(x => x.tie = x.loss < 0.0005);
+  const label = PAIRS.map((pair, i) => swaps[i].tie ? pair.join('/') : best.pers[i]).join(' ');
+  const runnerUp = out.find(x => x.pers !== best.pers && PAIRS.some((p2, i) => !swaps[i].tie && x.pers[i] !== best.pers[i])) || null;
+  const a = E.bySlug[st.slug], base = (G.personalityBaseline || {})[a.role] || null;
+  return { list: out, best, swaps, label, runnerUp, baseline: base, baselineRel: base ? base.map(p => find(p).rel) : null };
+};
+
 /* ---------- data check ---------- */
 E.checkData = function (game) {
   const g = game || G, out = [];
@@ -417,7 +454,7 @@ E.checkData = function (game) {
   ok('Stat chart for every Aniimo except the known gaps', noChart.every(n => expected.includes(n)), noChart.length ? 'No chart data: ' + noChart.join(', ') : '');
   const badKeys = (g.assets || []).filter(x => (x.key.match(/:/g) || []).length !== 1).map(x => x.key);
   ok('Image names are valid', !badKeys.length, badKeys.slice(0, 5).join(', '));
-  if (g.importInfo) ok('Form count matches the source', g.importInfo.formsOnSite <= g.importInfo.formsInSource, `${g.importInfo.formsOnSite} on this site, ${g.importInfo.formsInSource} in the source (includes Aniimo that aren't in game)`);
+  if (g.importInfo) ok('Form count matches the source', g.importInfo.formsOnSite === g.importInfo.formsInSource, `${g.importInfo.formsOnSite} on this site, ${g.importInfo.formsInSource} in the source (includes Aniimo that aren't in game)`);
   ok('Allowance at level 60, rank 6 is 43', E.allowance(60, 6) === 43);
   return out;
 };

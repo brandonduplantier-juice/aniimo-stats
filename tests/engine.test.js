@@ -94,6 +94,42 @@ t('every form has elements; regional forms have their own picture', () => { GAME
 t('Scorchhowl Thunderstorm form is Fire and Lightning', () => { const f = GAME.aniimo.find(a => a.name === 'Scorchhowl').formInfo.find(x => x.form === 'Thunderstorm'); assert.deepStrictEqual(f.elements, ['fire', 'electric']); });
 t('Somniwing form disagreement is kept and flagged', () => { const a = GAME.aniimo.find(x => x.name === 'Somniwing'); assert.deepStrictEqual(a.forms, ['Prismana']); assert(a.flags.some(f => /AniimoTools lists Basic/.test(f))); });
 
+t('personality: both letters of a pair are dropped, with a warning', () => { const n = E.normPers('EISJ'); assert.deepStrictEqual(n.letters, ['S', 'J']); assert.deepStrictEqual(n.conflicts, ['E/I']); assert.strictEqual(n.str, 'SJ');
+  const s = st('emberpup', { pers: 'EI' }); assert(E.validate(s).warnings.some(w => /E\/I/.test(w))); assert.deepStrictEqual(E.context(s, set()).pers, []); });
+t('personality: old saved text like "esfj" is read correctly', () => assert.strictEqual(E.normPers('esfj').str, 'ESFJ'));
+t('data check fails if a form is dropped (counts must be equal)', () => { const g = JSON.parse(JSON.stringify(GAME)); g.importInfo.formsOnSite -= 1; assert(!E.checkData(g).find(x => x.name === 'Form count matches the source').pass); });
+
+/* v10.2: enhanced core skill and Potential past 20 */
+const trom = () => GAME.aniimo.find(a => a.name === 'Tromber').slug;
+t('Tromber caps apply only with the enhanced skill', () => {
+  assert.deepStrictEqual(E.context(st(trom()), set()).m.caps, {});
+  assert.strictEqual(E.context(st(trom(), { alpha: 'wild' }), set()).m.caps.ATK, 800);
+  assert.strictEqual(E.context(st(trom(), { contract: 'this', item: 'h04', itemLv: 15 }), set()).m.caps.HP, 16000);
+  assert.deepStrictEqual(E.context(st(trom(), { contract: 'this', item: 'h04', itemLv: 10 }), set()).m.caps, {});
+  assert.deepStrictEqual(E.context(st(trom(), { alpha: 'egg' }), set()).m.caps, {});
+  assert.deepStrictEqual(E.context(st(trom(), { contract: 'other', item: 'h04', itemLv: 15 }), set()).m.caps, {}); });
+t('Alpha and contract never change the six stats', () => { const S = set(), a = E.context(st('emberpup'), S), b = E.context(st('emberpup', { alpha: 'wild' }), S), fx = E.itemEffects(null, 0, a, S.scenarios.full);
+  E.STATS.forEach(k => near(E.statAt(a, fx, k, 10), E.statAt(b, fx, k, 10), 1e-12, k)); });
+t('a contract only counts on the bound item when ranking', () => { const r = E.rankItems(st(trom(), { contract: 'this', item: 'h04', itemLv: 15 }), set(), 'kit', [{ id: 'h04', lvl: 15 }, { id: 'h02', lvl: 15 }]);
+  assert(r.rows.find(x => x.id === 'h04').enh.active); assert(!r.rows.find(x => x.id === 'h02').enh.active); assert(!r.base.enh.active); });
+t('Potential past 20: rank 7 + Ferocious Fang +15 puts ATK 20 at 26 effective', () => { const S = set(), s = st('emberpup', { level: 70, rank: 7 }); s.stats.ATK = { inn: 10, aq: 10, raw: 700 };
+  const c = E.context(s, S), fx = E.itemEffects('h02', 15, c, S.scenarios.full);
+  near(E.statAt(c, fx, 'ATK', 20), 700 * E.M(26, 'mult') / E.M(24, 'mult') + 49, 1e-9); assert(E.M(24, 'mult') > E.M(23, 'mult') * 1.04); });
+
+/* v10.3 */
+t('highest Star Up rank by level', () => { [[34, 1], [35, 3], [40, 4], [49, 4], [50, 5], [59, 5], [60, 6], [64, 6], [65, 7], [70, 7]].forEach(([l, r]) => assert.strictEqual(E.maxRank(l), r, 'level ' + l)); });
+t('an impossible rank is lowered, with a warning', () => { const v = E.validate(st('emberpup', { level: 55, rank: 7 })); assert.strictEqual(v.rk, 5); assert.strictEqual(v.budget, 25); assert(v.warnings.some(w => /rank 5 was used/.test(w))); });
+t('maximum points by level at the highest legal rank', () => { [[44, 5], [49, 10], [54, 15], [59, 25], [64, 43], [69, 63], [70, 78]].forEach(([l, n]) => assert.strictEqual(E.allowance(l, E.maxRank(l)), n, 'level ' + l)); });
+t('personality: 16 tried, best first, each swap costs something or nothing', () => { const r = E.rankPersonalities(st('emberpup'), set(), 'hit'); assert.strictEqual(r.list.length, 16); assert.strictEqual(new Set(r.list.map(x => x.pers)).size, 16);
+  assert(r.list.every((x, i) => i === 0 || x.log <= r.list[i - 1].log)); r.swaps.forEach(s => assert(s.loss >= -1e-12)); assert.deepStrictEqual(r.baseline, ['ESTJ', 'ENTJ']); });
+t('personality: a DPS going for hit damage picks E and S with the default crit settings', () => { const r = E.rankPersonalities(st('emberpup'), set(), 'hit'); assert.strictEqual(r.best.pers.slice(0, 2), 'ES', r.best.pers); });
+t('personality: very high crit damage makes N win over S', () => { const S = set(); S.A.critDmg.v = 150; S.A.critRate.v = 40; const r = E.rankPersonalities(st('emberpup'), S, 'hit'); assert.strictEqual(r.best.pers[1], 'N', r.best.pers); });
+t('personality: T beats F when all incoming damage is physical, F when magic', () => { const S = set(); S.A.physShare.v = 100; let r = E.rankPersonalities(st('emberpup'), S, 'surv'); assert.strictEqual(r.best.pers[2], 'T');
+  S.A.physShare.v = 0; r = E.rankPersonalities(st('emberpup'), S, 'surv'); assert.strictEqual(r.best.pers[2], 'F'); });
+t('personality: E is worth more than its 2% when the target has defense', () => { const r = E.rankPersonalities(st('emberpup'), set(), 'custom', { weights: { hit: 1 } }); const ei = r.swaps[0]; assert.strictEqual(ei.keep, 'E'); assert(ei.loss > 0.02, ei.loss); });
+t('personality: a letter that changes nothing is reported as a tie', () => { const r = E.rankPersonalities(st('emberpup'), set(), 'custom', { weights: { hit: 1 } }); assert(r.swaps[2].tie && r.swaps[3].tie); assert(/T\/F/.test(r.label) && /J\/P/.test(r.label), r.label); });
+t('events: dates in order and pictures exist', () => { const keys = new Set(GAME.assets.map(a => a.key)); GAME.events.list.forEach(e => { assert(new Date(e.start) < new Date(e.end), e.name); if (e.art) assert(keys.has(e.art), e.art); }); });
+
 /* team */
 const mem = (n, goal) => { const a = GAME.aniimo.find(x => x.name === n); return { st: st(a.slug), goal: goal || E.defaultGoal(a), weight: 1 }; };
 t('owned mode: one Fang can only go to one Aniimo', () => { const m = [mem('Emberpup'), mem('Emberpup'), mem('Popota')];
