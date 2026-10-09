@@ -11,6 +11,15 @@ R.fingerprint = function (cfg, assumptions, model) {
   return fnv(canon({ members: (c.members || []).map(m => ({ st: m.st, moves: m.moves, boost: m.boost || 0 })), actions: c.actions, target: c.target, model: model || c.model, mightTotal: c.mightTotal !== false, startEP: c.startEP, maxEP: c.maxEP, assumptions: assumptions || {} }));
 };
 const num = (v, lo, hi, what, allowNull) => { if (v == null || v === '') { if (allowNull) return; throw Error(what + ' is missing'); } if (!Number.isFinite(+v) || +v < lo || +v > hi) throw Error(`${what} must be ${lo} to ${hi}`); };
+/* the 9 elements in the game's type chart (tests check this matches data/game-data.js) */
+R.ELEMENTS = ['fire', 'water', 'grass', 'electric', 'ice', 'earth', 'wind', 'light', 'dark'];
+const elOk = (v, what) => { if (v == null || v === '') return; if (typeof v !== 'string' || !R.ELEMENTS.includes(v)) throw Error(`${what}: unknown element "${String(v).slice(0, 20)}"`); };
+/* a saved Alpha measurement: HP and DEF must both be real numbers above 0. Returns a list of problems, empty when fine. */
+R.checkMeasurement = function (hp, def) {
+  const bad = [], one = (v, what, hi) => { const t = v == null ? '' : String(v).trim();
+    if (t === '') bad.push(what + ' is blank'); else if (!Number.isFinite(+t)) bad.push(what + ' is not a number'); else if (+t <= 0) bad.push(what + ' must be above 0'); else if (+t > hi) bad.push(`${what} must be at most ${hi.toLocaleString('en-US')}`); };
+  one(hp, 'HP', 1e10); one(def, 'DEF', 1e6); return bad;
+};
 R.checkConfig = function (cfg) {
   if (!cfg || !Array.isArray(cfg.members) || !Array.isArray(cfg.actions)) throw Error('Missing team or rotation');
   if (cfg.members.length < 1 || cfg.members.length > 4) throw Error('A team has 1 to 4 Aniimo');
@@ -21,9 +30,12 @@ R.checkConfig = function (cfg) {
     Object.entries(st.stats || {}).forEach(([k, x]) => { num(x.inn, 0, 10, `${w} ${k} Innate`, true); num(x.aq, 0, 20, `${w} ${k} Acquired`, true); num(x.raw, 0, 100000, `${w} raw ${k}`, true); });
     if (!Array.isArray(m.moves) || m.moves.length > 30) throw Error(w + ': bad move list');
     m.moves.forEach(mv => { const n = `${w} move "${String(mv.name || '').slice(0, 40)}"`;
-      num(mv.might, 0, 5000, n + ' Might'); num(mv.hits, 1, 50, n + ' hits'); num(mv.ep, 0, 1000, n + ' EP', true); num(mv.cooldown, 0, 600, n + ' cooldown', true); num(mv.epGain || 0, 0, 1000, n + ' EP back');
+      elOk(mv.element, n); num(mv.might, 0, 5000, n + ' Might'); num(mv.hits, 1, 50, n + ' hits'); num(mv.ep, 0, 1000, n + ' EP', true); num(mv.cooldown, 0, 600, n + ' cooldown', true); num(mv.epGain || 0, 0, 1000, n + ' EP back');
       const b = mv.buff || {}; num(b.amp || 0, -100, 500, n + ' buff amp'); num(b.crit || 0, -100, 100, n + ' buff crit'); num(b.shred || 0, 0, 100, n + ' DEF shred'); num(b.duration || 0, 0, 600, n + ' buff length'); }); });
   const T = cfg.target || {};
+  if (T.elements != null) { if (!Array.isArray(T.elements) || T.elements.length > 2) throw Error('Target elements must be a list of up to 2');
+    T.elements.forEach((e, i) => { if (e == null || e === '') throw Error(`Target element ${i + 1}: blank`); elOk(e, `Target element ${i + 1}`); });
+    if (T.elements.length === 2 && T.elements[0] === T.elements[1]) throw Error('Target elements repeat'); }
   num(T.hp, 1, 1e10, 'Target HP'); num(T.def, 0, 1e6, 'Target DEF'); num(T.type == null ? 1 : T.type, 0.01, 10, 'Type matchup'); num(T.resist || 0, -100, 100, 'Elemental resistance');
   num(T.breakMult, 0, 20, 'BREAK multiplier', true); num(T.recoveryMult, 0, 20, 'Recovery multiplier', true);
   if (cfg.actions.length > 2000) throw Error('Rotation is too long');

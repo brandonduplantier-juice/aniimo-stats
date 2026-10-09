@@ -14,9 +14,12 @@ C.MODELS = {
        base: (att, def, might) => Math.max(att * might / 100 - def, 0.1 * att * might / 100) }
 };
 C.STATES = { normal: 'Normal', break: 'BREAK', recovery: 'Recovery' };
-/* type matchup from the chart: the move's element against each of the target's elements, multiplied. null when either is unknown. */
+/* type matchup from the chart: the move's element against each of the target's elements, multiplied.
+   null (so the hand-set matchup is used, labelled) when the move element or ANY target element is missing or not in the chart. */
+C.matchupGap = (chart, moveEl, targetEls) => !chart || !chart.attack ? 'no type chart' : !moveEl ? 'move element unknown' : !chart.attack[moveEl] ? `move element "${String(moveEl).slice(0, 20)}" not in type chart`
+  : !Array.isArray(targetEls) || !targetEls.length ? 'target element unknown' : (targetEls.find(e => !e || !chart.attack[e]) !== undefined ? `target element "${String(targetEls.find(e => !e || !chart.attack[e])).slice(0, 20)}" not in type chart` : null);
 C.matchup = (chart, moveEl, targetEls) => {
-  if (!chart || !moveEl || !targetEls || !targetEls.length || !chart.attack[moveEl]) return null;
+  if (C.matchupGap(chart, moveEl, targetEls)) return null;
   const a = chart.attack[moveEl]; return targetEls.reduce((t, e) => t * (a.strong.includes(e) ? chart.strong : a.weak.includes(e) ? chart.weak : 1), 1);
 };
 const conf = list => (list = list.map(x => x === 'measured' || x === 'manual' ? 'assumption' : x), list.includes('placeholder')) ? 'placeholder' : list.includes('unknown') ? 'unknown' : list.includes('experimental') ? 'experimental' : list.includes('assumption') ? 'assumption' : 'verified';
@@ -67,7 +70,7 @@ C.simulate = function (E, set, cfg) {
         { name: 'Target DEF' + (shred ? ` (−${Math.round(shred * 100)}% shred)` : '') + (T.defStatus === 'measured' ? ' (your measurement)' : ''), value: +def.toFixed(1), status: T.defStatus === 'measured' ? 'measured' : 'assumption' },
         { name: `Might${total_ && hits > 1 ? ` (${mv.might} ÷ ${hits} hits)` : ''}`, value: +perHitMight.toFixed(2), status: hits > 1 ? 'assumption' : (mv.status && mv.status.might) || 'assumption' },
         { name: model.label, value: +b.toFixed(1), status: 'experimental' },
-        { name: autoType != null ? `Type matchup (${mv.element} → ${T.elements.join('/')}, type chart)` : `Type matchup (set by hand: ${!mv.element ? 'move element unknown' : 'target element unknown'})`, value: +typeM.toFixed(4), status: autoType != null ? 'verified' : 'manual' },
+        { name: autoType != null ? `Type matchup (${mv.element} → ${T.elements.join('/')}, type chart)` : `Type matchup (set by hand: ${C.matchupGap(E.G && E.G.typeChart, mv.element, T.elements)})`, value: +typeM.toFixed(4), status: autoType != null ? 'verified' : 'manual' },
         { name: autoSame == null ? 'Same element (ticked by hand)' : `Same element (move ${mv.element}, form ${els.join('/')})`, value: same, status: autoSame == null ? 'assumption' : 'verified' },
         { name: 'Elemental Boost − resistance', value: +elem.toFixed(3), status: 'assumption' },
         { name: 'Crit (expected)', value: +P.crit.toFixed(3), status: 'assumption' },

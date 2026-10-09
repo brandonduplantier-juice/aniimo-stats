@@ -85,4 +85,26 @@ t('the simulator uses the chart per move and labels it', () => { const r = run([
   near(r.log[0].damage, 900 * 2.56 * 0.625); assert.strictEqual(r.log[1].typeStatus, 'manual'); near(r.log[1].typeM, 1); assert(r.log[1].mods.some(m => /set by hand: move element unknown/.test(m.name))); });
 t('dual-element Aniimo: an Earth move from Highland Emberpup gets same-element ×1.1 and ×1.6 vs Fire', () => { const m = emb({ form: 'Highland' }, [one(100, { element: 'earth', cooldown: 0 })]); const r = run([m], [{ slot: 0, move: 0 }], { elements: ['fire'] }); near(r.log[0].damage, 900 * 1.6 * 1.1 * 0.625); });
 t('unknown target element falls back to the hand-set matchup, labelled', () => { const r = run([emb({}, [one(100, { element: 'fire', cooldown: 0 })])], [{ slot: 0, move: 0 }], { type: 0.625 }); near(r.log[0].typeM, 0.625); assert.strictEqual(r.log[0].typeStatus, 'manual'); });
+/* v10.13: unknown elements and measurement validation */
+t('R.ELEMENTS matches the type chart exactly', () => assert.deepStrictEqual(R.ELEMENTS.slice().sort(), Object.keys(GAME.typeChart.attack).sort()));
+t('matchup: an unknown target element gives null, not neutral', () => { const ch = GAME.typeChart; assert.strictEqual(C.matchup(ch, 'water', ['plasma']), null); assert.strictEqual(C.matchup(ch, 'water', ['fire', 'plasma']), null); assert.strictEqual(C.matchup(ch, 'water', ['fire', '']), null); assert.strictEqual(C.matchup(ch, 'plasma', ['fire']), null); near(C.matchup(ch, 'water', ['fire']), 1.6); });
+t('simulator: unknown target element uses the hand-set matchup, labelled as an assumption', () => { const r = run([emb({}, [one(100, { element: 'water', cooldown: 0 })])], [{ slot: 0, move: 0 }], { elements: ['fire', 'plasma'], type: 0.625 });
+  near(r.log[0].typeM, 0.625); assert.strictEqual(r.log[0].typeStatus, 'manual'); const m = r.log[0].mods.find(x => /Type matchup/.test(x.name)); assert(/target element "plasma" not in type chart/.test(m.name), m.name); assert.strictEqual(m.status, 'manual'); assert.notStrictEqual(r.log[0].confidence, 'verified'); });
+t('simulator: unknown move element is labelled as such', () => { const r = run([emb({}, [one(100, { element: 'plasma', cooldown: 0 })])], [{ slot: 0, move: 0 }], { elements: ['fire'], type: 1.6 }); near(r.log[0].typeM, 1.6); assert(r.log[0].mods.some(x => /move element "plasma" not in type chart/.test(x.name))); });
+const cfgOf = tgt => ({ members: [emb()], actions: [{ slot: 0, move: 0 }], target: { hp: 1000, def: 10, ...tgt }, model: 'A' });
+t('checkConfig refuses bad target elements', () => { [['plasma'], ['Fire'], ['fire', 'fire'], ['fire', 'water', 'ice'], [''], [null], 'fire', [5]].forEach(el => assert.throws(() => R.checkConfig(cfgOf({ elements: el })), /element/i, JSON.stringify(el)));
+  assert(R.checkConfig(cfgOf({ elements: ['water', 'fire'] }))); assert(R.checkConfig(cfgOf({ elements: [] }))); assert(R.checkConfig(cfgOf({}))); });
+t('checkConfig refuses a move with an unknown element, allows none', () => { const c = cfgOf({}); c.members = [emb({}, [one(100, { element: 'plasma' })])]; assert.throws(() => R.checkConfig(c), /unknown element "plasma"/); c.members = [emb({}, [one(100, { element: '' })])]; assert(R.checkConfig(c)); });
+t('importing a malformed report with an unknown element is refused', () => { const good = JSON.parse(JSON.stringify(rep())); assert(R.validate(JSON.parse(JSON.stringify(good))));
+  const a = JSON.parse(JSON.stringify(good)); a.configuration.target.elements = ['lava']; assert.throws(() => R.validate(a), /unknown element "lava"/);
+  const b = JSON.parse(JSON.stringify(good)); b.configuration.target.elements = ['fire', 'fire']; assert.throws(() => R.validate(b), /repeat/);
+  const c = JSON.parse(JSON.stringify(good)); c.configuration.members[0].moves[0].element = 'shadow'; assert.throws(() => R.validate(c), /unknown element "shadow"/);
+  const d = JSON.parse(JSON.stringify(good)); d.configuration.target.elements = 'fire'; assert.throws(() => R.validate(d), /list of up to 2/);
+  assert.throws(() => R.groupEvidence([good, a]), /unknown element/); });
+t('measurement check refuses blank, 0, negative and non-numbers, naming the field', () => {
+  [['', '700', /HP is blank/], [null, '700', /HP is blank/], ['   ', '700', /HP is blank/], ['0', '700', /HP must be above 0/], ['-5', '700', /HP must be above 0/], ['abc', '700', /HP is not a number/], ['1e11', '700', /HP must be at most/],
+   ['150000', '', /DEF is blank/], ['150000', '0', /DEF must be above 0/], ['150000', '-1', /DEF must be above 0/], ['150000', 'x', /DEF is not a number/], ['150000', undefined, /DEF is blank/]]
+    .forEach(([h, d, re]) => { const b = R.checkMeasurement(h, d); assert(b.length === 1 && re.test(b[0]), JSON.stringify([h, d, b])); });
+  const both = R.checkMeasurement('', '0'); assert(both.length === 2 && /HP/.test(both[0]) && /DEF/.test(both[1]));
+  assert.deepStrictEqual(R.checkMeasurement('150000', '700'), []); assert.deepStrictEqual(R.checkMeasurement(150000, 700), []); });
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
