@@ -451,6 +451,27 @@ body.night .sechead p,body.night .key,body.night footer,body.night .logo,body.ni
 body.night footer a{color:#d6e7ff}
 @media (max-width:600px){#scene .island,#scene .ruins,#scene .bloom.b3,#scene .bloom.b4,#scene .flowers.r{display:none}#scene .land{height:24vh}#scene .flowers{width:150px;height:60px}}
 @media (prefers-reduced-motion:reduce){#scene *,#scene *::before,#roam *{animation:none!important}}
+
+.tl-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px}
+.tl-slot{background:var(--panel2);border:2px solid var(--frame);border-radius:16px;padding:10px}
+.tl-slot h4{margin:0 0 6px;font-size:16px;color:var(--deep);display:flex;align-items:center;gap:8px}
+.tl-slot h4 .pic{width:40px;height:40px;position:relative;flex:none}.tl-slot h4 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.tl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.tl-grid label,.tl-row label{display:grid;gap:2px;font-size:11px;font-weight:800;color:var(--soft)}
+.tl-grid input,.tl-grid select,.tl-row input,.tl-row select,.tl-moves input,.tl-moves select,.tl-acts input,.tl-acts select{width:100%;background:#fff;border:2px solid var(--frame);border-radius:9px;padding:3px 6px;font-weight:700;font-size:12px}
+.tl-derived{font-size:12px;color:var(--soft);margin:6px 0;padding:6px 8px;background:#fff;border-radius:10px;border:1px solid #d3e3f6}
+.tl-moves,.tl-acts{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.tl-moves th,.tl-acts th{font-size:10px;color:var(--faint);text-align:left;padding:2px 3px}
+.tl-moves td,.tl-acts td{padding:2px 3px;vertical-align:middle}
+.tl-moves input[type=number],.tl-acts input[type=number]{min-width:52px}
+.tl-moves input[type=checkbox]{width:auto}
+.tl-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:6px 0}
+.xbtn{border:0;background:none;color:var(--no2);font-weight:800;cursor:pointer;font-size:14px}
+.chip.experimental{background:#efe6ff;color:#5b3fb0;border-color:#b7a2f2}
+.chip.unknown{background:#f1f5fb;color:#5a6f97;border-color:#c9d4e8}
+.tl-log td.err{color:var(--no2);font-weight:800}
+.tl-mods{columns:2;font-size:12px;margin:4px 0;padding-left:18px}
+@media (max-width:600px){.tl-mods{columns:1}.tl-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -460,7 +481,7 @@ body.night footer a{color:#d6e7ff}
 <div class="wrap">
 <div class="bar">
   <a class="logo" href="#top" id="top"><span class="gem" id="logoGem"></span>Potential Planner</a>
-  <nav><a href="#planner">Planner</a><a href="#roster">Aniilog</a><a href="#optimizer">Optimizer</a><a href="#items">Held items</a><a href="#settings">Settings</a><a href="#reference">How it works</a></nav>
+  <nav><a href="#planner">Planner</a><a href="#roster">Aniilog</a><a href="#optimizer">Optimizer</a><a href="#teamlab">Team Lab</a><a href="#items">Held items</a><a href="#settings">Settings</a><a href="#reference">How it works</a></nav>
 </div>
 
 <div class="frame intro">
@@ -555,6 +576,42 @@ body.night footer a{color:#d6e7ff}
       <textarea id="sCode" placeholder="Export code appears here. Paste a code here, then press Import."></textarea>
       <p class="small" id="sMsg"></p>
     </div>
+  </div>
+</section>
+
+<section id="teamlab">
+  <div class="sechead"><span class="plate">Team Lab</span><p>Test a team of 3 against an Alpha, hit by hit. Estimates for now: the damage formula isn't confirmed, and your test reports help confirm it.</p></div>
+  <div class="frame opt">
+    <div class="tabs" role="tablist" id="tlTabs">
+      <button type="button" role="tab" data-t="team" aria-selected="true">Team</button>
+      <button type="button" role="tab" data-t="fight">Target and rotation</button>
+      <button type="button" role="tab" data-t="log">Hit log</button>
+      <button type="button" role="tab" data-t="reports">Test reports</button>
+      <button type="button" role="tab" data-t="how">How damage is worked out</button>
+    </div>
+    <div data-tp="team"><p class="small">Each slot can use a saved build (level, form, Potential, personality, held item and raw stats come along), the planner's current Aniimo, or a quick manual setup. Stats and held items are worked out by the same engine as the planner.</p><div class="tl-slots" id="tlSlots"></div></div>
+    <div data-tp="fight" hidden>
+      <h4 style="margin:4px 0;color:var(--deep)">Target</h4>
+      <div class="tl-row" id="tlTarget"></div>
+      <h4 style="margin:10px 0 4px;color:var(--deep)">Damage model <span class="chip experimental">experimental</span></h4>
+      <div class="tl-row" id="tlModel"></div>
+      <h4 style="margin:10px 0 4px;color:var(--deep)">Rotation</h4>
+      <p class="small">Moves happen in order. "Wait" is seconds after the previous move. Set the target's state for each move; BREAK and Recovery use the multipliers above.</p>
+      <div class="scroll"><table class="tl-acts" id="tlActs"></table></div>
+      <div class="row"><button class="gbtn blue sm" type="button" id="tlAddAct">+ Add move to rotation</button><button class="gbtn" type="button" id="tlRun">Simulate</button></div>
+    </div>
+    <div data-tp="log" hidden><div id="tlLog"><p class="small">Set up the rotation, then press Simulate.</p></div></div>
+    <div data-tp="reports" hidden>
+      <p class="small">Record a run, then type the damage numbers you saw in game next to each hit. Reports stay in this browser; export them to keep or share.</p>
+      <div class="row"><input type="text" id="tlRepLabel" placeholder="Name this test (optional)"><button class="gbtn" type="button" id="tlRecord">Record last simulation</button></div>
+      <div class="row"><label class="small">Report <select id="tlRepSel"></select></label><label class="small">Match within <input id="tlTol" type="number" min="0" max="100" value="5" style="width:60px">%</label><button class="gbtn blue sm" type="button" id="tlRepDel">Delete</button></div>
+      <div id="tlRepView"></div>
+      <div class="row"><button class="gbtn blue sm" type="button" id="tlExpJson">Export JSON</button><button class="gbtn blue sm" type="button" id="tlExpCsv">Export CSV</button><button class="gbtn blue sm" type="button" id="tlImport">Import JSON</button></div>
+      <textarea id="tlIO" placeholder="Exported reports appear here. Paste a JSON report here and press Import."></textarea>
+      <p class="small" id="tlRepMsg"></p>
+      <h4 style="margin:10px 0 4px;color:var(--deep)">Repeated evidence</h4><div id="tlEvidence" class="scroll"></div>
+    </div>
+    <div data-tp="how" hidden><div id="tlHow"></div></div>
   </div>
 </section>
 
@@ -654,6 +711,7 @@ body.night footer a{color:#d6e7ff}
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>9 Oct 2026, v10.8.</b> Team Lab: build a team of 3 from your saved builds (or the planner, or a quick setup), set up an Alpha and a rotation, and see the damage hit by hit, each hit with its time, source, every modifier and how sure the site is about it. The way Might turns into damage isn't confirmed, so two labelled experimental models are offered. Target states Normal, BREAK and Recovery with multipliers you enter. Test reports: record a run, type in the damage you saw, and the site flags differences and groups repeated evidence; export as JSON or CSV. Thirteen move presets checked against AniimoTools. Crit is now capped at ×3, as documented.</p>
       <p><b>8 Oct 2026, v10.7.</b> Living Idyll: the page now sits in an illustrated Aniimo landscape (sky, clouds, a floating ruin, rolling hills, wildflowers, glowing Blooms) that follows your device's time of day, with stars and fireflies at night. Nimbi, Chirpi and Skippy sometimes wander through the empty side margins. Event themes now dress up the landscape instead of replacing it. New Look settings: visual intensity (Full, Subtle, Minimal, Off; Subtle by default, each with a cap on how much moves) and time of day. Panels never move; ambience pauses and dims while you type, calculate or read a detail panel.</p>
       <p><b>8 Oct 2026, v10.6.</b> Portraits are trimmed of empty space so every Aniimo fills its box about the same. Header art fits inside the header. The leading event theme is now a featured event if one is marked, otherwise the longest-running confirmed event (total length, not time left); shorter events add accents. Right now that is Windchaser's Departure (Irisalis) with petals, wind and light motes, with Prismana sparkles as the accent. The events line is gone; the Theme choice moved to Settings and data, under Look.</p>
       <p><b>8 Oct 2026, v10.5.</b> Portraits always fit their box. Tall or wide artwork (Flameruff, Inferlupa and others) was running past the edge of the planner picture and the detail panel; every picture now shrinks to fit, whatever its shape.</p>
@@ -682,6 +740,8 @@ body.night footer a{color:#d6e7ff}
 
 <script src="data/game-data.js"></script>
 <script src="js/engine.js"></script>
+<script src="js/combat.js"></script>
+<script src="js/reports.js"></script>
 <script>
 const IMG={};/*IMG_DATA*/
 const GAME=window.ANIIMO_DATA;const FEATURES={"allItems": true, "builds": true, "team": true};
@@ -1084,6 +1144,121 @@ function initLook(){const L=GAME.visual.levels;$('xVis').innerHTML=Object.entrie
 let rsT=null;addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{renderScene();applyTheme()},300)});
 setInterval(updateTime,300000);
 
+
+/* ---------- Team Lab ---------- */
+const CB=window.AniimoCombat,RP=window.AniimoReports;
+const TLK='aniimo.teamlab.v1',RPK='aniimo.reports.v2';
+const presetMoves=slug=>((GAME.moves||{})[slug]||[]).map(m=>({...m,buff:{amp:0,crit:0,shred:0,duration:0},epGain:0,sameElement:false,mightTotal:null}));
+const newSlot=slug=>({src:'manual',slug,level:60,rank:6,item:'',itemLv:15,pers:'',atk:'',brk:'',boost:0,moves:presetMoves(slug).length?presetMoves(slug):[{name:'Custom move',kind:'Physical',might:50,hits:1,ep:20,epGain:0,cooldown:0,status:{might:'assumption'},buff:{amp:0,crit:0,shred:0,duration:0}}]});
+let TL=LS.get(TLK,null)||{slots:['stellarys','rookey','fragrancier'].map(newSlot),target:{name:'Alpha',hp:200000,def:500,type:1,resist:0,wild:true,breakMult:1,recoveryMult:1,omega:false},model:'A',mightTotal:true,startEP:100,maxEP:100,actions:[{slot:0,move:1,wait:0,state:'normal'},{slot:1,move:2,wait:1,state:'normal'},{slot:2,move:1,wait:1,state:'normal'}]};
+let TLOUT=null,TLCFG=null;
+const tlSave=()=>LS.set(TLK,TL);
+const savedBuilds=()=>LS.get('aniimo.builds.v1',[]);
+function memberSt(sl){
+  if(sl.src==='planner'){const s=engineState();return {st:s,label:'Planner'}}
+  if(sl.src&&sl.src[0]==='b'){const b=savedBuilds()[+sl.src.slice(1)];if(b){const p=b.state.planner;return {st:{slug:p.slug,form:p.form,build:p.build,level:p.level,rank:p.rank,capa:p.capa,pers:p.pers,reset:false,stats:p.stats,item:p.item,itemLv:p.itemLv,alpha:p.alpha,contract:p.contract},label:'Saved: '+b.name}}}
+  const stats=Object.fromEntries(STATS.map(k=>[k,{inn:0,aq:0,raw:null}]));if(sl.atk!=='')stats.ATK.raw=+sl.atk;if(sl.brk!=='')stats.BREAK.raw=+sl.brk;
+  return {st:{slug:sl.slug,level:+sl.level||60,rank:+sl.rank||6,stats,item:sl.item,itemLv:+sl.itemLv||0,pers:sl.pers},label:'Manual'}}
+function slotHtmlTL(sl,i){const ms=memberSt(sl),a=E.bySlug[ms.st.slug]||released[0];let c=null;try{c=E.context(ms.st,SET)}catch(e){}
+  const fx=c?E.itemEffects(ms.st.item||null,ms.st.itemLv||0,c,SET.scenarios[SET.scenario]):null,P=c?E.hitParts(c,fx&&!fx.blocked?fx:E.itemEffects(null,0,c,SET.scenarios[SET.scenario])):null;
+  const opts=`<option value="manual">Manual setup</option><option value="planner">Planner's current Aniimo</option>`+savedBuilds().map((b,j)=>`<option value="b${j}">Saved: ${esc(b.name)}</option>`).join('');
+  const man=sl.src==='manual';const pre=presetMoves(a.slug);
+  return `<div class="tl-slot" data-slot="${i}"><h4><span class="pic">${im('p:'+a.slug,'',a.name)}</span>Slot ${i+1}: ${esc(a.name)}</h4>
+   <div class="tl-grid"><label style="grid-column:1/-1">Stats from<select data-f="src">${opts}</select></label>
+   ${man?`<label>Aniimo<select data-f="slug">${released.map(x=>`<option value="${x.slug}"${x.slug===sl.slug?' selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>Level<input data-f="level" type="number" min="1" max="70" value="${sl.level}"></label>
+     <label>Star Up rank<input data-f="rank" type="number" min="1" max="7" value="${sl.rank}"></label><label>Personality<input data-f="pers" maxlength="4" value="${esc(sl.pers)}" placeholder="e.g. ESTJ"></label>
+     <label>Held item<select data-f="item"><option value="">None</option>${ITEMS.map(x=>`<option value="${x.id}"${x.id===sl.item?' selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>Item level<input data-f="itemLv" type="number" min="0" max="15" value="${sl.itemLv}"></label>
+     <label>Raw ATK<input data-f="atk" type="number" min="0" value="${esc(sl.atk)}" placeholder="blank = placeholder"></label><label>Raw BREAK<input data-f="brk" type="number" min="0" value="${esc(sl.brk)}" placeholder="blank = placeholder"></label>`:''}
+   <label>Elemental Boost %<input data-f="boost" type="number" value="${sl.boost||0}"></label></div>
+   ${P?`<div class="tl-derived">${esc(ms.label)} · ${esc(a.role)} · attack <b>${Math.round(P.attack)}</b> (${c.hitByLevel?'10.5 × level':c.attack==='max'?'higher of ATK and 0.85 × BREAK':c.attack}) · crit ×${P.crit.toFixed(2)} · Damage Amp +${Math.round(P.amp*100)}%${ms.st.item?` · ${esc(ITEM[ms.st.item].name)} +${ms.st.itemLv}`:''}${c.usesPlaceholder.length?` <span class="chip placeholder">blank stats: placeholder</span>`:''}${fx&&fx.blocked?` <span class="chip unverified">${esc(fx.blocked)}</span>`:''}</div>`:''}
+   <div class="scroll"><table class="tl-moves"><tr><th>Move</th><th>Might</th><th>Hits</th><th>EP</th><th>EP back</th><th>Cooldown s</th><th title="Skill shares the Aniimo's element (×1.1)">Same el.</th><th>Buff amp %</th><th>Buff crit %</th><th>DEF shred %</th><th>Buff s</th><th></th></tr>
+   ${sl.moves.map((m,j)=>`<tr data-mv="${j}"><td><input data-m="name" value="${esc(m.name)}" style="min-width:110px">${m.source?`<a class="small" href="${esc(m.source)}" target="_blank" rel="noopener" title="Checked ${esc(m.checked||'')}">source</a>`:''}</td><td><input data-m="might" type="number" value="${m.might}"></td><td><input data-m="hits" type="number" min="1" value="${m.hits}"></td>
+     <td><input data-m="ep" type="number" min="0" value="${m.ep==null?'':m.ep}" placeholder="?" title="${m.ep==null?'Not listed: costs nothing here':''}"></td><td><input data-m="epGain" type="number" min="0" value="${m.epGain||0}"></td><td><input data-m="cooldown" type="number" min="0" value="${m.cooldown==null?'':m.cooldown}" placeholder="?"></td>
+     <td><input data-m="sameElement" type="checkbox"${m.sameElement?' checked':''}></td>${['amp','crit','shred','duration'].map(k=>`<td><input data-b="${k}" type="number" value="${(m.buff||{})[k]||0}"></td>`).join('')}<td><button class="xbtn" type="button" data-delmv="${j}" aria-label="Remove move">×</button></td></tr>`).join('')}</table></div>
+   <div class="row">${pre.length?`<select data-addpre><option value="">+ Checked move for ${esc(a.name)}…</option>${pre.map((m,j)=>`<option value="${j}">${esc(m.name)} (${m.might} Might)</option>`).join('')}</select>`:`<span class="small">No checked moves on file for ${esc(a.name)} yet; add your own.</span>`}<button class="gbtn blue sm" type="button" data-addmv>+ Custom move</button></div></div>`}
+function tlRenderTeam(){$('tlSlots').innerHTML=TL.slots.map(slotHtmlTL).join('')}
+$('tlSlots').addEventListener('change',e=>{const s=e.target.closest('[data-slot]');if(!s)return;const sl=TL.slots[+s.dataset.slot],f=e.target.dataset.f,mrow=e.target.closest('[data-mv]');
+  if(f){sl[f]=e.target.value;if(f==='slug'){const n=newSlot(sl.slug);sl.moves=n.moves}if(f==='src'&&sl.src!=='manual'){const ms=memberSt(sl);if(ms.st.slug!==sl.slug){sl.slug=ms.st.slug;sl.moves=newSlot(sl.slug).moves}}}
+  else if(mrow){const m=sl.moves[+mrow.dataset.mv],k=e.target.dataset.m,b=e.target.dataset.b;
+    if(b){m.buff=m.buff||{};m.buff[b]=+e.target.value||0}else if(k==='name')m.name=e.target.value;else if(k==='sameElement')m.sameElement=e.target.checked;else if(k==='ep'||k==='cooldown')m[k]=e.target.value===''?null:Math.max(0,+e.target.value);else m[k]=+e.target.value||0;
+    if(k==='might'||k==='ep'||k==='hits'){m.status={...(m.status||{}),[k==='might'?'might':k]:'edited'}}}
+  else if(e.target.dataset.addpre!==undefined&&e.target.value!==''){sl.moves.push(presetMoves(sl.slug)[+e.target.value])}
+  tlSave();tlRenderTeam();tlRenderActs()});
+$('tlSlots').addEventListener('click',e=>{const s=e.target.closest('[data-slot]');if(!s)return;const sl=TL.slots[+s.dataset.slot];
+  if(e.target.dataset.delmv!==undefined){sl.moves.splice(+e.target.dataset.delmv,1);TL.actions=TL.actions.filter(a=>!(a.slot===+s.dataset.slot&&a.move===+e.target.dataset.delmv)).map(a=>a.slot===+s.dataset.slot&&a.move>+e.target.dataset.delmv?{...a,move:a.move-1}:a)}
+  else if(e.target.dataset.addmv!==undefined)sl.moves.push({name:'Custom move',kind:'Physical',might:50,hits:1,ep:20,epGain:0,cooldown:0,status:{might:'edited'},buff:{amp:0,crit:0,shred:0,duration:0}});else return;
+  tlSave();tlRenderTeam();tlRenderActs()});
+function tlRenderTarget(){const T=TL.target,f=(k,l,ty,extra)=>`<label>${l}<input data-t="${k}" type="${ty||'number'}" value="${esc(T[k])}" ${extra||''}></label>`;
+  $('tlTarget').innerHTML=f('name','Name','text')+f('hp','HP (enter measured)')+f('def','DEF (enter measured)')+
+   `<label>Type matchup<select data-t="type">${[[2.56,'×2.56 (double weak)'],[1.6,'×1.6 (weak)'],[1,'×1 (neutral)'],[0.625,'×0.625 (resists)'],[0.39,'×0.39 (double resist)']].map(([v,l])=>`<option value="${v}"${+T.type===v?' selected':''}>${l}</option>`).join('')}</select></label>`+
+   f('resist','Elemental resistance %')+`<label>Wild or Alpha (×0.625)<select data-t="wild"><option value="1"${T.wild!==false?' selected':''}>Yes</option><option value="0"${T.wild===false?' selected':''}>No</option></select></label>`+
+   f('breakMult','BREAK multiplier (unverified)','number','step="0.05" min="0"')+f('recoveryMult','Recovery multiplier (unverified)','number','step="0.05" min="0"')+
+   `<label>Omega target<select data-t="omega"><option value="0"${!T.omega?' selected':''}>No</option><option value="1"${T.omega?' selected':''}>Yes</option></select></label>`;
+  $('tlModel').innerHTML=`<label>Might formula<select id="tlM">${Object.entries(CB.MODELS).map(([k,m])=>`<option value="${k}"${TL.model===k?' selected':''}>${esc(m.label)}</option>`).join('')}</select></label>
+   <label>Multi-hit Might<select id="tlMT"><option value="1"${TL.mightTotal?' selected':''}>Listed Might is the total</option><option value="0"${!TL.mightTotal?' selected':''}>Listed Might is per hit</option></select></label>
+   <label>Starting EP<input id="tlEP" type="number" min="0" value="${TL.startEP}"></label><label>Max EP<input id="tlMaxEP" type="number" min="1" value="${TL.maxEP}"></label>
+   <p class="small" style="grid-column:1/-1">${esc((CB.MODELS[TL.model]||CB.MODELS.A).about)} Neither model is confirmed; record test runs to find out which one matches the game. BREAK and Recovery multipliers start at 1 (no change) because no source gives a number: Alphas take "greatly increased damage" while broken (AniimoTools).</p>`}
+$('tlTarget').addEventListener('change',e=>{const k=e.target.dataset.t;if(!k)return;const v=e.target.value;TL.target[k]=k==='name'?v:k==='wild'||k==='omega'?v==='1':Math.max(0,+v||0);tlSave()});
+$('tlModel').addEventListener('change',e=>{if(e.target.id==='tlM')TL.model=e.target.value;if(e.target.id==='tlMT')TL.mightTotal=e.target.value==='1';if(e.target.id==='tlEP')TL.startEP=Math.max(0,+e.target.value||0);if(e.target.id==='tlMaxEP')TL.maxEP=Math.max(1,+e.target.value||100);tlSave();tlRenderTarget()});
+function tlRenderActs(){const names=TL.slots.map(sl=>E.bySlug[memberSt(sl).st.slug].name);
+  $('tlActs').innerHTML='<tr><th>#</th><th>Aniimo</th><th>Move</th><th>Wait s</th><th>Target state</th><th></th></tr>'+TL.actions.map((a,i)=>`<tr data-a="${i}"><td>${i+1}</td><td><select data-k="slot">${names.map((n,j)=>`<option value="${j}"${a.slot===j?' selected':''}>${esc(n)}</option>`).join('')}</select></td>
+   <td><select data-k="move">${(TL.slots[a.slot]||{moves:[]}).moves.map((m,j)=>`<option value="${j}"${a.move===j?' selected':''}>${esc(m.name)}</option>`).join('')}</select></td><td><input data-k="wait" type="number" min="0" step="0.1" value="${a.wait||0}"></td>
+   <td><select data-k="state">${Object.entries(CB.STATES).map(([k,l])=>`<option value="${k}"${a.state===k?' selected':''}>${l}</option>`).join('')}</select></td><td style="white-space:nowrap"><button class="xbtn" type="button" data-up="${i}" aria-label="Move up">↑</button><button class="xbtn" type="button" data-dn="${i}" aria-label="Move down">↓</button><button class="xbtn" type="button" data-del="${i}" aria-label="Remove">×</button></td></tr>`).join('')}
+$('tlActs').addEventListener('change',e=>{const r=e.target.closest('[data-a]');if(!r)return;const a=TL.actions[+r.dataset.a],k=e.target.dataset.k;a[k]=k==='state'?e.target.value:k==='wait'?Math.max(0,+e.target.value||0):+e.target.value;if(k==='slot')a.move=0;tlSave();tlRenderActs()});
+$('tlActs').addEventListener('click',e=>{const d=e.target.dataset,A=TL.actions;let i;
+  if(d.del!==undefined)A.splice(+d.del,1);else if(d.up!==undefined&&(i=+d.up)>0)[A[i-1],A[i]]=[A[i],A[i-1]];else if(d.dn!==undefined&&(i=+d.dn)<A.length-1)[A[i+1],A[i]]=[A[i],A[i+1]];else return;tlSave();tlRenderActs()});
+$('tlAddAct').onclick=()=>{TL.actions.push({slot:0,move:0,wait:1,state:'normal'});tlSave();tlRenderActs()};
+function tlCfg(){return {members:TL.slots.map(sl=>{const ms=memberSt(sl);return {name:E.bySlug[ms.st.slug].name,st:ms.st,moves:sl.moves,boost:+sl.boost||0}}),actions:TL.actions.map(a=>({...a})),target:{...TL.target},model:TL.model,mightTotal:TL.mightTotal,startEP:TL.startEP,maxEP:TL.maxEP}}
+const fmt=n=>Math.round(n).toLocaleString();
+function tlRun(){TLCFG=tlCfg();TLOUT=CB.simulate(E,SET,TLCFG);const o=TLOUT,ok=o.log.filter(x=>!x.error);
+  let h=`<div class="verdict"><h4>${fmt(o.total)} damage in ${o.elapsed.toFixed(1)}s ${o.defeated?'· target defeated':`· ${(100*o.hpLeft/o.maxHP).toFixed(1)}% HP left`}</h4>${esc(o.modelLabel)} <span class="chip experimental">experimental</span> · ${ok.length} hits · not confirmed against the game yet.</div>`;
+  if(o.warnings.length)h+=`<div class="banner"><b>Read before trusting these numbers:</b><ul>${o.warnings.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div>`;
+  h+=`<div class="scroll"><table class="rtab tl-log"><tr><th>Time</th><th>Aniimo</th><th>Move</th><th>Hit</th><th>State</th><th>Damage</th><th>Target HP</th><th>Confidence</th><th></th></tr>`+o.log.map((x,i)=>x.error?`<tr><td>${x.time}s</td><td>${esc(x.who||'')}</td><td>${esc(x.move||'')}</td><td></td><td>${CB.STATES[x.state]}</td><td colspan="4" class="err">Skipped: ${esc(x.error)}</td></tr>`:
+    `<tr><td>${x.time}s</td><td>${esc(x.who)}</td><td>${esc(x.move)}</td><td>${x.hit}/${x.hits}</td><td>${CB.STATES[x.state]}</td><td><b>${fmt(x.damage)}</b></td><td>${x.hpPct.toFixed(1)}%</td><td><span class="chip ${x.confidence}">${x.confidence}</span></td><td><button class="linkbtn" type="button" data-why="${i}">Why</button></td></tr>
+     <tr class="more" id="tlw${i}" hidden><td colspan="9"><ul class="tl-mods">${x.mods.map(m=>`<li>${esc(m.name)}: <b>${m.value}</b> <span class="chip ${m.status}">${m.status}</span></li>`).join('')}</ul>${x.buffs.length?`Active buffs: ${x.buffs.map(esc).join(', ')}. `:''}${x.itemNotes.length?`Not simulated: ${x.itemNotes.map(esc).join(' ')}`:''}</td></tr>`).join('')+'</table></div>';
+  $('tlLog').innerHTML=h;tlTab('log')}
+$('tlLog').addEventListener('click',e=>{const w=e.target.closest('[data-why]');if(w){const r=$('tlw'+w.dataset.why);r.hidden=!r.hidden}});
+$('tlRun').onclick=()=>{try{tlRun()}catch(err){console.error(err);$('tlLog').innerHTML='<p class="banner">Something went wrong: '+esc(err.message)+'</p>';tlTab('log')}};
+/* reports */
+const reps=()=>LS.get(RPK,[]),putReps=r=>LS.set(RPK,r.slice(-50));
+function tlRenderReports(sel){const L=reps();$('tlRepSel').innerHTML=L.length?L.map((r,i)=>`<option value="${i}">${esc(r.label||r.id)} · ${esc(new Date(r.createdAt).toLocaleString())}</option>`).join(''):'<option value="">No reports yet</option>';
+  if(sel!=null)$('tlRepSel').value=String(sel);tlRenderRep();
+  let g=[];try{g=RP.groupEvidence(L)}catch(e){}
+  $('tlEvidence').innerHTML=g.length?`<table class="atab"><tr><th>Model</th><th>Target</th><th>Aniimo</th><th>Move</th><th>Hit</th><th>State</th><th>Samples</th><th>Runs</th><th>Median error</th><th>Evidence</th></tr>${g.map(x=>`<tr><td>${esc(x.model)}</td><td>${esc(x.target)}</td><td>${esc(x.aniimo)}</td><td>${esc(x.move)}</td><td>${x.hit}</td><td>${CB.STATES[x.state]||x.state}</td><td>${x.samples}</td><td>${x.runs}</td><td>${x.medianErrorPct>0?'+':''}${x.medianErrorPct}%</td><td><span class="chip ${x.evidence==='repeated'?'verified':'unknown'}">${x.evidence}</span></td></tr>`).join('')}</table>`:'<p class="small">No compared hits yet. A pattern counts as repeated after 3 samples from at least 2 runs.</p>'}
+function tlRenderRep(){const L=reps(),i=+$('tlRepSel').value,r=L[i];if(!r||$('tlRepSel').value===''){$('tlRepView').innerHTML='';return}
+  RP.summarize(r,+$('tlTol').value);const s=r.summary;
+  $('tlRepView').innerHTML=`<p class="small">Model ${esc(r.model.id)} (${esc(r.model.label)}), multi-hit Might ${r.model.mightTotal?'as total':'per hit'}, data ${esc(r.model.dataVersion||'')}. Team: ${r.equipment.map(q=>`${esc(q.name)}${q.item?` (${esc(ITEM[q.item]?ITEM[q.item].name:q.item)} +${q.itemLv})`:''}`).join(', ')}.</p>
+   <p><b>${s.compared||0}</b> hits compared: <span class="pass">${s.matched||0} match</span>, <span class="failx">${s.discrepancies||0} off</span>${s.deltaPct!=null?` · observed is ${s.deltaPct>0?'+':''}${s.deltaPct}% vs predicted`:''}</p>
+   <div class="scroll"><table class="rtab"><tr><th>#</th><th>Time</th><th>Aniimo</th><th>Move</th><th>Hit</th><th>State</th><th>Predicted</th><th>Seen in game</th><th>Crit?</th><th>Result</th><th>Note</th></tr>
+   ${r.steps.map((x,j)=>x.error?`<tr><td>${x.index}</td><td colspan="10" class="small">Skipped: ${esc(x.error)}</td></tr>`:`<tr data-st="${j}"><td>${x.index}</td><td>${x.time}s</td><td>${esc(x.who)}</td><td>${esc(x.move)}</td><td>${x.hit}/${x.hits}</td><td>${CB.STATES[x.state]}</td><td>${fmt(x.predicted)}</td>
+     <td><input data-o="observed" type="number" min="0" value="${x.observed==null?'':x.observed}" style="width:90px"></td><td><input data-o="crit" type="checkbox"${x.crit?' checked':''}></td>
+     <td>${x.status==='unverified'?'':`<span class="chip ${x.status==='match'?'verified':'unverified'}">${x.status} ${x.errorPct!=null?(x.errorPct>0?'+':'')+x.errorPct+'%':''}</span>`}</td><td><input data-o="note" maxlength="300" value="${esc(x.note||'')}" style="width:140px"></td></tr>`).join('')}</table></div>`}
+$('tlRepView').addEventListener('change',e=>{const row=e.target.closest('[data-st]');if(!row)return;const L=reps(),r=L[+$('tlRepSel').value],x=r.steps[+row.dataset.st],k=e.target.dataset.o;
+  x[k]=k==='crit'?e.target.checked:k==='note'?e.target.value.slice(0,300):e.target.value===''?null:Math.max(0,+e.target.value);putReps(L);tlRenderReports(+$('tlRepSel').value)});
+$('tlRepSel').onchange=tlRenderRep;$('tlTol').onchange=()=>tlRenderRep();
+$('tlRecord').onclick=()=>{if(!TLOUT){$('tlRepMsg').textContent='Run a simulation first.';return}
+  const A=Object.fromEntries(Object.entries(SET.A).map(([k,v])=>[k,v.v]));const r=RP.make(TLCFG,TLOUT,{label:$('tlRepLabel').value.trim(),dataVersion:GAME.version,assumptions:{...A,potModel:SET.potModel,t15Basis:SET.t15Basis,fight:SET.scenario}});
+  const L=reps();L.push(r);putReps(L);$('tlRepMsg').textContent=`Recorded "${r.label||r.id}" with ${r.steps.length} hits. Type in what you saw in game.`;$('tlRepLabel').value='';tlRenderReports(Math.min(L.length,50)-1)};
+$('tlRepDel').onclick=()=>{const L=reps(),i=+$('tlRepSel').value;if(!L[i])return;L.splice(i,1);putReps(L);tlRenderReports()};
+$('tlExpJson').onclick=()=>{const L=reps(),r=L[+$('tlRepSel').value];if(!r)return;$('tlIO').value=JSON.stringify(r);$('tlIO').select();$('tlRepMsg').textContent='Copy this JSON to keep or share the report.'};
+$('tlExpCsv').onclick=()=>{const L=reps(),r=L[+$('tlRepSel').value];if(!r)return;$('tlIO').value=RP.csv(r);$('tlIO').select();$('tlRepMsg').textContent='CSV: paste into a spreadsheet.'};
+$('tlImport').onclick=()=>{try{const r=RP.validate(JSON.parse($('tlIO').value));const L=reps();if(L.some(x=>x.id===r.id))throw Error('That report is already here');L.push(r);putReps(L);$('tlRepMsg').textContent='Imported. Its totals were recalculated from the individual hits.';tlRenderReports(Math.min(L.length,50)-1)}catch(err){$('tlRepMsg').textContent="Couldn't import: "+err.message}};
+function tlRenderHow(){const C2=GAME.combat||{verified:[],unverified:[]};
+  $('tlHow').innerHTML=`<p>Each hit is worked out in this order. Rules marked <span class="chip verified">verified</span> come from AniimoTools' damage formula; everything else is labelled.</p><ol class="small">
+   <li>Attack: the higher of ATK and 0.85 × BREAK for DPS and Break; 10.5 × level for Support, Heal and Regen. Stats, held items, Potential and personality come from the planner engine. <span class="chip verified">verified</span></li>
+   <li>Minus the target's DEF (after shred), never below 10% of the attack. <span class="chip verified">verified</span> The DEF you enter is your measurement. <span class="chip assumption">assumption</span></li>
+   <li>× the skill's Might: the exact form is unknown. Model A (default) and Model B are both on offer. <span class="chip experimental">experimental</span></li>
+   <li>× type matchup, × 1.1 for a same-element skill, × (1 + Elemental Boost − resistance). <span class="chip verified">verified</span></li>
+   <li>× expected crit: 1 + crit rate × crit bonus (50% at base, ×3 at most). <span class="chip verified">rule verified</span> <span class="chip assumption">crit rate is a setting</span></li>
+   <li>× (1 + Damage Amp), at least ×0.2; × (1 + Final Damage Amp). <span class="chip verified">verified</span> The amounts come from items, settings and team buffs.</li>
+   <li>× 0.625 against wild Aniimo and Alphas. <span class="chip verified">verified</span></li>
+   <li>× the BREAK or Recovery multiplier you enter. <span class="chip unverified">unverified</span></li></ol>
+   <h4 style="color:var(--deep)">Not confirmed yet</h4><ul class="small">${C2.unverified.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+   <p class="small">Sources: <a href="https://aniimotools.dev/guides/damage-formula/" target="_blank" rel="noopener">AniimoTools damage formula</a>; move presets from each Aniimo's AniimoTools page, checked 9 Oct 2026. Combat engine ${esc(CB.version)}.</p>`}
+function tlTab(t){[...$('tlTabs').children].forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));document.querySelectorAll('#teamlab [data-tp]').forEach(p=>p.hidden=p.dataset.tp!==t);if(t==='reports')tlRenderReports();if(t==='team')tlRenderTeam()}
+$('tlTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b)tlTab(b.dataset.t)};
+function initTeamLab(){tlRenderTeam();tlRenderTarget();tlRenderActs();tlRenderHow()}
+
 /* ---------- best personality for this setup ---------- */
 $('persBest').onclick=()=>{const g=$('oGoal').value,r=E.rankPersonalities(engineState(),SET,g,{custom:customW()}),a=cur(),b=r.best,ru=r.runnerUp;
   const pc=x=>(x*100).toFixed(1)+'%';
@@ -1230,7 +1405,7 @@ function snapshot(){return {planner:readState(),goal:$('oGoal').value,scenario:S
 function listSaved(){const b=LS.get('aniimo.builds.v1',[]);
   $('sList').innerHTML=b.length?b.map((x,i)=>{const a=E.bySlug[x.state.planner.slug];return `<div class="saved"><b>${esc(x.name)}</b><span>${a?esc(a.name):'unknown Aniimo'} · ${esc(new Date(x.savedAt).toLocaleDateString())}${x.dataVersion!==GAME.version?' · saved with older data':''}</span><button class="gbtn sm" type="button" data-load="${i}">Load</button><button class="gbtn blue sm" type="button" data-del="${i}">Delete</button></div>`}).join(''):'<p class="small">No saved builds yet.</p>';
   if(FEATURES.team)refreshSlotSources()}
-$('sSave').onclick=()=>{const b=LS.get('aniimo.builds.v1',[]),a=cur();const name=$('sName').value.trim()||`${a.name}: ${GAME.goals[$('oGoal').value].label}`;
+$('sSave').onclick=()=>{setTimeout(()=>{if(typeof tlRenderTeam==='function')tlRenderTeam()},0);const b=LS.get('aniimo.builds.v1',[]),a=cur();const name=$('sName').value.trim()||`${a.name}: ${GAME.goals[$('oGoal').value].label}`;
   b.push({name,savedAt:Date.now(),dataVersion:GAME.version,state:snapshot()});$('sMsg').textContent=LS.set('aniimo.builds.v1',b)?`Saved "${name}".`:'Your browser blocked saving. Use Export to keep a copy.';$('sName').value='';listSaved()};
 function applyState(s){const p=s.planner;if(!E.bySlug[p.slug]){$('sMsg').textContent='That Aniimo is not in the current data.';return}
   $('pA').value=p.slug;setForms();if(p.form)$('pForm').value=p.form;if(p.build)$('pBuild').value=p.build;
@@ -1281,7 +1456,7 @@ function renderData(){const ch=E.checkData();$('dVer').textContent=GAME.version;
   const flagged=GAME.aniimo.filter(a=>a.flags&&a.flags.length);
   $('dVerify').innerHTML='<tr><th>Topic</th><th>Status</th><th>Source</th></tr>'+GAME.verification.map(v=>`<tr><td>${esc(v.topic)}</td><td><span class="chip ${v.status}">${v.status}</span></td><td class="why">${esc(v.source)}</td></tr>`).join('')+
     `<tr><td>Aniimo with a point to check in game</td><td><span class="chip unverified">${flagged.length}</span></td><td class="why">${flagged.map(a=>esc(a.name)).join(', ')}</td></tr>`}
-initThemePick();initLook();renderScene();applyTheme();scheduleRoam();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
+initThemePick();initLook();renderScene();applyTheme();scheduleRoam();initTeamLab();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
 setForms();plan();
 </script>
 </body>

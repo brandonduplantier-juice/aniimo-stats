@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-08g",
+ "version": "2026-10-09a",
  "aniimo": [
   {
    "num": "001",
@@ -12024,6 +12024,292 @@ window.ANIIMO_DATA = {
    "slug": "skippy",
    "move": "peek"
   }
- ]
+ ],
+ "moves": {
+  "stellarys": [
+   {
+    "name": "Basic attack",
+    "kind": "Magical",
+    "might": 6,
+    "ep": null,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Ranged dark attack.",
+    "source": "https://aniimotools.dev/creatures/stellarys/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "unknown",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Shooting Stars",
+    "kind": "Magical",
+    "might": 40,
+    "ep": 20,
+    "hits": 3,
+    "hitsNote": "Fires 3 homing stars",
+    "cooldown": null,
+    "element": null,
+    "effect": "Each star hit gives the user 1% Damage Boost, stacking up to 15 (not simulated).",
+    "source": "https://aniimotools.dev/creatures/stellarys/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "verified",
+     "hits": "stated",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Shooting Star Glide",
+    "kind": "Magical",
+    "might": 74,
+    "ep": 20,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Hitting the same target 3 times raises Energy recovery 10% for 10s (not simulated).",
+    "source": "https://aniimotools.dev/creatures/stellarys/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "verified",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Comet Aureus",
+    "kind": "Magical",
+    "might": 166,
+    "ep": null,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Many comets strike a target.",
+    "source": "https://aniimotools.dev/creatures/stellarys/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "unknown",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   }
+  ],
+  "rookey": [
+   {
+    "name": "Basic attack",
+    "kind": "Physical",
+    "might": 6,
+    "ep": null,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Close-range attack.",
+    "source": "https://aniimotools.dev/creatures/rookey/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "unknown",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Guardbreak Slam",
+    "kind": "Physical",
+    "might": 45,
+    "ep": 15,
+    "hits": 3,
+    "hitsNote": "Up to three smashes",
+    "cooldown": null,
+    "element": null,
+    "effect": "Third smash stuns for 1s.",
+    "source": "https://aniimotools.dev/creatures/rookey/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "verified",
+     "hits": "stated",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Bouncy Sling",
+    "kind": "Physical",
+    "might": 55,
+    "ep": 20,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Target takes 15% more BREAK damage for 15s; ricochets (not simulated).",
+    "source": "https://aniimotools.dev/creatures/rookey/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "verified",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Ballistic Guard",
+    "kind": "Physical",
+    "might": 52,
+    "ep": 20,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "+20% damage reduction; 10 Might shockwave when hit (not simulated).",
+    "source": "https://aniimotools.dev/creatures/rookey/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "verified",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Heavy Slam",
+    "kind": "Physical",
+    "might": 196,
+    "ep": null,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Smashes all nearby targets.",
+    "source": "https://aniimotools.dev/creatures/rookey/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "unknown",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   }
+  ],
+  "fragrancier": [
+   {
+    "name": "Basic attack",
+    "kind": "Physical",
+    "might": 6,
+    "ep": null,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Close-range attack.",
+    "source": "https://aniimotools.dev/creatures/fragrancier/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "unknown",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Withering Bloom",
+    "kind": "Magical",
+    "might": 22,
+    "ep": 20,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Heals all team members 5% max HP, doubled with one target (healing not simulated).",
+    "source": "https://aniimotools.dev/creatures/fragrancier/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "verified",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Secret Fragrance Mark",
+    "kind": "Magical",
+    "might": 30,
+    "ep": null,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Marks for 20s: Dark basic attacks deal 50% extra to marked targets (not simulated).",
+    "source": "https://aniimotools.dev/creatures/fragrancier/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "unknown",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   },
+   {
+    "name": "Blossoming Moment",
+    "kind": "Magical",
+    "might": 38,
+    "ep": 10,
+    "hits": 1,
+    "hitsNote": null,
+    "cooldown": null,
+    "element": null,
+    "effect": "Dodge then dive-peck; shield 10% max HP for 20s on a successful dodge (not simulated).",
+    "source": "https://aniimotools.dev/creatures/fragrancier/",
+    "checked": "2026-10-09",
+    "status": {
+     "might": "verified",
+     "ep": "verified",
+     "hits": "unknown",
+     "cooldown": "unknown"
+    }
+   }
+  ]
+ },
+ "combat": {
+  "version": "combat-1",
+  "verified": [
+   {
+    "rule": "Wild Aniimo and Alphas take ×0.625 damage",
+    "source": "AniimoTools damage formula"
+   },
+   {
+    "rule": "A skill sharing one of the Aniimo's elements: ×1.1",
+    "source": "AniimoTools damage formula"
+   },
+   {
+    "rule": "Crit: ×(1 + crit bonus), 50% at base, capped at ×3",
+    "source": "AniimoTools damage formula"
+   },
+   {
+    "rule": "Attack minus defense, never below 10% of attack; DPS and Break use max(ATK, 0.85 × BREAK); Support, Heal and Regen use 10.5 × level",
+    "source": "AniimoTools damage formula"
+   },
+   {
+    "rule": "Type matchups ×1.6 / ×1 / ×0.625; Elemental Boost ×(1 + boost − resistance); Damage Amp ×(1 + amp), at least ×0.2",
+    "source": "AniimoTools damage formula"
+   }
+  ],
+  "unverified": [
+   "How Might turns into damage. AniimoTools says a skill adds \"its fixed part plus its Might\" but gives no number for the fixed part. The Team Lab offers two experimental models.",
+   "Whether a multi-hit skill's Might is the total or per hit.",
+   "Alphas take \"greatly increased damage\" while broken (AniimoTools), with no number given. Enter a measured multiplier.",
+   "Skill cooldowns: not listed on AniimoTools for these moves."
+  ]
+ }
 };
 if (typeof module !== "undefined") module.exports = window.ANIIMO_DATA;

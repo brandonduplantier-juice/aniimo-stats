@@ -179,7 +179,7 @@ E.statAt = statAt;
 function critFactor(c, fx, team) {
   const A = c.A; let cr = A.critRate.v / 100 + (c.pers.includes('N') ? 0.05 : 0) + fx.critRate + (team || 0); let cd = A.critDmg.v / 100 + fx.critDmg;
   if (fx._pity) cr = pityRate(Math.min(1, cr), fx._pity);
-  cr = Math.min(1, cr);
+  cr = Math.min(1, cr); cd = Math.min(2, cd); // crit is capped at ×3 (AniimoTools damage formula)
   let f = fx.forcedCrit * (1 + cd) + (1 - fx.forcedCrit) * (1 + cr * cd);
   if (fx._extraHit) f += Math.max(cr, fx.forcedCrit) * fx._extraHit.chance * fx._extraHit.might / A.mightPerHit.v;
   return f;
@@ -411,6 +411,16 @@ E.optimizeTeam = function (members, set, opts) {
   if (!roles.includes('Break')) notes.push('No Break Aniimo on this team, so BREAK gauge damage comes only from side stats.');
   if (!roles.some(r => ['Heal', 'Regen'].includes(r))) notes.push('No Heal or Regen Aniimo on this team.');
   return { best, naive, cands, notes };
+};
+
+/* ---------- per-hit numbers for the Team Lab (same rules as the optimizer) ---------- */
+E.hitParts = function (c, fx, d, teamCrit) {
+  const A = c.A, dd = d || Object.fromEntries(STATS.map(s => [s, c.S[s].dNow]));
+  const atk = statAt(c, fx, 'ATK', dd.ATK), brk = statAt(c, fx, 'BREAK', dd.BREAK);
+  const attack = c.hitByLevel ? 10.5 * c.lv : c.attack === 'ATK' ? atk : c.attack === 'BREAK' ? 0.85 * brk : Math.max(atk, 0.85 * brk);
+  let amp = A.otherAmp.v / 100; fx.amp.forEach(r => amp += r.v * (r.double15 && above15(c, r.double15, dd[r.double15], c.S[r.double15].blue + (fx.blue[r.double15] || 0)) ? 2 : 1));
+  let cdr = 0; fx.cdr.forEach(r => cdr += r.v * (r.double15 && above15(c, r.double15, dd.REGEN, c.S.REGEN.blue + (fx.blue.REGEN || 0)) ? 2 : 1));
+  return { atk, brk, attack, amp, final: A.otherFinal.v / 100 + fx.final, crit: critFactor(c, fx, teamCrit || 0), hitMult: fx.hitMult, cdr: Math.min(0.9, cdr), persS: c.pers.includes('S') ? 1.04 : 1, placeholder: c.usesPlaceholder };
 };
 
 /* ---------- personality: try all 16 for this setup ---------- */

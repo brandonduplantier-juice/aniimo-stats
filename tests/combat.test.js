@@ -1,0 +1,41 @@
+/* Run with: node tests/combat.test.js (from the site folder) */
+global.window = {};
+const assert = require('assert');
+const GAME = require('../data/game-data.js');
+const E = require('../js/engine.js').init(GAME), C = require('../js/combat.js'), R = require('../js/reports.js');
+let pass = 0, fail = 0; const t = (n, f) => { try { f(); pass++; console.log('ok   ' + n); } catch (e) { fail++; console.log('FAIL ' + n + '\n     ' + e.message); } };
+const near = (a, b, tol, m) => assert(Math.abs(a - b) <= (tol || 1e-6), `${m || ''} expected ${b}, got ${a}`);
+const blank = () => Object.fromEntries(E.STATS.map(s => [s, { inn: 0, aq: 0, raw: null }]));
+const st = (slug, o) => ({ slug, level: 60, rank: 6, stats: blank(), ...(o || {}) });
+const SET = () => E.settingsFrom({ A: { critRate: 0, otherAmp: 0, otherFinal: 0 } });
+const one = (might, o) => ({ name: 'Test', kind: 'Physical', might, ep: 0, hits: 1, ...(o || {}) });
+const run = (members, actions, target, o) => C.simulate(E, SET(), { members, actions, target: { hp: 1e9, def: 100, ...(target || {}) }, model: 'A', mightTotal: true, startEP: 100, maxEP: 100, ...(o || {}) });
+const emb = (o, moves) => { const s = st('emberpup', o); s.stats.ATK.raw = 1000; s.stats.BREAK.raw = 300; return { name: 'Emberpup', st: s, moves: moves || [one(100)] }; };
+
+t('model A by hand: (1000 − 100) × 100/100 × 1.5^0 crit … × 0.625 Alpha', () => { const r = run([emb()], [{ slot: 0, move: 0 }]); near(r.log[0].damage, 900 * 1 * 0.625, 1e-6); });
+t('model B differs from model A', () => { const a = run([emb()], [{ slot: 0, move: 0 }]).total, b = run([emb()], [{ slot: 0, move: 0 }], {}, { model: 'B' }).total; near(b, (1000 - 100) * 0.625); const a2 = run([emb({}, [one(50)])], [{ slot: 0, move: 0 }]).total, b2 = run([emb({}, [one(50)])], [{ slot: 0, move: 0 }], {}, { model: 'B' }).total; assert(Math.abs(a2 - b2) > 1, a2 + ' ' + b2); });
+t('defense floor: never below 10% of attack', () => { const r = run([emb()], [{ slot: 0, move: 0 }], { def: 5000 }); near(r.log[0].damage, 100 * 0.625, 1e-6); });
+t('not an Alpha: no ×0.625', () => near(run([emb()], [{ slot: 0, move: 0 }], { wild: false }).total, 900, 1e-6));
+t('BREAK state multiplier applied and recorded', () => { const r = run([emb()], [{ slot: 0, move: 0, state: 'break' }], { breakMult: 1.5 }); near(r.log[0].damage, 900 * 0.625 * 1.5, 1e-6); assert.strictEqual(r.log[0].state, 'break'); assert(r.log[0].mods.some(m => /BREAK state/.test(m.name) && m.status === 'unverified')); });
+t('multi-hit: total Might split across hits, one log line per hit', () => { const r = run([emb({}, [one(90, { hits: 3 })])], [{ slot: 0, move: 0 }]); assert.strictEqual(r.log.length, 3); r.log.forEach(x => near(x.damage, (1000 - 100) * 30 / 100 * 0.625)); });
+t('multi-hit: per-hit Might when set', () => { const r = run([emb({}, [one(90, { hits: 3, mightTotal: false })])], [{ slot: 0, move: 0 }]); near(r.log[0].damage, 900 * 0.9 * 0.625); });
+t('EP: a move it cannot afford is refused', () => { const r = run([emb({}, [one(50, { ep: 60 })])], [{ slot: 0, move: 0 }, { slot: 0, move: 0 }]); assert(!r.log[0].error); assert(/Not enough EP/.test(r.log[1].error)); });
+t('cooldown blocks a repeat until ready', () => { const r = run([emb({}, [one(50, { cooldown: 5 })])], [{ slot: 0, move: 0 }, { slot: 0, move: 0, wait: 2 }, { slot: 0, move: 0, wait: 3 }]); assert(/Cooldown/.test(r.log[1].error)); assert(!r.log[2].error); });
+t('team buff: Damage Amp and DEF shred last their duration', () => { const buffer = { name: 'B', st: st('emberpup'), moves: [one(0, { kind: 'buff', buff: { amp: 20, shred: 50, duration: 10 } })] };
+  const r = run([buffer, emb()], [{ slot: 0, move: 0 }, { slot: 1, move: 0 }, { slot: 1, move: 0, wait: 11 }]); near(r.log[1].damage, (1000 - 50) * 1.2 * 0.625); near(r.log[2].damage, (1000 - 100) * 0.625); });
+t('Ferocious Fang comes from the planner engine (+42 ATK at level 60)', () => { const r = run([emb({ item: 'h02', itemLv: 9 })], [{ slot: 0, move: 0 }]); near(r.log[0].damage, (1042 - 100) * 0.625, 1e-6); });
+t('Vanguard\'s Whistle switches off once the target drops below 60%', () => { const r = run([emb({ item: 'h06', itemLv: 10 }, [one(100)])], [{ slot: 0, move: 0 }, { slot: 0, move: 0 }], { hp: 1000, def: 0 }); assert(r.log[0].mods.find(m => m.name === 'Final Damage Amp').value > 1); });
+t('crit is capped at ×3', () => { const S = E.settingsFrom({ A: { critRate: 100, critDmg: 300 } }); const r = C.simulate(E, S, { members: [emb()], actions: [{ slot: 0, move: 0 }], target: { hp: 1e9, def: 0 }, model: 'A' }); near(r.log[0].mods.find(m => /Crit/.test(m.name)).value, 3, 1e-9); });
+t('blank raw stats flag the hit as placeholder confidence', () => { const r = run([{ name: 'X', st: st('emberpup'), moves: [one(50)] }], [{ slot: 0, move: 0 }]); assert.strictEqual(r.log[0].confidence, 'placeholder'); assert(r.warnings.some(w => /placeholder/.test(w))); });
+t('every hit names its source, time, modifiers and confidence', () => { const r = run([emb()], [{ slot: 0, move: 0, wait: 1.5 }]); const x = r.log[0]; assert(x.who && x.move && x.time === 1.5 && x.mods.length >= 10 && x.confidence); });
+t('move presets: 13 checked moves, Might verified, unknown values left unknown', () => { const all = Object.values(GAME.moves).flat(); assert.strictEqual(all.length, 13); all.forEach(m => { assert.strictEqual(m.status.might, 'verified'); assert.strictEqual(m.cooldown, null); if (m.ep == null) assert.strictEqual(m.status.ep, 'unknown'); });
+  assert(GAME.moves.fragrancier.some(m => m.name === 'Secret Fragrance Mark') && GAME.moves.fragrancier.some(m => m.name === 'Blossoming Moment')); });
+/* reports */
+const rep = () => { const cfg = { members: [emb()], actions: [{ slot: 0, move: 0, state: 'break' }], target: { name: 'Alpha Test', hp: 1e9, def: 100, breakMult: 1 }, model: 'A', mightTotal: true }; return R.make(cfg, C.simulate(E, SET(), cfg), { dataVersion: GAME.version }); };
+t('report records model, state, equipment and confidence per hit', () => { const r = rep(); assert.strictEqual(r.model.id, 'A'); assert.strictEqual(r.steps[0].state, 'break'); assert.strictEqual(r.equipment[0].slug, 'emberpup'); assert(r.steps[0].confidence); });
+t('observed damage within 5% is a match, beyond is a discrepancy', () => { const r = rep(); r.steps[0].observed = r.steps[0].predicted * 1.03; R.summarize(r); assert.strictEqual(r.steps[0].status, 'match'); r.steps[0].observed = r.steps[0].predicted * 1.2; R.summarize(r); assert.strictEqual(r.steps[0].status, 'discrepancy'); });
+t('import recalculates totals and rejects bad data', () => { const r = rep(); r.steps[0].observed = r.steps[0].predicted; r.summary.matched = 999; assert.strictEqual(R.validate(JSON.parse(JSON.stringify(r))).summary.matched, 1);
+  const bad = JSON.parse(JSON.stringify(r)); bad.steps[0].observed = -5; assert.throws(() => R.validate(bad)); const bad2 = JSON.parse(JSON.stringify(r)); bad2.steps[0].state = 'stunned'; assert.throws(() => R.validate(bad2)); });
+t('evidence groups by model and BREAK state and needs repeats', () => { const rs = [rep(), rep(), rep()]; rs.forEach(r => { r.steps[0].observed = r.steps[0].predicted * 1.1; R.summarize(r); }); const g = R.groupEvidence(rs); assert.strictEqual(g.length, 1); assert.strictEqual(g[0].state, 'break'); assert.strictEqual(g[0].evidence, 'repeated'); near(g[0].medianErrorPct, 10, 0.01); });
+t('CSV has one row per hit plus a header', () => { const r = rep(); assert.strictEqual(R.csv(r).split('\n').length, 2); assert(/model,mightTotal/.test(R.csv(r))); });
+console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
