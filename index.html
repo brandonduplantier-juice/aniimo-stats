@@ -392,6 +392,18 @@ body[data-theme=prismana] .plate{background:linear-gradient(90deg,#7b5cf0,#c9448
 .card .art img.pic{width:86%;height:104px;max-width:none;max-height:none;object-fit:contain}
 .mcard .pic img,.fchip .fimg img,.ev .art img{width:100%;height:100%;object-fit:contain}
 @media (max-width:600px){.card .art img.pic{height:82px}}
+
+body[data-theme] .intro{padding-right:200px;min-height:140px}
+body[data-theme] #themeArt{top:8px;bottom:8px;right:14px;width:180px;height:auto}
+#themeArt .main{position:absolute;inset:0 0 0 40px}
+#themeArt .main img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;object-position:center}
+#themeArt .side{position:absolute;left:0;bottom:0;width:62px;height:62px}
+#themeArt .side img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain}
+#themeArt::before{inset:0 0 0 30px}
+body[data-theme=windchaser]{background:radial-gradient(circle at 82% 0,rgba(255,232,160,.75),transparent 38%),radial-gradient(circle at 12% 18%,rgba(255,196,228,.45),transparent 32%),radial-gradient(circle at 55% 60%,rgba(190,240,255,.35),transparent 40%),linear-gradient(180deg,var(--sky1) 0,var(--sky2) 520px,#f6fdfb 100%) fixed}
+.fx-petal{position:absolute;top:-30px;width:16px;height:16px;animation:drift linear infinite}
+.fx-mote{position:absolute;width:6px;height:6px;border-radius:50%;animation:twinkle ease-in-out infinite}
+@media (max-width:600px){body[data-theme] .intro{padding-right:110px}body[data-theme] #themeArt{width:100px;right:6px}#themeArt .main{inset:0}}
 </style>
 </head>
 <body>
@@ -412,7 +424,6 @@ body[data-theme=prismana] .plate{background:linear-gradient(90deg,#7b5cf0,#c9448
   <div id="themeArt" aria-hidden="true"></div>
 </div>
 
-<div class="frame events" id="events" aria-live="polite"></div>
 
 <section id="planner" class="planner">
   <aside class="frame who" id="who">
@@ -534,6 +545,7 @@ body[data-theme=prismana] .plate{background:linear-gradient(90deg,#7b5cf0,#c9448
       </div>
       <p class="small">None of these is confirmed in game. The "Compare" check in the Optimizer tells you whether flipping one changes the answer.</p>
     </div></details>
+    <details class="frame"><summary>Look</summary><div><div class="settingsgrid"><label>Theme<select id="xTheme"></select></label></div><p class="small">Automatic dresses the page for events running in the game, on official dates only (Windchaser's Departure runs until 9 Dec). It changes colors and decorations only, never numbers.</p></div></details>
     <details class="frame"><summary>Assumptions</summary><div>
       <p class="small"><span class="chip placeholder">placeholder</span> not from the game. <span class="chip assumption">assumption</span> a reasonable guess. Low and high are the ends tested by the "what changes the winner" check.</p>
       <div class="scroll"><table class="atab" id="aTable"></table></div>
@@ -593,6 +605,7 @@ body[data-theme=prismana] .plate{background:linear-gradient(90deg,#7b5cf0,#c9448
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>8 Oct 2026, v10.6.</b> Portraits are trimmed of empty space so every Aniimo fills its box about the same. Header art fits inside the header. The leading event theme is now a featured event if one is marked, otherwise the longest-running confirmed event (total length, not time left); shorter events add accents. Right now that is Windchaser's Departure (Irisalis) with petals, wind and light motes, with Prismana sparkles as the accent. The events line is gone; the Theme choice moved to Settings and data, under Look.</p>
       <p><b>8 Oct 2026, v10.5.</b> Portraits always fit their box. Tall or wide artwork (Flameruff, Inferlupa and others) was running past the edge of the planner picture and the detail panel; every picture now shrinks to fit, whatever its shape.</p>
       <p><b>8 Oct 2026, v10.4.</b> Event themes. The page dresses up for what's running in the game: Windchaser's Departure brings a teal and gold sky with drifting feathers and Irisalis in the header; Prismana events bring rainbow borders, sparkles and the featured Prismana form; Glamour Star brings stage lights. Overlapping events mix, with the strongest one leading. Themes switch on official event dates, can be picked by hand (Theme menu), stay still for anyone who has reduced motion turned on, and never change any numbers. The events line is now one row, with Details to expand.</p>
       <p><b>8 Oct 2026, v10.3.</b> Events now banner with the current and upcoming events (official dates, roadmap ones marked). Star Up ranks your level can't reach are greyed out and lowered automatically. The board shows Acquired points used out of the total, the most possible at your level, and the absolute max of 78. Each stat row says where the next ×4 breakpoint is and whether you can reach it. Best personality for this setup: tries all 16 and shows the runner-up, GameWith's default, and what each letter is worth.</p>
@@ -652,9 +665,9 @@ const sid=s=>s.replace('.','');
 const IDX={};ASSETS.forEach(a=>IDX[a.key]=a);
 /* order: baked-in copy, then images/ folder next to the page (the published site), then each online source */
 const localSrc=key=>'images/'+key.replace(':','_')+'.webp';
-const srcList=key=>{const a=IDX[key];const L=[IMG[key],localSrc(key),...a.urls];if(key.startsWith('f:')){const p='p:'+key.slice(2).split('--')[0];if(IDX[p])L.push(...srcList(p))}return L.filter(Boolean)};
+let srcList=key=>{const a=IDX[key];const L=[IMG[key],localSrc(key),...a.urls];if(key.startsWith('f:')){const p='p:'+key.slice(2).split('--')[0];if(IDX[p])L.push(...srcList(p))}return L.filter(Boolean)};
 function im(key,cls,alt){if(!IDX[key])return '';
-  return `<img class="${cls||''}" alt="${esc(alt||'')}" src="${srcList(key)[0]}" data-key="${key}" data-n="0" onerror="imgFail(this)">`}
+  return `<img class="${cls||''}" alt="${esc(alt||'')}" src="${srcList(key)[0]}" data-key="${key}" data-n="0" onerror="imgFail(this)" onload="imgTrim(this)">`}
 window.imgFail=el=>{const L=srcList(el.dataset.key);const n=+el.dataset.n+1;
   if(n<L.length){el.dataset.n=n;el.src=L[n];return}
   if(el.classList.contains('pic')){const s=document.createElement('span');s.className='ini';s.textContent=el.alt.slice(0,2);el.replaceWith(s)}else if(el.alt){const s=document.createElement('span');s.className='txt';s.textContent=el.alt;el.replaceWith(s)}else el.remove()};
@@ -894,6 +907,20 @@ function nowDate(){const q=new URLSearchParams(location.search).get('date');cons
 const evWhen=iso=>{const m=iso.match(/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)/);const mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1];return `${mon} ${+m[3]}, ${m[4]}:${m[5]}`};
 const evLeft=ms=>{const d=Math.floor(ms/864e5),h=Math.floor(ms/36e5)%24;return d>=1?`${d} day${d>1?'s':''}${h?` ${h} h`:''}`:`${Math.max(1,Math.floor(ms/36e5))} h`};
 
+
+/* trim empty transparent space around portraits so every Aniimo fills its box about the same.
+   Works for pictures from this site's images folder; others are left as they are. */
+const TRIM={};
+window.imgTrim=el=>{const key=el.dataset.key;if(!key||!/^(p|f):/.test(key)||el.dataset.trimmed)return;el.dataset.trimmed='1';
+  try{const W=el.naturalWidth,H=el.naturalHeight;if(!W||!H)return;const sc=Math.min(1,220/Math.max(W,H)),w=Math.max(1,Math.round(W*sc)),h=Math.max(1,Math.round(H*sc));
+    const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(el,0,0,w,h);const d=x.getImageData(0,0,w,h).data;
+    let t=h,l=w,b=-1,r=-1;for(let y=0;y<h;y++)for(let i=0;i<w;i++)if(d[(y*w+i)*4+3]>20){if(y<t)t=y;if(y>b)b=y;if(i<l)l=i;if(i>r)r=i}
+    if(b<0)return;const fw=(r-l+1)/w,fh=(b-t+1)/h;if(fw>0.94&&fh>0.94)return;
+    const pad=0.03,X=Math.max(0,(l/sc)-W*pad),Y=Math.max(0,(t/sc)-H*pad),X2=Math.min(W,(r+1)/sc+W*pad),Y2=Math.min(H,(b+1)/sc+H*pad);
+    const cw=X2-X,ch=Y2-Y,k=Math.min(1,480/Math.max(cw,ch)),o=document.createElement('canvas');o.width=Math.round(cw*k);o.height=Math.round(ch*k);
+    o.getContext('2d').drawImage(el,X,Y,cw,ch,0,0,o.width,o.height);const url=o.toDataURL('image/webp');TRIM[key]=url;el.src=url}catch(e){/* picture from another site: leave it */}};
+const srcList0=srcList;srcList=key=>TRIM[key]?[TRIM[key],...srcList0(key)]:srcList0(key);
+
 /* ---------- event themes: decoration only, never touches calculations ---------- */
 const evShort=ms=>{const d=Math.floor(ms/864e5);return d>=1?`${d} d left`:`${Math.max(1,Math.floor(ms/36e5))} h left`};
 function renderEvents(){const now=nowDate(),L=(GAME.events&&GAME.events.list)||[];
@@ -910,14 +937,16 @@ function renderEvents(){const now=nowDate(),L=(GAME.events&&GAME.events.list)||[
   $('themeSel').oninput=()=>{LS.set('aniimo.theme.v1',$('themeSel').value);applyTheme()};
   $('evToggle').onclick=()=>{const m=$('evMore'),o=m.hidden;m.hidden=!o;$('evToggle').setAttribute('aria-expanded',o);$('evToggle').textContent=o?'Hide details':'Details'}}
 function activeThemes(){const now=nowDate(),by={};
-  ((GAME.events&&GAME.events.list)||[]).filter(e=>e.theme&&e.official&&GAME.themes[e.theme]&&new Date(e.start)<=now&&now<new Date(e.end)).forEach(e=>{const t=by[e.theme]||(by[e.theme]={key:e.theme,art:null});if(!t.art&&e.art)t.art=e.art});
-  return Object.values(by).sort((a,b)=>GAME.themes[b.key].priority-GAME.themes[a.key].priority)}
+  ((GAME.events&&GAME.events.list)||[]).filter(e=>e.theme&&e.official&&GAME.themes[e.theme]&&new Date(e.start)<=now&&now<new Date(e.end)).forEach(e=>{const t=by[e.theme]||(by[e.theme]={key:e.theme,art:null,featured:false,len:0});if(!t.art&&e.art)t.art=e.art;t.featured=t.featured||!!e.featured;t.len=Math.max(t.len,new Date(e.end)-new Date(e.start))});
+  return Object.values(by).sort((a,b)=>(b.featured-a.featured)||(b.len-a.len))}
 const rnd=seed=>()=>{seed=(seed*9301+49297)%233280;return seed/233280};
 const FEATHER=c=>`<svg viewBox="0 0 24 24"><path d="M20 3C12 4 6 9 4 20l1 1C7 15 10 12 14 10 10 13 8 16 7 19c7-2 11-8 13-16z" fill="#fff" stroke="${c}" stroke-width="1.2"/></svg>`;
 const STAR=c=>`<svg viewBox="0 0 24 24"><path d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0z" fill="${c}"/></svg>`;
 function fxLayer(motif,sec){const r=rnd(motif.length*97+(sec?7:1)),n=x=>sec?Math.ceil(x/2):x,cls=sec?' sec':'';let h='';
   if(motif==='wind'){for(let i=0;i<n(6);i++)h+=`<div class="fx-streak${cls}" style="top:${(8+r()*80).toFixed(1)}%;animation-duration:${(7+r()*7).toFixed(1)}s;animation-delay:-${(r()*12).toFixed(1)}s"></div>`;
-    for(let i=0;i<n(8);i++)h+=`<div class="fx-feather${cls}" style="left:${(r()*90).toFixed(1)}%;animation-duration:${(18+r()*14).toFixed(1)}s;animation-delay:-${(r()*30).toFixed(1)}s">${FEATHER(i%2?'#d9a514':'#2f9f8f')}</div>`}
+    const PET=['#ffc4dc','#e6c8ff','#ffd9b0','#bff0e6','#fff1a8'];for(let i=0;i<n(12);i++)h+=`<div class="fx-petal${cls}" style="left:${(r()*95).toFixed(1)}%;animation-duration:${(16+r()*14).toFixed(1)}s;animation-delay:-${(r()*30).toFixed(1)}s"><svg viewBox="0 0 20 20"><path d="M10 1C15 6 15 14 10 19 5 14 5 6 10 1z" fill="${PET[i%5]}" opacity=".9"/></svg></div>`;
+    for(let i=0;i<n(14);i++)h+=`<div class="fx-mote${cls}" style="left:${(r()*97).toFixed(1)}%;top:${(r()*95).toFixed(1)}%;background:${i%3?'#fff6c9':'#d8fff4'};box-shadow:0 0 6px ${i%3?'#ffe27a':'#7fe0cf'};animation-duration:${(3+r()*3).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s"></div>`;
+    for(let i=0;i<n(5);i++)h+=`<div class="fx-feather${cls}" style="left:${(r()*90).toFixed(1)}%;animation-duration:${(18+r()*14).toFixed(1)}s;animation-delay:-${(r()*30).toFixed(1)}s">${FEATHER(i%2?'#d9a514':'#2f9f8f')}</div>`}
   if(motif==='prismana'){h+=sec?'':`<div class="fx-glow" style="left:-15vw;top:-10vw;background:radial-gradient(circle,#ffb6e1,transparent 70%)"></div><div class="fx-glow" style="right:-18vw;top:30vh;background:radial-gradient(circle,#9fd8ff,transparent 70%)"></div>`;
     const hues=['#ff7fc8','#ffc94d','#6fe3b0','#6fb9ff','#b38bff'];for(let i=0;i<n(16);i++)h+=`<div class="fx-spark${cls}" style="left:${(r()*96).toFixed(1)}%;top:${(r()*92).toFixed(1)}%;animation-duration:${(2.4+r()*2.6).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s">${STAR(hues[i%5])}</div>`}
   if(motif==='glamour'){for(let i=0;i<n(3);i++)h+=`<div class="fx-beam${cls}" style="left:${10+i*32}%;animation-duration:${(8+r()*4).toFixed(1)}s;animation-delay:-${(r()*6).toFixed(1)}s"></div>`;
@@ -936,6 +965,9 @@ function applyTheme(){const pick=LS.get('aniimo.theme.v1','auto'),T=GAME.themes|
   $('themeArt').innerHTML=(a1?`<span class="main">${im(a1,'',t.label)}</span>`:'')+(a2&&a2!==a1?`<span class="side">${im(a2,'','')}</span>`:'');
   $('themeTag').textContent='✦ '+[t.label,...sec.map(x=>T[x.key].label)].join(' + ')+(pick==='auto'?' event theme':' theme')}
 
+function initThemePick(){const opts=[['auto','Automatic (follows official event dates)'],['default','Default sky'],...Object.entries(GAME.themes||{}).map(([k,t])=>[k,t.label])];
+  $('xTheme').innerHTML=opts.map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join('');$('xTheme').value=LS.get('aniimo.theme.v1','auto');
+  $('xTheme').oninput=()=>{LS.set('aniimo.theme.v1',$('xTheme').value);applyTheme()}}
 /* ---------- best personality for this setup ---------- */
 $('persBest').onclick=()=>{const g=$('oGoal').value,r=E.rankPersonalities(engineState(),SET,g,{custom:customW()}),a=cur(),b=r.best,ru=r.runnerUp;
   const pc=x=>(x*100).toFixed(1)+'%';
@@ -1133,7 +1165,7 @@ function renderData(){const ch=E.checkData();$('dVer').textContent=GAME.version;
   const flagged=GAME.aniimo.filter(a=>a.flags&&a.flags.length);
   $('dVerify').innerHTML='<tr><th>Topic</th><th>Status</th><th>Source</th></tr>'+GAME.verification.map(v=>`<tr><td>${esc(v.topic)}</td><td><span class="chip ${v.status}">${v.status}</span></td><td class="why">${esc(v.source)}</td></tr>`).join('')+
     `<tr><td>Aniimo with a point to check in game</td><td><span class="chip unverified">${flagged.length}</span></td><td class="why">${flagged.map(a=>esc(a.name)).join(', ')}</td></tr>`}
-renderEvents();applyTheme();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
+initThemePick();applyTheme();renderPers();setGoalFor(cur());initInv();listSaved();if(FEATURES.team)initTeam();renderSettings();renderData();
 setForms();plan();
 </script>
 </body>

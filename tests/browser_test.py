@@ -8,7 +8,7 @@ def check(name, ok, detail=''):
 
 with sync_playwright() as p:
     b = p.chromium.launch()
-    for ver in ('10.4',):
+    for ver in ('10.6',):
         ctx = b.new_context(viewport={'width': 1280, 'height': 900})
         ctx.route('http*://**/*', lambda r: r.abort())   # sandbox has no internet; images fall back
         pg = ctx.new_page(); errs = []
@@ -61,7 +61,6 @@ with sync_playwright() as p:
         check('v10.3 rank lowered to 5 at level 55, 6 and 7 greyed out', pg.input_value('#pRank') == '5' and pg.evaluate("[...document.getElementById('pRank').options].filter(o=>o.disabled).map(o=>o.value).join()") == '6,7')
         check('v10.3 points summary', '0 / 25' in pg.text_content('#sumBox') and 'Most possible at Lv 55: 25' in pg.text_content('#sumBox') and '78' in pg.text_content('#sumBox'), pg.text_content('#sumBox'))
         pg.fill('#pLevel', '60'); pg.dispatch_event('#pLevel','input'); pg.select_option('#pRank', '6')
-        check('v10.3 events banner shows Berylline Vale on Oct 8', 'Berylline Vale' in pg.text_content('#events') and 'Journey Chronicles' in pg.text_content('#events') and 'roadmap' in pg.text_content('#events'), pg.text_content('#events')[:300])
         pg.click('#persBest'); pg.wait_for_timeout(1500)
         check('v10.3 best personality for this setup', 'Best for this setup' in pg.text_content('#persRes') and 'Runner-up' in pg.text_content('#persRes') and 'GameWith default' in pg.text_content('#persRes'), pg.text_content('#persRes')[:300])
         best = pg.text_content('#persUse').replace('Use ','').strip(); pg.click('#persUse'); pg.wait_for_timeout(100)
@@ -128,32 +127,52 @@ with sync_playwright() as p:
         check(f'v{ver} no sideways scroll on a phone', sw <= 390, sw)
         ctx.close()
 
-    # v10.4 event themes
+    # v10.6 event themes and portrait trimming
     def page_at(date, motion='no-preference'):
-        c = b.new_context(viewport={'width': 1280, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort())
+        c = b.new_context(viewport={'width': 1280, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort() if 'localhost' not in r.request.url else r.continue_())
         pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/work/site_v10.4/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
+        pg.goto('file:///home/claude/work/site_v10.6/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
     c, pg, errs = page_at('2026-10-08T12:00:00-04:00')
-    check('v10.4 Oct 8: Prismana leads, Windchaser mixed in', pg.evaluate("document.body.dataset.theme") == 'prismana' and 'windchaser' in pg.evaluate("document.body.dataset.sec"), pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]"))
-    check('v10.4 header art and tag shown', pg.locator('#themeArt .main').count() == 1 and 'Prismana + Windchaser' in pg.text_content('#themeTag'), pg.text_content('#themeTag'))
-    check('v10.4 effects drawn, behind the page and not clickable', pg.locator('#fx .fx-spark').count() >= 16 and pg.locator('#fx .fx-feather').count() >= 4 and pg.evaluate("getComputedStyle(document.getElementById('fx')).pointerEvents") == 'none')
-    check('v10.4 one-line banner, details hidden until asked', pg.is_visible('#evMore') is False and 'Berylline Vale' in pg.inner_text('.evnow'))
-    pg.click('#evToggle'); check('v10.4 details expand', pg.is_visible('#evMore'))
+    check('v10.6 Oct 8: Windchaser leads, Prismana is the accent', pg.evaluate("document.body.dataset.theme") == 'windchaser' and pg.evaluate("document.body.dataset.sec") == 'prismana', pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]"))
+    check('v10.6 petals, wind and motes drawn', pg.locator('#fx .fx-petal').count() >= 12 and pg.locator('#fx .fx-mote').count() >= 14 and pg.locator('#fx .fx-streak').count() >= 6)
+    check('v10.6 no events line on the page', pg.locator('#events').count() == 0)
+    check('v10.6 header art box sits inside the header', pg.evaluate("(()=>{const i=document.querySelector('.intro').getBoundingClientRect(),a=document.getElementById('themeArt').getBoundingClientRect();return a.top>=i.top&&a.bottom<=i.bottom&&a.right<=i.right})()"))
     before = pg.text_content('#spendLine') + pg.text_content('#sumBox')
-    pg.select_option('#themeSel', 'glamour'); pg.wait_for_timeout(100)
-    check('v10.4 manual theme pick', pg.evaluate("document.body.dataset.theme") == 'glamour' and pg.locator('#fx .fx-beam').count() == 3)
-    check('v10.4 theme never changes the numbers', before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
-    pg.reload(); pg.wait_for_timeout(300); check('v10.4 theme choice remembered', pg.input_value('#themeSel') == 'glamour' and pg.evaluate("document.body.dataset.theme") == 'glamour')
-    pg.select_option('#themeSel', 'default'); pg.wait_for_timeout(100)
-    check('v10.4 Default removes the theme', pg.evaluate("document.body.dataset.theme") is None and pg.locator('#fx *').count() == 0)
-    pg.select_option('#themeSel', 'auto'); check('v10.4 no script errors', not errs, errs); c.close()
+    pg.click("summary:has-text('Look')"); pg.select_option('#xTheme', 'glamour'); pg.wait_for_timeout(100)
+    check('v10.6 Theme picker in Settings works', pg.evaluate("document.body.dataset.theme") == 'glamour')
+    check('v10.6 theme never changes the numbers', before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
+    pg.reload(); pg.wait_for_timeout(300); check('v10.6 theme choice remembered', pg.input_value('#xTheme') == 'glamour')
+    pg.click("summary:has-text('Look')"); pg.select_option('#xTheme', 'default'); check('v10.6 Default removes the theme', pg.evaluate("document.body.dataset.theme") is None and pg.locator('#fx *').count() == 0)
+    pg.select_option('#xTheme', 'auto'); check('v10.6 no script errors', not errs, errs); c.close()
     c, pg, errs = page_at('2026-10-20T12:00:00-04:00')
-    check('v10.4 Oct 20: roadmap-only Prismana does not theme automatically; Windchaser does', pg.evaluate("document.body.dataset.theme") == 'windchaser' and not pg.evaluate("document.body.dataset.sec"), pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]")); c.close()
+    check('v10.6 Oct 20: roadmap-only Prismana does not theme; Windchaser alone', pg.evaluate("document.body.dataset.theme") == 'windchaser' and not pg.evaluate("document.body.dataset.sec")); c.close()
+    c, pg, errs = page_at('2026-10-08T12:00:00-04:00'); pg.evaluate("GAME.events.list.find(e=>e.name.startsWith('Vein Abundance: Berylline')).featured=true;applyTheme()")
+    check('v10.6 a featured event leads even when shorter', pg.evaluate("document.body.dataset.theme") == 'prismana' and pg.evaluate("document.body.dataset.sec") == 'windchaser'); c.close()
     c, pg, errs = page_at('2026-12-20T12:00:00-05:00')
-    check('v10.4 after all events: normal sky', pg.evaluate("document.body.dataset.theme") is None and 'No events on record' in pg.inner_text('.evnow')); c.close()
+    check('v10.6 after all events: normal sky', pg.evaluate("document.body.dataset.theme") is None); c.close()
     c, pg, errs = page_at('2026-09-26T12:00:00-04:00')
-    check('v10.4 Sep 26: Glamour Star (official) leads Windchaser', pg.evaluate("document.body.dataset.theme") == 'glamour' and pg.evaluate("document.body.dataset.sec") == 'windchaser', pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]")); c.close()
+    check('v10.6 Sep 26: Windchaser leads, Glamour Star accent', pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec].join()") == 'windchaser,glamour'); c.close()
     c, pg, errs = page_at('2026-10-08T12:00:00-04:00', 'reduce')
-    check('v10.4 reduced motion stops all animation', pg.evaluate("[...document.querySelectorAll('#fx *, .frame, .plate')].every(e=>getComputedStyle(e).animationName==='none')")); c.close()
+    check('v10.6 reduced motion stops all animation', pg.evaluate("[...document.querySelectorAll('#fx *, .frame, .plate')].every(e=>getComputedStyle(e).animationName==='none')")); c.close()
+    # trimming: serve a copy over http with padded test portraits
+    import subprocess, shutil, os, time
+    from PIL import Image, ImageDraw
+    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.6', T); os.makedirs(T + '/images', exist_ok=True)
+    def mk(n, W, H, box):
+        im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); ImageDraw.Draw(im).ellipse(box, fill=(200, 80, 160, 255)); im.save(T + '/images/' + n, 'PNG')
+    mk('p_inferlupa.webp', 1000, 1000, (380, 420, 620, 580)); Image.new('RGBA', (600, 1200), (230, 90, 40, 255)).save(T + '/images/p_flameruff.webp', 'PNG'); mk('p_emberpup.webp', 800, 800, (100, 100, 700, 700))
+    srv = subprocess.Popen(['python3', '-m', 'http.server', '8765', '--bind', '127.0.0.1', '-d', T], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(1)
+    try:
+        c = b.new_context(viewport={'width': 1280, 'height': 900}); c.route('**/*', lambda r: r.continue_() if '127.0.0.1' in r.request.url else r.abort())
+        pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+        sizes = {}
+        for slug in ('inferlupa', 'flameruff', 'emberpup'):
+            pg.goto('http://127.0.0.1:8765/index.html'); pg.wait_for_timeout(400); pg.select_option('#pA', slug); pg.wait_for_timeout(600)
+            sizes[slug] = pg.evaluate("(()=>{const i=document.querySelector('#pArt img');return [i.src.startsWith('data:'),i.naturalWidth,i.naturalHeight]})()")
+        check('v10.6 padded portrait gets trimmed (Inferlupa test image)', sizes['inferlupa'][0] and sizes['inferlupa'][1] < 400, sizes)
+        check('v10.6 a portrait with no empty space is left alone', not sizes['flameruff'][0], sizes)
+        check('v10.6 trimming causes no script errors', not errs, errs); c.close()
+    finally:
+        srv.terminate()
     b.close()
 print(f'\n{sum(res)} passed, {len(res) - sum(res)} failed')

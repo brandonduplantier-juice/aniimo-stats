@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-08e",
+ "version": "2026-10-08f",
  "aniimo": [
   {
    "num": "001",
@@ -11883,7 +11883,7 @@ window.ANIIMO_DATA = {
  "themes": {
   "windchaser": {
    "label": "Windchaser's Departure",
-   "priority": 1,
+   "priority": 3,
    "motif": "wind",
    "art": "p:irisalis",
    "fallbackArt": "p:irisalis",
@@ -11896,11 +11896,11 @@ window.ANIIMO_DATA = {
     "plateB": "#1f978a",
     "ring": "#d9a514"
    },
-   "about": "Teal and gold sky, drifting feathers and wind. Irisalis is the event's legendary Aniimo."
+   "about": "Leads while it runs (25 Sep to 9 Dec). Teal and pale gold sky with a soft floral glow, drifting petals, wind and light motes, after the event text: Irisalis \"blooms amidst radiant colors\" and players \"follow the drifting petals on the breeze\"."
   },
   "prismana": {
    "label": "Prismana",
-   "priority": 3,
+   "priority": 1,
    "motif": "prismana",
    "art": null,
    "fallbackArt": "f:waleetle--v1045302",
