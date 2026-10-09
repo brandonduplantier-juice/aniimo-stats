@@ -13,7 +13,7 @@ R.fingerprint = function (cfg, assumptions, model) {
 const num = (v, lo, hi, what, allowNull) => { if (v == null || v === '') { if (allowNull) return; throw Error(what + ' is missing'); } if (!Number.isFinite(+v) || +v < lo || +v > hi) throw Error(`${what} must be ${lo} to ${hi}`); };
 R.checkConfig = function (cfg) {
   if (!cfg || !Array.isArray(cfg.members) || !Array.isArray(cfg.actions)) throw Error('Missing team or rotation');
-  if (cfg.members.length < 1 || cfg.members.length > 3) throw Error('A team has 1 to 3 Aniimo');
+  if (cfg.members.length < 1 || cfg.members.length > 4) throw Error('A team has 1 to 4 Aniimo');
   if (cfg.model != null && !['A', 'B'].includes(cfg.model)) throw Error('Unknown damage model');
   cfg.members.forEach((m, i) => { const st = m && m.st, w = `Slot ${i + 1}`;
     if (!st || typeof st.slug !== 'string' || !st.slug) throw Error(w + ': no Aniimo');
@@ -36,7 +36,7 @@ const clone = x => JSON.parse(JSON.stringify(x)), finite = x => x !== '' && x !=
 R.make = function (cfg, out, meta) {
   meta = meta || {};
   const steps = out.log.map((x, i) => ({ index: i + 1, action: x.action, time: x.time, slot: x.slot, who: x.who || null, move: x.move || null, hit: x.hit || null, hits: x.hits || null,
-    state: x.state, buffs: x.buffs || [], confidence: x.confidence || null, predicted: finite(x.damage) ? r2(x.damage) : null, error: x.error || null, observed: null, crit: null, note: '', status: 'unverified' }));
+    state: x.state, buffs: x.buffs || [], epBefore: x.epBefore == null ? null : r2(x.epBefore), epAfter: x.epAfter == null ? null : r2(x.epAfter), confidence: x.confidence || null, predicted: finite(x.damage) ? r2(x.damage) : null, error: x.error || null, observed: null, crit: null, note: '', status: 'unverified' }));
   return { schema: R.schema, id: 'run-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8), createdAt: new Date().toISOString(), label: meta.label || '',
     model: { version: out.version, id: out.model, label: out.modelLabel, mightTotal: cfg.mightTotal !== false, dataVersion: meta.dataVersion || null },
     assumptions: meta.assumptions || {}, configuration: clone(cfg), fingerprint: R.fingerprint(cfg, meta.assumptions || {}, out.model), complete: out.complete !== false, incomplete: out.incomplete || [],
@@ -56,7 +56,7 @@ R.summarize = function (rec, tol) {
 };
 R.validate = function (x) {
   if (!x || x.schema !== 2 || !Array.isArray(x.steps) || !x.configuration || !Array.isArray(x.configuration.members) || !Array.isArray(x.configuration.actions) || typeof x.id !== 'string' || !x.id) throw Error('Not a Team Lab report (schema 2)');
-  if (x.steps.length > 5000 || JSON.stringify(x).length > 3000000 || x.configuration.members.length > 3) throw Error('Report is larger than allowed');
+  if (x.steps.length > 5000 || JSON.stringify(x).length > 3000000 || x.configuration.members.length > 4) throw Error('Report is larger than allowed');
   R.checkConfig(x.configuration);
   x.fingerprint = R.fingerprint(x.configuration, x.assumptions || {}, x.model && x.model.id); // recomputed, never trusted
   x.steps.forEach(s => { if (!s || !(Number(s.index) >= 1)) throw Error('Bad step');
@@ -77,8 +77,8 @@ R.groupEvidence = function (reports) {
 };
 R.csv = function (rec) {
   const q = v => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
-  const head = ['report', 'setup', 'complete', 'model', 'mightTotal', 'step', 'time', 'aniimo', 'move', 'hit', 'state', 'buffs', 'confidence', 'predicted', 'observed', 'errorPct', 'status', 'crit', 'note'];
-  return [head.join(','), ...rec.steps.map(s => [rec.id, rec.fingerprint, rec.complete !== false, rec.model.id, rec.model.mightTotal, s.index, s.time, s.who, s.move, s.hit, s.state, (s.buffs || []).join('; '), s.confidence, s.predicted, s.observed, s.errorPct, s.status, s.crit, s.note].map(q).join(','))].join('\n');
+  const head = ['report', 'setup', 'complete', 'model', 'mightTotal', 'step', 'time', 'aniimo', 'move', 'hit', 'state', 'epBefore', 'epAfter', 'buffs', 'confidence', 'predicted', 'observed', 'errorPct', 'status', 'crit', 'note'];
+  return [head.join(','), ...rec.steps.map(s => [rec.id, rec.fingerprint, rec.complete !== false, rec.model.id, rec.model.mightTotal, s.index, s.time, s.who, s.move, s.hit, s.state, s.epBefore, s.epAfter, (s.buffs || []).join('; '), s.confidence, s.predicted, s.observed, s.errorPct, s.status, s.crit, s.note].map(q).join(','))].join('\n');
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = R; else root.AniimoReports = R;
 })(typeof window !== 'undefined' ? window : this);

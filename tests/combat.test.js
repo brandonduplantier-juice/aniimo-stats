@@ -19,7 +19,7 @@ t('not an Alpha: no ×0.625', () => near(run([emb()], [{ slot: 0, move: 0 }], { 
 t('BREAK state multiplier applied and recorded', () => { const r = run([emb()], [{ slot: 0, move: 0, state: 'break' }], { breakMult: 1.5 }); near(r.log[0].damage, 900 * 0.625 * 1.5, 1e-6); assert.strictEqual(r.log[0].state, 'break'); assert(r.log[0].mods.some(m => /BREAK state/.test(m.name) && m.status === 'unverified')); });
 t('multi-hit: total Might split across hits, one log line per hit', () => { const r = run([emb({}, [one(90, { hits: 3 })])], [{ slot: 0, move: 0 }]); assert.strictEqual(r.log.length, 3); r.log.forEach(x => near(x.damage, (1000 - 100) * 30 / 100 * 0.625)); });
 t('multi-hit: per-hit Might when set', () => { const r = run([emb({}, [one(90, { hits: 3, mightTotal: false })])], [{ slot: 0, move: 0 }]); near(r.log[0].damage, 900 * 0.9 * 0.625); });
-t('EP: a move it cannot afford is refused', () => { const r = run([emb({}, [one(50, { ep: 60 })])], [{ slot: 0, move: 0 }, { slot: 0, move: 0 }]); assert(!r.log[0].error); assert(/Not enough EP/.test(r.log[1].error)); });
+t('EP: a move it cannot afford is refused', () => { const r = run([emb({}, [one(50, { ep: 60 })])], [{ slot: 0, move: 0 }, { slot: 0, move: 0 }]); assert(!r.log[0].error); assert(/Not enough team EP/.test(r.log[1].error)); });
 t('cooldown blocks a repeat until ready', () => { const r = run([emb({}, [one(50, { cooldown: 5 })])], [{ slot: 0, move: 0 }, { slot: 0, move: 0, wait: 2 }, { slot: 0, move: 0, wait: 3 }]); assert(/Cooldown/.test(r.log[1].error)); assert(!r.log[2].error); });
 t('team buff: Damage Amp and DEF shred last their duration', () => { const buffer = { name: 'B', st: st('emberpup'), moves: [one(0, { kind: 'buff', buff: { amp: 20, shred: 50, duration: 10 } })] };
   const r = run([buffer, emb()], [{ slot: 0, move: 0 }, { slot: 1, move: 0 }, { slot: 1, move: 0, wait: 11 }]); near(r.log[1].damage, (1000 - 50) * 1.2 * 0.625); near(r.log[2].damage, (1000 - 100) * 0.625); });
@@ -53,4 +53,25 @@ t('import rejects impossible setups', () => { const base = repOf(1000, 100), bad
   assert.doesNotThrow(() => R.validate(JSON.parse(JSON.stringify(base)))); });
 t('an imported fingerprint is recomputed, not trusted', () => { const x = JSON.parse(JSON.stringify(repOf(1000, 100))); const real = x.fingerprint; x.fingerprint = 'fake'; assert.strictEqual(R.validate(x).fingerprint, real); });
 t('reports and CSV carry the setup fingerprint and complete flag', () => { const r = repOf(1000, 100); assert(r.fingerprint && r.complete === false && r.incomplete[0].missing.includes('cooldown')); assert(/setup,complete/.test(R.csv(r))); });
+/* v10.11 */
+t('EP is one shared team pool: a second Aniimo cannot spend what the first used', () => { const a = emb({}, [one(50, { ep: 60, cooldown: 0 })]), b2 = emb({}, [one(50, { ep: 60, cooldown: 0 })]);
+  const r = run([a, b2], [{ slot: 0, move: 0 }, { slot: 1, move: 0 }]); assert(!r.log[0].error); assert(/Not enough team EP \(40 of 60\)/.test(r.log[1].error), r.log[1].error); });
+t('EP before, cost, gain and after are recorded on every hit', () => { const r = run([emb({}, [one(30, { ep: 20, epGain: 5, cooldown: 0, hits: 2 })])], [{ slot: 0, move: 0 }]);
+  r.log.forEach(x => { assert.strictEqual(x.epBefore, 100); assert.strictEqual(x.epCost, 20); assert.strictEqual(x.epGain, 5); assert.strictEqual(x.epAfter, 85); }); });
+t('EP gain refills the shared pool for the next Aniimo', () => { const r = run([emb({}, [one(10, { ep: 60, epGain: 30, cooldown: 0 })]), emb({}, [one(10, { ep: 60, cooldown: 0 })])], [{ slot: 0, move: 0 }, { slot: 1, move: 0 }]); assert(!r.log[1].error, r.log[1].error); });
+t('teams of 4 are accepted; 5 are refused', () => { const cfg = n => ({ members: Array.from({ length: n }, () => emb()), actions: [{ slot: 0, move: 0 }], target: { hp: 1e6, def: 0 }, model: 'A' });
+  assert.doesNotThrow(() => R.checkConfig(cfg(4))); assert.throws(() => R.checkConfig(cfg(5)), /1 to 4/); assert.doesNotThrow(() => R.checkConfig(cfg(3))); });
+t('same element is worked out when the move and form elements are known', () => { const r = run([emb({}, [one(100, { element: 'fire', cooldown: 0 }), one(100, { element: 'water', cooldown: 0 })])], [{ slot: 0, move: 0 }, { slot: 0, move: 1 }]);
+  near(r.log[0].damage, 900 * 1.1 * 0.625); near(r.log[1].damage, 900 * 0.625); assert(r.log[0].mods.some(m => /move fire, form fire/.test(m.name) && m.status === 'verified')); });
+t('with no move element the hand-ticked box is used and labelled', () => { const r = run([emb({}, [one(100, { sameElement: true, cooldown: 0 })])], [{ slot: 0, move: 0 }]); near(r.log[0].damage, 900 * 1.1 * 0.625); assert(r.log[0].mods.some(m => /ticked by hand/.test(m.name))); });
+t('your measured DEF is labelled as yours', () => { const r = run([emb()], [{ slot: 0, move: 0 }], { defStatus: 'measured' }); assert(r.log[0].mods.some(m => /your measurement/.test(m.name) && m.status === 'measured')); });
+t('Alpha list: 17 Alphas, each with element, region and a source; no invented HP or DEF', () => { assert.strictEqual(GAME.alphas.length, 17); GAME.alphas.forEach(a => { assert(a.elements.length && a.region && a.sources.length && E.bySlug[a.slug], a.name); assert.strictEqual(a.hp, null); assert.strictEqual(a.def, null); }); });
+const brute = (members, S, opts) => { const pools = members.map((m, i) => [null, ...opts.poolFor(i)]); let best = -Infinity; const base = members.map(m => E.rankItems(m.st, S, m.goal, []).base.log);
+  const go = (i, pick) => { if (i === members.length) { const ids = pick.filter(Boolean).map(p => p.id); if (!opts.allowDuplicates && new Set(ids).size !== ids.length) return;
+    const tc = pick.reduce((t, p) => { if (!p) return t; const c0 = E.context(members[0].st, S); return t + E.itemEffects(p.id, p.lvl, c0, S.scenarios[S.scenario]).team.filter(x => x.kind === 'critRate').reduce((u, x) => u + x.v, 0); }, 0);
+    let sc = 0; pick.forEach((p, k) => { const rr = E.rankItems(members[k].st, S, members[k].goal, p ? [p] : [], { teamCrit: tc }); const row = p ? rr.rows.find(x => x.id === p.id) || rr.base : rr.base; sc += members[k].weight * (row.log - base[k]); }); best = Math.max(best, sc); return; }
+    pools[i].forEach(p => go(i + 1, [...pick, p])); }; go(0, []); return best; };
+t('team item search is exhaustive and matches a full brute force (4 Aniimo, Bell team crit)', () => { const S = E.settingsFrom(); S.A.luckUptime.v = 100;
+  const m = s => ({ st: st(s), goal: 'hit', weight: 1 }), members = ['emberpup', 'emberpup', 'flameruff', 'emberpup'].map(m), pool = ['h02', 'h06', 'h07', 'h16', 'h09'].map(id => ({ id, lvl: 15 }));
+  const r = E.optimizeTeam(members, S, { inventory: null, allowDuplicates: false, poolFor: () => pool }); assert.strictEqual(r.search, 'exhaustive'); near(r.best.score, brute(members, S, { poolFor: () => pool, allowDuplicates: false }), 1e-9); });
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

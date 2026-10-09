@@ -1,7 +1,7 @@
 /* Aniimo planner game data. Edit this file after a patch; no code changes needed.
    version = date the data was last checked. */
 window.ANIIMO_DATA = {
- "version": "2026-10-09b",
+ "version": "2026-10-09c",
  "aniimo": [
   {
    "num": "001",
@@ -11545,11 +11545,6 @@ window.ANIIMO_DATA = {
    "source": "GameWith Gargantuan Horn page (one item checked)."
   },
   {
-   "topic": "Team of 3 Aniimo",
-   "status": "verified",
-   "source": "zeroluck.gg combat guide (one source)."
-  },
-  {
    "topic": "Damage = attack minus defense, 10% floor; DPS and Break use max(ATK, 0.85 × BREAK)",
    "status": "verified",
    "source": "AniimoTools damage formula."
@@ -11658,9 +11653,24 @@ window.ANIIMO_DATA = {
    "topic": "GameWith personality picks: role default, then S becomes N if \"crit\" is in the skills or trait",
    "status": "verified",
    "source": "GameWith personality guide."
+  },
+  {
+   "topic": "A team has up to 4 Aniimo, switched one at a time",
+   "status": "verified",
+   "source": "DailyAniimo combat guide (\"A combat party holds four Aniimo\"); AniimoEggs team structure guide. Corrects the earlier team of 3."
+  },
+  {
+   "topic": "Energy (EP) is one shared team pool",
+   "status": "verified",
+   "source": "DailyAniimo (\"restores the team's EP\"); AniimoEggs (\"the shared EP pool\"). Maximum and recovery rate are not published."
+  },
+  {
+   "topic": "The 17 Alphas: element, region and location",
+   "status": "verified",
+   "source": "Dexerto Alpha locations. Level ranges for 11 of them from Nerdschalk; HP and DEF are not published."
   }
  ],
- "teamSize": 3,
+ "teamSize": 4,
  "otherAniimo": [
   {
    "name": "Jabster",
@@ -11951,9 +11961,10 @@ window.ANIIMO_DATA = {
      26
     ],
     "fire": 8,
-    "maxAnimated": 42,
+    "maxAnimated": 48,
     "twinkle": 14,
-    "shoot": 2
+    "shoot": 2,
+    "motes": 6
    },
    "subtle": {
     "label": "Subtle",
@@ -11969,10 +11980,11 @@ window.ANIIMO_DATA = {
      25,
      40
     ],
-    "fire": 3,
+    "fire": 2,
     "maxAnimated": 16,
-    "twinkle": 5,
-    "shoot": 1
+    "twinkle": 4,
+    "shoot": 1,
+    "motes": 2
    },
    "minimal": {
     "label": "Minimal",
@@ -11991,7 +12003,8 @@ window.ANIIMO_DATA = {
     "fire": 0,
     "maxAnimated": 0,
     "twinkle": 0,
-    "shoot": 0
+    "shoot": 0,
+    "motes": 0
    },
    "off": {
     "label": "Off",
@@ -12010,7 +12023,8 @@ window.ANIIMO_DATA = {
     "fire": 0,
     "maxAnimated": 0,
     "twinkle": 0,
-    "shoot": 0
+    "shoot": 0,
+    "motes": 0
    }
   },
   "about": "Counts are the most moving things on screen at once for each level; phones get about half. Reduced-motion settings stop all movement whatever the level."
@@ -12322,6 +12336,312 @@ window.ANIIMO_DATA = {
    "Alphas take \"greatly increased damage\" while broken (AniimoTools), with no number given. Enter a measured multiplier.",
    "Skill cooldowns: not listed on AniimoTools for these moves."
   ]
- }
+ },
+ "alphas": [
+  {
+   "name": "Alpha Scorchhowl",
+   "slug": "scorchhowl",
+   "elements": [
+    "fire"
+   ],
+   "region": "Beast Fang Ridge",
+   "location": "East of Sanctum: Water to Ice, in the middle of three monoliths",
+   "level": "29–32",
+   "requirement": null,
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Glynsera",
+   "slug": "glynsera",
+   "elements": [
+    "ice"
+   ],
+   "region": "Beast Fang Ridge",
+   "location": "South of Sanctum: Water to Ice, at an ice cave sealed by flammable vines or ice",
+   "level": null,
+   "requirement": "Vines or ice can block the cave entrance",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Minespine",
+   "slug": "minespine",
+   "elements": [
+    "earth"
+   ],
+   "region": "Beast Fang Ridge",
+   "location": "Crystal Cave, south of the Forgotten Mine",
+   "level": "29–32",
+   "requirement": "Same Branch progress as Geoclaw; use Budclaw to dig under the low obstruction",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Bouldus",
+   "slug": "bouldus",
+   "elements": [
+    "earth"
+   ],
+   "region": "Berylline Vale",
+   "location": "Small hill northeast of Mudstone Pass Bloom",
+   "level": "39–41",
+   "requirement": null,
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Ignitis",
+   "slug": "ignitis",
+   "elements": [
+    "dark"
+   ],
+   "region": "Berylline Vale",
+   "location": "Southeast of Berylline Vale Bloom",
+   "level": "44–46",
+   "requirement": "Appears only at night",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Blazen",
+   "slug": "blazen",
+   "elements": [
+    "electric"
+   ],
+   "region": "Blitzwood",
+   "location": "On a mountaintop south of Blitzwood Bloom",
+   "level": "42–44",
+   "requirement": null,
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Panpanta",
+   "slug": "panpanta",
+   "elements": [
+    "water"
+   ],
+   "region": "Echoback Landing",
+   "location": "On the shore north of Echoback Landing Bloom",
+   "level": "36–37",
+   "requirement": null,
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Stellarys",
+   "slug": "stellarys",
+   "elements": [
+    "dark"
+   ],
+   "region": "Forest of Falling Stars",
+   "location": "North of the Outpost, in a star-shaped patch of grass",
+   "level": null,
+   "requirement": null,
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Leafy",
+   "slug": "leafy",
+   "elements": [
+    "grass",
+    "water"
+   ],
+   "region": "Mistwoods",
+   "location": "Grove northeast of the Breezy Plains Branch",
+   "level": null,
+   "requirement": null,
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Turbo",
+   "slug": "turbo",
+   "elements": [
+    "wind"
+   ],
+   "region": "Nimbus Fields",
+   "location": "Fields just northeast of First Spark Sanctum",
+   "level": null,
+   "requirement": null,
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Geoclaw",
+   "slug": "geoclaw",
+   "elements": [
+    "ice"
+   ],
+   "region": "Nimbus Fields",
+   "location": "Underground in the northwest, near the Breezy Plains Branch",
+   "level": "55",
+   "requirement": "Infuse 120 Lumin Amber to unlock Earthquake Revelation and cave access",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Grizbo",
+   "slug": "grizbo",
+   "elements": [
+    "earth"
+   ],
+   "region": "Rosetower Woods",
+   "location": "North of Rosetower Woods Bloom",
+   "level": "43–50",
+   "requirement": "Break the rocks on the entrance route with Hustle",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Rookey",
+   "slug": "rookey",
+   "elements": [
+    "dark"
+   ],
+   "region": "Russet Highlands",
+   "location": "East of First Sight Sanctum",
+   "level": "45–50",
+   "requirement": "Use the Russet Highlands transporter",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Irisal",
+   "slug": "irisal",
+   "elements": [
+    "grass"
+   ],
+   "region": "Sea of Flowers",
+   "location": "South of Sea of Flowers Bloom",
+   "level": null,
+   "requirement": "Tied to story progress",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Tubster",
+   "slug": "tubster",
+   "elements": [
+    "wind"
+   ],
+   "region": "The Argent Strait",
+   "location": "Shore southwest of First Spark Sanctum",
+   "level": null,
+   "requirement": null,
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Luminelle",
+   "slug": "luminelle",
+   "elements": [
+    "electric"
+   ],
+   "region": "Tideblossom Coast",
+   "location": "South of Tideblossom Coast Bloom",
+   "level": "53–60",
+   "requirement": "A shooting star must land to trigger it",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  },
+  {
+   "name": "Alpha Magmarex",
+   "slug": "magmarex",
+   "elements": [
+    "fire",
+    "earth"
+   ],
+   "region": "Zephyrus Landbridge",
+   "location": "North of Hot Spring Reef Bloom",
+   "level": "46–51",
+   "requirement": "Go down through the geyser into the underground area",
+   "hp": null,
+   "sources": [
+    "https://www.dexerto.com/wikis/aniimo/alpha-aniimo-locations/",
+    "https://nerdschalk.com/aniimo-alpha-boss-locations-requirements-and-how-to-reach-every-boss/"
+   ],
+   "checked": "2026-10-09",
+   "def": null
+  }
+ ]
 };
 if (typeof module !== "undefined") module.exports = window.ANIIMO_DATA;

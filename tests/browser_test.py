@@ -8,7 +8,7 @@ def check(name, ok, detail=''):
 
 with sync_playwright() as p:
     b = p.chromium.launch()
-    for ver in ('10.10',):
+    for ver in ('10.11',):
         ctx = b.new_context(viewport={'width': 1280, 'height': 900})
         ctx.route('http*://**/*', lambda r: r.abort())   # sandbox has no internet; images fall back
         pg = ctx.new_page(); errs = []
@@ -94,7 +94,7 @@ with sync_playwright() as p:
             pg.screenshot(path=str(SHOTS / f'v{ver}_builds.png'), full_page=False)
         if float(ver) >= 9:
             pg.click('#oTabs [data-t=team]'); pg.click('#oRun'); pg.wait_for_timeout(5000)
-            t3 = pg.inner_text('#oTeam'); check('v10 team optimizer runs', pg.locator('#oTeam .mcard').count() == 3 and 'Something went wrong' not in t3, t3[:300])
+            t3 = pg.inner_text('#oTeam'); check('v10.11 team optimizer runs with 4 Aniimo', pg.locator('#oTeam .mcard').count() == 4 and 'Something went wrong' not in t3, t3[:300])
             slot = pg.locator('#tSlots .slot3').nth(1); slot.locator('[data-k=a]').select_option(sup); slot.locator('[data-k=src]').select_option('planner')
             pg.click('#oRun'); pg.wait_for_timeout(4000)
             check('v10 team slot refuses another Aniimo\'s planner stats', 'so this slot used the defaults' in pg.inner_text('#oTeam'), pg.inner_text('#oTeam')[-300:])
@@ -131,7 +131,7 @@ with sync_playwright() as p:
     def page_at(date, motion='no-preference'):
         c = b.new_context(viewport={'width': 1280, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort() if 'localhost' not in r.request.url else r.continue_())
         pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/work/site_v10.10/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
+        pg.goto('file:///home/claude/work/site_v10.11/index.html' + ('?date=' + date if date else '')); pg.wait_for_timeout(300); return c, pg, errs
     c, pg, errs = page_at('2026-10-08T12:00:00-04:00')
     check('v10.6 Oct 8: Windchaser leads, Prismana is the accent', pg.evaluate("document.body.dataset.theme") == 'windchaser' and pg.evaluate("document.body.dataset.sec") == 'prismana', pg.evaluate("[document.body.dataset.theme,document.body.dataset.sec]"))
     check('v10.7 Subtle event layer: petals and wind, at most 5 + 2 accent pieces', pg.locator('#fx .fx-petal').count() >= 2 and pg.locator('#fx .fx-streak').count() >= 1 and pg.locator('#fx > *:not(.fx-glow)').count() <= 7, pg.locator('#fx > *').count())
@@ -157,7 +157,7 @@ with sync_playwright() as p:
     # trimming: serve a copy over http with padded test portraits
     import subprocess, shutil, os, time
     from PIL import Image, ImageDraw
-    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.10', T); os.makedirs(T + '/images', exist_ok=True)
+    T = '/tmp/claude-0/-home-claude/1a34ac8d-b6d4-5a9c-8b16-78338b6c1bbd/scratchpad/trimtest'; shutil.rmtree(T, ignore_errors=True); shutil.copytree('/home/claude/work/site_v10.11', T); os.makedirs(T + '/images', exist_ok=True)
     def mk(n, W, H, box):
         im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); ImageDraw.Draw(im).ellipse(box, fill=(200, 80, 160, 255)); im.save(T + '/images/' + n, 'PNG')
     mk('p_inferlupa.webp', 1000, 1000, (380, 420, 620, 580)); Image.new('RGBA', (600, 1200), (230, 90, 40, 255)).save(T + '/images/p_flameruff.webp', 'PNG'); mk('p_emberpup.webp', 800, 800, (100, 100, 700, 700))
@@ -179,13 +179,13 @@ with sync_playwright() as p:
     def look(vis=None, tod=None, date='2026-10-08T12:00:00-04:00', hour=None, w=1600, motion='no-preference', drawn=False):
         c = b.new_context(viewport={'width': w, 'height': 900}, reduced_motion=motion); c.route('http*://**/*', lambda r: r.abort())
         pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-        pg.goto('file:///home/claude/work/site_v10.10/index.html?date=' + date + ('&hour=' + str(hour) if hour is not None else '')); pg.wait_for_timeout(200)
+        pg.goto('file:///home/claude/work/site_v10.11/index.html?date=' + date + ('&hour=' + str(hour) if hour is not None else '')); pg.wait_for_timeout(200)
         if vis: pg.evaluate(f"localStorage.setItem('aniimo.visual.v1',JSON.stringify('{vis}'))")
         if tod: pg.evaluate(f"localStorage.setItem('aniimo.tod.v1',JSON.stringify('{tod}'))")
         if vis or tod: pg.reload(); pg.wait_for_timeout(300)
         if drawn: pg.evaluate("GAME.scene.art=null;renderScene();applyTheme()")
         return c, pg, errs
-    for vis, cap in (('full', 42), ('subtle', 16), ('minimal', 0), ('off', 0)):
+    for vis, cap in (('full', 48), ('subtle', 16), ('minimal', 0), ('off', 0)):
         for hour in (12, 23):
             c, pg, errs = look(vis if vis != 'subtle' else None, hour=hour); n = pg.evaluate(ANIM)
             check(f'v10.7 {vis} at {hour}:00: {n} moving things, cap {cap}', n <= cap and (n > 0) == (cap > 0), n)
@@ -213,9 +213,30 @@ with sync_playwright() as p:
     check('v10.7 visual settings never change the numbers', before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
     check('v10.7 prismana panel borders stay still', True)
     check('v10.7 no script errors', not errs, errs); c.close()
+    # v10.11
+    c = b.new_context(viewport={'width': 1400, 'height': 1000}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+    pg.goto('file:///home/claude/work/site_v10.11/index.html'); pg.wait_for_timeout(400)
+    pg.click('#tlSlots [data-delslot="3"]'); pg.wait_for_timeout(100)
+    check('v10.11 remove a Team Lab slot (4 to 3), add button appears', pg.locator('#tlSlots .tl-slot[data-slot]').count() == 3 and pg.locator('#tlAddSlot').count() == 1)
+    pg.click('#tlAddSlot'); pg.wait_for_timeout(100); check('v10.11 add it back (3 to 4), no add button at 4', pg.locator('#tlSlots .tl-slot[data-slot]').count() == 4 and pg.locator('#tlAddSlot').count() == 0)
+    check('v10.11 move element column', pg.locator('#tlSlots [data-m=element]').count() > 5)
+    pg.evaluate("TL.slots[0].moves=[{name:'Big',kind:'Physical',might:50,hits:1,ep:60,cooldown:0,buff:{}}];TL.slots[1].moves=[{name:'Big2',kind:'Physical',might:50,hits:1,ep:60,cooldown:0,buff:{}}];TL.actions=[{slot:0,move:0,wait:0,state:'normal'},{slot:1,move:0,wait:1,state:'normal'}];TL.startEP=100;tlSave();tlRenderTeam();tlRenderActs();tlRenderTarget()")
+    pg.click('#tlTabs [data-t=fight]'); pg.click('#tlRun'); pg.wait_for_timeout(200); lg = pg.inner_text('#tlLog')
+    check('v10.11 shared team EP: the second 60-EP move is refused (40 left)', 'Not enough team EP (40 of 60)' in lg and 'Team EP' in lg and '100 → 40' in lg, lg[:400])
+    pg.click('#tlTabs [data-t=fight]'); pg.select_option('#tlAlpha', 'Alpha Rookey'); pg.wait_for_timeout(100); info = pg.inner_text('#tlTarget')
+    check('v10.11 Alpha picker fills name, place, element and level', 'Russet Highlands' in info and pg.input_value('[data-t=level]') == '45' and pg.input_value('[data-t=name]') == 'Alpha Rookey' and 'unverified' in info, info[:300])
+    pg.fill('[data-t=hp]', '123456'); pg.dispatch_event('[data-t=hp]', 'change'); pg.fill('[data-t=def]', '321'); pg.dispatch_event('[data-t=def]', 'change'); pg.click('#tlSaveMeasure'); pg.wait_for_timeout(100)
+    check('v10.11 measurement saved for this Alpha and level', 'your measurement' in pg.inner_text('#tlTarget'))
+    pg.fill('[data-t=hp]', '1'); pg.dispatch_event('[data-t=hp]', 'change'); pg.select_option('#tlAlpha', 'Alpha Geoclaw'); pg.select_option('#tlAlpha', 'Alpha Rookey'); pg.wait_for_timeout(100)
+    check('v10.11 picking the Alpha again reloads your measurement', pg.input_value('[data-t=hp]') == '123456' and pg.input_value('[data-t=def]') == '321')
+    pg.click('#tlRun'); pg.wait_for_timeout(100); pg.locator('#tlLog [data-why]').nth(0).click()
+    check('v10.11 the log labels DEF as your measurement', 'your measurement' in pg.inner_text('#tlLog'))
+    pg.evaluate("document.querySelector('#oTabs [data-t=team]').click()"); pg.locator('#tSlots .slot3').nth(3).locator('[data-k=a]').select_option(''); pg.click('#oRun'); pg.wait_for_timeout(5000)
+    check('v10.11 optimizer: an empty slot makes a 3-Aniimo team; search is exhaustive', pg.locator('#oTeam .mcard').count() == 3 and 'Every combination of items was checked' in pg.inner_text('#oTeam'), pg.inner_text('#oTeam')[-300:])
+    check('v10.11 no script errors', not errs, errs); c.close()
     # v10.10
     c = b.new_context(viewport={'width': 1400, 'height': 1000}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-    pg.goto('file:///home/claude/work/site_v10.10/index.html'); pg.wait_for_timeout(400); pg.click('#tlTabs [data-t=fight]'); pg.click('#tlRun'); pg.wait_for_timeout(200)
+    pg.goto('file:///home/claude/work/site_v10.11/index.html'); pg.wait_for_timeout(400); pg.click('#tlTabs [data-t=fight]'); pg.click('#tlRun'); pg.wait_for_timeout(200)
     check('v10.10 runs with unlisted EP or cooldown are labelled incomplete', 'incomplete' in pg.inner_text('#tlLog .verdict') and 'cooldown' in pg.inner_text('#tlLog .verdict'))
     pg.click('#tlTabs [data-t=fight]'); pg.evaluate("TL.target.def=-5;tlRun()"); pg.wait_for_timeout(100)
     check('v10.10 an impossible setup is refused before simulating', 'Fix the setup first' in pg.inner_text('#tlLog'), pg.inner_text('#tlLog')[:200])
@@ -227,7 +248,7 @@ with sync_playwright() as p:
     # v10.9 background picture
     c, pg, errs = look()
     check('v10.9 background picture set and found', 'idyll-night.webp' in pg.evaluate("getComputedStyle(document.querySelector('#scene .sky')).backgroundImage") and pg.evaluate("new Promise(r=>{const i=new Image();i.onload=()=>r(i.naturalWidth);i.onerror=()=>r(0);i.src='data/art/idyll-night.webp'})") == 1672)
-    check('v10.9 Subtle: 5 twinkles, 1 shooting star, 3 fireflies', pg.locator('#scene .tw').count() == 5 and pg.locator('#scene .shoot').count() == 1 and pg.locator('#scene .firefly').count() == 3)
+    check('v10.11 Subtle: 4 twinkles, 1 shooting star, 2 fireflies, 2 rising motes', pg.locator('#scene .tw').count() == 4 and pg.locator('#scene .shoot').count() == 1 and pg.locator('#scene .firefly').count() == 2 and pg.locator('#scene .mote2').count() == 2)
     check('v10.9 drawn hills and sun are off with the picture', pg.locator('#scene .land, #scene .sun').count() == 0)
     check('v10.9 light text outside panels on the dark picture', pg.evaluate("document.body.classList.contains('night')") and pg.evaluate("getComputedStyle(document.querySelector('.sechead p')).color") == 'rgb(244, 247, 255)')
     check('v10.9 no script errors', not errs, errs); c.close()
@@ -236,8 +257,8 @@ with sync_playwright() as p:
     # v10.8 Team Lab
     c = b.new_context(viewport={'width': 1400, 'height': 1000}); c.route('http*://**/*', lambda r: r.abort())
     pg = c.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
-    pg.goto('file:///home/claude/work/site_v10.10/index.html?date=2026-10-08T12:00:00-04:00'); pg.wait_for_timeout(400)
-    check('v10.8 Team Lab: 3 slots with checked moves for Stellarys, Rookey, Fragrancier', pg.locator('#tlSlots .tl-slot').count() == 3 and 'Shooting Stars' in pg.inner_html('#tlSlots') and 'Secret Fragrance Mark' in pg.inner_html('#tlSlots'))
+    pg.goto('file:///home/claude/work/site_v10.11/index.html?date=2026-10-08T12:00:00-04:00'); pg.wait_for_timeout(400)
+    check('v10.11 Team Lab: 4 slots with checked moves for Stellarys, Rookey, Fragrancier', pg.locator('#tlSlots .tl-slot[data-slot]').count() == 4 and 'Shooting Stars' in pg.inner_html('#tlSlots') and 'Secret Fragrance Mark' in pg.inner_html('#tlSlots'))
     plan_before = pg.text_content('#spendLine') + pg.text_content('#sumBox')
     pg.select_option('#pA', 'emberpup'); pg.fill('#rw_ATK', '1200'); pg.dispatch_event('#rw_ATK', 'input'); pg.select_option('#pItem', 'h02'); pg.fill('#pItemLv', '15'); pg.dispatch_event('#pItemLv', 'input')
     pg.evaluate("document.querySelector('#oTabs [data-t=saved]').click()"); pg.fill('#sName', 'Ember test'); pg.click('#sSave'); pg.wait_for_timeout(200)
@@ -272,7 +293,7 @@ with sync_playwright() as p:
     pg.select_option('#pA', 'emberpup'); pg.fill('#rw_ATK', ''); pg.dispatch_event('#rw_ATK', 'input'); pg.select_option('#pItem', ''); pg.wait_for_timeout(100)
     check('v10.8 Team Lab never changes the planner\'s numbers', plan_before == pg.text_content('#spendLine') + pg.text_content('#sumBox'))
     check('v10.8 no script errors', not errs, errs); c.close()
-    c = b.new_context(viewport={'width': 390, 'height': 844}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); pg.goto('file:///home/claude/work/site_v10.10/index.html'); pg.wait_for_timeout(300)
+    c = b.new_context(viewport={'width': 390, 'height': 844}); c.route('http*://**/*', lambda r: r.abort()); pg = c.new_page(); pg.goto('file:///home/claude/work/site_v10.11/index.html'); pg.wait_for_timeout(300)
     pg.click('#tlTabs [data-t=fight]'); pg.click('#tlRun'); pg.wait_for_timeout(200)
     check('v10.8 phone: Team Lab fits, no sideways page scroll', pg.evaluate("document.documentElement.scrollWidth") <= 390, pg.evaluate("document.documentElement.scrollWidth")); c.close()
     b.close()

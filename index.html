@@ -484,6 +484,13 @@ body.artbg #scene .firefly{opacity:1}
 body.artbg .sechead p,body.artbg .key,body.artbg footer,body.artbg .logo,body.artbg .tools .count{color:#f4f7ff;text-shadow:0 1px 3px rgba(10,20,50,.8)}
 body.artbg footer a{color:#d6e7ff}
 @media (prefers-reduced-motion:reduce){#scene .shoot{display:none}}
+
+#scene .mote2{position:absolute;width:5px;height:5px;border-radius:50%;background:#e8fbff;box-shadow:0 0 8px 2px rgba(150,220,255,.85);opacity:0;animation:rise ease-out infinite}
+@keyframes rise{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:.95}100%{opacity:0;transform:translate(var(--dx,8px),-110px) scale(1.1)}}
+.tl-alpha{background:#fff;border:1px solid #d3e3f6;border-radius:12px;padding:8px 10px;font-size:12px;color:var(--soft);grid-column:1/-1}
+.tl-alpha b{color:var(--deep)}
+.chip.measured{background:#e8f1ff;color:#2d5fa8;border-color:#8fb8e8}
+.tl-slot .slotx{margin-left:auto}
 </style>
 </head>
 <body>
@@ -569,7 +576,7 @@ body.artbg footer a{color:#d6e7ff}
     <div data-p="best"><div id="oBest"><p class="small">Press Calculate.</p></div></div>
     <div data-p="builds" hidden><div id="oBuilds"><p class="small">Press Calculate.</p></div></div>
     <div data-p="team" hidden>
-      <p class="small">A team is 3 Aniimo (zeroluck.gg combat guide). Each slot uses the level and rank below with blank stats, or the planner's inputs, or one of your saved builds.</p>
+      <p class="small">A team is up to 4 Aniimo (DailyAniimo, AniimoEggs). Leave a slot empty for a smaller team. Each slot uses the level and rank below with blank stats, or the planner's inputs, or one of your saved builds.</p>
       <div class="team" id="tSlots"></div>
       <div class="row small"><label>Level for "defaults" <input id="tLevel" type="number" min="1" max="70" value="60" style="width:70px"></label>
         <label>Star Up rank <select id="tRank"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option selected>6</option><option>7</option></select></label>
@@ -601,7 +608,7 @@ body.artbg footer a{color:#d6e7ff}
       <button type="button" role="tab" data-t="reports">Test reports</button>
       <button type="button" role="tab" data-t="how">How damage is worked out</button>
     </div>
-    <div data-tp="team"><p class="small">Each slot can use a saved build (level, form, Potential, personality, held item and raw stats come along), the planner's current Aniimo, or a quick manual setup. Stats and held items are worked out by the same engine as the planner.</p><div class="tl-slots" id="tlSlots"></div></div>
+    <div data-tp="team"><p class="small">A team is up to 4 Aniimo, and they share one EP pool. Each slot can use a saved build (level, form, Potential, personality, held item and raw stats come along), the planner's current Aniimo, or a quick manual setup. Stats and held items are worked out by the same engine as the planner.</p><div class="tl-slots" id="tlSlots"></div></div>
     <div data-tp="fight" hidden>
       <h4 style="margin:4px 0;color:var(--deep)">Target</h4>
       <div class="tl-row" id="tlTarget"></div>
@@ -723,6 +730,7 @@ body.artbg footer a{color:#d6e7ff}
       <li>Upcoming Aniimo (#084 to #093) have no advice yet. #083 is skipped in the dex itself.</li>
     </ul></div></details>
     <details class="frame"><summary>Changelog</summary><div>
+      <p><b>9 Oct 2026, v10.11.</b> Teams are up to 4 Aniimo, as in the game (the earlier 3 was wrong), in both the Team Lab and the team optimizer. Team EP is one shared pool, and the hit log shows team EP before and after every move. The same-element bonus is worked out automatically when a move's element is known. Alpha picker with all 17 Alphas (element, place, level range where published) and your own saved HP and DEF measurements per Alpha and level. The team optimizer now checks every item combination. Light motes rise from the glowing flowers in the background.</p>
       <p><b>9 Oct 2026, v10.10.</b> Test reports only count as repeated evidence when the whole setup matches (team, stats, Potential, personality, items, target, moves, rotation and settings), shown as a setup code. Imported reports with an impossible setup are refused, and the Team Lab checks the setup the same way before simulating. A BREAK or Recovery multiplier of 0 now stays 0. Runs that use a move with no listed EP cost or cooldown are labelled incomplete.</p>
       <p><b>9 Oct 2026, v10.9.</b> New background: a night landscape of floating ruins, a moonlit lake and glowing flowers, with twinkling stars, shooting stars and fireflies (amounts follow Visual intensity; nothing moves with reduced motion turned on).</p>
       <p><b>9 Oct 2026, v10.8.</b> Team Lab: build a team of 3 from your saved builds (or the planner, or a quick setup), set up an Alpha and a rotation, and see the damage hit by hit, each hit with its time, source, every modifier and how sure the site is about it. The way Might turns into damage isn't confirmed, so two labelled experimental models are offered. Target states Normal, BREAK and Recovery with multipliers you enter. Test reports: record a run, type in the damage you saw, and the site flags differences and groups repeated evidence; export as JSON or CSV. Thirteen move presets checked against AniimoTools. Crit is now capped at ×3, as documented.</p>
@@ -1105,8 +1113,8 @@ function initThemePick(){const opts=[['auto','Automatic (follows official event 
 const VIS=()=>{const L=GAME.visual.levels,k=LS.get('aniimo.visual.v1',GAME.visual.default||'subtle');return Object.assign({key:L[k]?k:'subtle'},L[k]||L.subtle)};
 const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches,SMALL=()=>innerWidth<=600;
 function lim(){const v=VIS(),o={...v};
-  if(SMALL()){o.event=Math.ceil(o.event/2);o.eventSec=Math.floor(o.eventSec/2);o.clouds=Math.min(o.clouds,1);o.blooms=Math.min(o.blooms,1);o.fire=Math.ceil(o.fire/2);o.twinkle=Math.ceil((o.twinkle||0)/2);o.roam=false;o.sway=false;o.maxAnimated=Math.ceil(o.maxAnimated/2)+(o.maxAnimated?2:0)}
-  if(RM()){o.staticEvent=o.event?Math.min(4,o.event):o.staticEvent;o.clouds=o.blooms=o.fire=o.event=o.eventSec=o.twinkle=o.shoot=0;o.roam=false;o.sway=false;o.maxAnimated=0}
+  if(SMALL()){o.event=Math.ceil(o.event/2);o.eventSec=Math.floor(o.eventSec/2);o.clouds=Math.min(o.clouds,1);o.blooms=Math.min(o.blooms,1);o.fire=Math.ceil(o.fire/2);o.twinkle=Math.ceil((o.twinkle||0)/2);o.motes=Math.ceil((o.motes||0)/2);o.roam=false;o.sway=false;o.maxAnimated=Math.ceil(o.maxAnimated/2)+(o.maxAnimated?2:0)}
+  if(RM()){o.staticEvent=o.event?Math.min(4,o.event):o.staticEvent;o.clouds=o.blooms=o.fire=o.event=o.eventSec=o.twinkle=o.shoot=o.motes=0;o.roam=false;o.sway=false;o.maxAnimated=0}
   return o}
 function todT(){const mode=LS.get('aniimo.tod.v1','auto');if(mode==='day')return 0;if(mode==='night')return 1;
   const q=new URLSearchParams(location.search).get('hour'),d=new Date(),h=q!=null&&q!==''?+q:d.getHours()+d.getMinutes()/60;
@@ -1127,6 +1135,7 @@ function renderScene(){const v=VIS(),L=lim(),sc=$('scene');document.body.dataset
     h+=Array.from({length:L.twinkle||0},()=>`<i class="tw" style="left:${(4+r()*92).toFixed(1)}%;top:${(2+r()*34).toFixed(1)}%;animation-duration:${(2.5+r()*3).toFixed(1)}s;animation-delay:-${(r()*4).toFixed(1)}s"></i>`).join('');
     h+=Array.from({length:L.shoot||0},(_,i)=>`<i class="shoot" style="left:${(62+r()*30).toFixed(1)}%;top:${(4+r()*18).toFixed(1)}%;animation-duration:${(16+i*9+r()*6).toFixed(1)}s;animation-delay:${(2+i*5+r()*4).toFixed(1)}s"></i>`).join('');
     h+=Array.from({length:L.fire||0},(_,i)=>`<div class="firefly" style="left:${(i%2?78+r()*20:r()*22).toFixed(1)}%;top:${(68+r()*28).toFixed(1)}%;animation-duration:${(6+r()*6).toFixed(1)}s;animation-delay:-${(r()*6).toFixed(1)}s"></div>`).join('');
+    h+=Array.from({length:L.motes||0},(_,i)=>{const left=i%2?86+r()*10:2+r()*12;return `<i class="mote2" style="left:${left.toFixed(1)}%;top:${(82+r()*12).toFixed(1)}%;--dx:${Math.round(r()*30-15)}px;animation-duration:${(5+r()*4).toFixed(1)}s;animation-delay:-${(r()*8).toFixed(1)}s"></i>`}).join('');
     sc.innerHTML=h;document.body.classList.toggle('night',true);return}
   let h=`<div class="sky${art?' art':''}"${art?` style="background-image:url('${esc(localSrc(art))}')"`:''}></div><div class="tint"></div>`;
   if(!art){h+=`<div class="sun"></div><div class="moon"></div><div class="stars">${Array.from({length:SMALL()?18:40},()=>`<i style="left:${(r()*100).toFixed(1)}%;top:${(r()*42).toFixed(1)}%"></i>`).join('')}</div>`;
@@ -1164,12 +1173,26 @@ let rsT=null;addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=
 setInterval(updateTime,300000);
 
 
+
+/* ---------- v10.11: Alpha picker and saved measurements ---------- */
+const AMK='aniimo.alphameasure.v1';
+const ELS=['fire','water','grass','electric','ice','earth','wind','light','dark'];
+const alphaByName=n=>(GAME.alphas||[]).find(a=>a.name===n);
+const measured=()=>LS.get(AMK,{});
+function applyMeasurement(){const T=TL.target,a=alphaByName(T.name);if(!a)return;const m=measured()[a.name+'|'+(T.level||'')];
+  if(m){T.hp=m.hp;T.def=m.def;T.defStatus='measured'}else if(T.defStatus==='measured')T.defStatus='assumption'}
+function alphaInfo(){const T=TL.target,a=alphaByName(T.name);if(!a)return '';const m=measured()[a.name+'|'+(T.level||'')];
+  return `<div class="tl-alpha"><b>${esc(a.name)}</b> · ${a.elements.map(e=>elIco(e)+ELN(e)).join(' / ')} · ${esc(a.region)}: ${esc(a.location)} · Level ${a.level?esc(a.level):'not published'}${a.requirement?` · ${esc(a.requirement)}`:''}<br>
+   HP and DEF aren't published for any Alpha. ${m?`<span class="chip measured">your measurement</span> loaded for level ${esc(T.level)} (saved ${esc(new Date(m.savedAt).toLocaleDateString())}).`:'<span class="chip unverified">unverified</span> Enter what you measure, then save it for this Alpha and level.'}
+   Set Type matchup for your attackers against ${a.elements.map(ELN).join(' / ')}. Sources: ${a.sources.map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener">${i?'levels':'locations'}</a>`).join(', ')}.
+   <div class="row"><button class="gbtn blue sm" type="button" id="tlSaveMeasure">Save HP and DEF as my measurement for this level</button></div></div>`}
+
 /* ---------- Team Lab ---------- */
 const CB=window.AniimoCombat,RP=window.AniimoReports;
 const TLK='aniimo.teamlab.v1',RPK='aniimo.reports.v2';
 const presetMoves=slug=>((GAME.moves||{})[slug]||[]).map(m=>({...m,buff:{amp:0,crit:0,shred:0,duration:0},epGain:0,sameElement:false,mightTotal:null}));
 const newSlot=slug=>({src:'manual',slug,level:60,rank:6,item:'',itemLv:15,pers:'',atk:'',brk:'',boost:0,moves:presetMoves(slug).length?presetMoves(slug):[{name:'Custom move',kind:'Physical',might:50,hits:1,ep:20,epGain:0,cooldown:0,status:{might:'assumption'},buff:{amp:0,crit:0,shred:0,duration:0}}]});
-let TL=LS.get(TLK,null)||{slots:['stellarys','rookey','fragrancier'].map(newSlot),target:{name:'Alpha',hp:200000,def:500,type:1,resist:0,wild:true,breakMult:1,recoveryMult:1,omega:false},model:'A',mightTotal:true,startEP:100,maxEP:100,actions:[{slot:0,move:1,wait:0,state:'normal'},{slot:1,move:2,wait:1,state:'normal'},{slot:2,move:1,wait:1,state:'normal'}]};
+let TL=LS.get(TLK,null)||{slots:['stellarys','rookey','fragrancier','emberpup'].map(newSlot),target:{name:'Alpha',hp:200000,def:500,type:1,resist:0,wild:true,breakMult:1,recoveryMult:1,omega:false},model:'A',mightTotal:true,startEP:100,maxEP:100,actions:[{slot:0,move:1,wait:0,state:'normal'},{slot:1,move:2,wait:1,state:'normal'},{slot:2,move:1,wait:1,state:'normal'}]};
 let TLOUT=null,TLCFG=null;
 const tlSave=()=>LS.set(TLK,TL);
 const savedBuilds=()=>LS.get('aniimo.builds.v1',[]);
@@ -1182,7 +1205,7 @@ function slotHtmlTL(sl,i){const ms=memberSt(sl),a=E.bySlug[ms.st.slug]||released
   const fx=c?E.itemEffects(ms.st.item||null,ms.st.itemLv||0,c,SET.scenarios[SET.scenario]):null,P=c?E.hitParts(c,fx&&!fx.blocked?fx:E.itemEffects(null,0,c,SET.scenarios[SET.scenario])):null;
   const opts=`<option value="manual">Manual setup</option><option value="planner">Planner's current Aniimo</option>`+savedBuilds().map((b,j)=>`<option value="b${j}">Saved: ${esc(b.name)}</option>`).join('');
   const man=sl.src==='manual';const pre=presetMoves(a.slug);
-  return `<div class="tl-slot" data-slot="${i}"><h4><span class="pic">${im('p:'+a.slug,'',a.name)}</span>Slot ${i+1}: ${esc(a.name)}</h4>
+  return `<div class="tl-slot" data-slot="${i}"><h4><span class="pic">${im('p:'+a.slug,'',a.name)}</span>Slot ${i+1}: ${esc(a.name)}${TL.slots.length>1?`<button class="xbtn slotx" type="button" data-delslot="${i}" aria-label="Remove this Aniimo">×</button>`:''}</h4>
    <div class="tl-grid"><label style="grid-column:1/-1">Stats from<select data-f="src">${opts}</select></label>
    ${man?`<label>Aniimo<select data-f="slug">${released.map(x=>`<option value="${x.slug}"${x.slug===sl.slug?' selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label>Level<input data-f="level" type="number" min="1" max="70" value="${sl.level}"></label>
      <label>Star Up rank<input data-f="rank" type="number" min="1" max="7" value="${sl.rank}"></label><label>Personality<input data-f="pers" maxlength="4" value="${esc(sl.pers)}" placeholder="e.g. ESTJ"></label>
@@ -1190,34 +1213,39 @@ function slotHtmlTL(sl,i){const ms=memberSt(sl),a=E.bySlug[ms.st.slug]||released
      <label>Raw ATK<input data-f="atk" type="number" min="0" value="${esc(sl.atk)}" placeholder="blank = placeholder"></label><label>Raw BREAK<input data-f="brk" type="number" min="0" value="${esc(sl.brk)}" placeholder="blank = placeholder"></label>`:''}
    <label>Elemental Boost %<input data-f="boost" type="number" value="${sl.boost||0}"></label></div>
    ${P?`<div class="tl-derived">${esc(ms.label)} · ${esc(a.role)} · attack <b>${Math.round(P.attack)}</b> (${c.hitByLevel?'10.5 × level':c.attack==='max'?'higher of ATK and 0.85 × BREAK':c.attack}) · crit ×${P.crit.toFixed(2)} · Damage Amp +${Math.round(P.amp*100)}%${ms.st.item?` · ${esc(ITEM[ms.st.item].name)} +${ms.st.itemLv}`:''}${c.usesPlaceholder.length?` <span class="chip placeholder">blank stats: placeholder</span>`:''}${fx&&fx.blocked?` <span class="chip unverified">${esc(fx.blocked)}</span>`:''}</div>`:''}
-   <div class="scroll"><table class="tl-moves"><tr><th>Move</th><th>Might</th><th>Hits</th><th>EP</th><th>EP back</th><th>Cooldown s</th><th title="Skill shares the Aniimo's element (×1.1)">Same el.</th><th>Buff amp %</th><th>Buff crit %</th><th>DEF shred %</th><th>Buff s</th><th></th></tr>
+   <div class="scroll"><table class="tl-moves"><tr><th>Move</th><th>Might</th><th>Hits</th><th>EP</th><th>EP back</th><th>Cooldown s</th><th title="The move's element. When it's known, the ×1.1 same-element bonus is worked out automatically from the Aniimo's form.">Element</th><th title="Used only when the move's element is blank: tick if the move shares the Aniimo's element (×1.1)">Same el.</th><th>Buff amp %</th><th>Buff crit %</th><th>DEF shred %</th><th>Buff s</th><th></th></tr>
    ${sl.moves.map((m,j)=>`<tr data-mv="${j}"><td><input data-m="name" value="${esc(m.name)}" style="min-width:110px">${m.source?`<a class="small" href="${esc(m.source)}" target="_blank" rel="noopener" title="Checked ${esc(m.checked||'')}">source</a>`:''}</td><td><input data-m="might" type="number" value="${m.might}"></td><td><input data-m="hits" type="number" min="1" value="${m.hits}"></td>
      <td><input data-m="ep" type="number" min="0" value="${m.ep==null?'':m.ep}" placeholder="?" title="${m.ep==null?'Not listed: costs nothing here':''}"></td><td><input data-m="epGain" type="number" min="0" value="${m.epGain||0}"></td><td><input data-m="cooldown" type="number" min="0" value="${m.cooldown==null?'':m.cooldown}" placeholder="?"></td>
-     <td><input data-m="sameElement" type="checkbox"${m.sameElement?' checked':''}></td>${['amp','crit','shred','duration'].map(k=>`<td><input data-b="${k}" type="number" value="${(m.buff||{})[k]||0}"></td>`).join('')}<td><button class="xbtn" type="button" data-delmv="${j}" aria-label="Remove move">×</button></td></tr>`).join('')}</table></div>
+     <td><select data-m="element"><option value="">?</option>${ELS.map(x=>`<option value="${x}"${m.element===x?' selected':''}>${ELN(x)}</option>`).join('')}</select></td><td><input data-m="sameElement" type="checkbox"${m.sameElement?' checked':''}${m.element?' disabled title="Worked out from the element"':''}></td>${['amp','crit','shred','duration'].map(k=>`<td><input data-b="${k}" type="number" value="${(m.buff||{})[k]||0}"></td>`).join('')}<td><button class="xbtn" type="button" data-delmv="${j}" aria-label="Remove move">×</button></td></tr>`).join('')}</table></div>
    <div class="row">${pre.length?`<select data-addpre><option value="">+ Checked move for ${esc(a.name)}…</option>${pre.map((m,j)=>`<option value="${j}">${esc(m.name)} (${m.might} Might)</option>`).join('')}</select>`:`<span class="small">No checked moves on file for ${esc(a.name)} yet; add your own.</span>`}<button class="gbtn blue sm" type="button" data-addmv>+ Custom move</button></div></div>`}
-function tlRenderTeam(){$('tlSlots').innerHTML=TL.slots.map(slotHtmlTL).join('')}
+function tlRenderTeam(){$('tlSlots').innerHTML=TL.slots.map(slotHtmlTL).join('')+(TL.slots.length<4?`<div class="tl-slot" style="display:grid;place-items:center"><button class="gbtn" type="button" id="tlAddSlot">+ Add Aniimo (${TL.slots.length} of 4)</button></div>`:'')}
 $('tlSlots').addEventListener('change',e=>{const s=e.target.closest('[data-slot]');if(!s)return;const sl=TL.slots[+s.dataset.slot],f=e.target.dataset.f,mrow=e.target.closest('[data-mv]');
   if(f){sl[f]=e.target.value;if(f==='slug'){const n=newSlot(sl.slug);sl.moves=n.moves}if(f==='src'&&sl.src!=='manual'){const ms=memberSt(sl);if(ms.st.slug!==sl.slug){sl.slug=ms.st.slug;sl.moves=newSlot(sl.slug).moves}}}
   else if(mrow){const m=sl.moves[+mrow.dataset.mv],k=e.target.dataset.m,b=e.target.dataset.b;
-    if(b){m.buff=m.buff||{};m.buff[b]=+e.target.value||0}else if(k==='name')m.name=e.target.value;else if(k==='sameElement')m.sameElement=e.target.checked;else if(k==='ep'||k==='cooldown')m[k]=e.target.value===''?null:Math.max(0,+e.target.value);else m[k]=+e.target.value||0;
+    if(b){m.buff=m.buff||{};m.buff[b]=+e.target.value||0}else if(k==='name')m.name=e.target.value;else if(k==='element')m.element=e.target.value||null;else if(k==='sameElement')m.sameElement=e.target.checked;else if(k==='ep'||k==='cooldown')m[k]=e.target.value===''?null:Math.max(0,+e.target.value);else m[k]=+e.target.value||0;
     if(k==='might'||k==='ep'||k==='hits'){m.status={...(m.status||{}),[k==='might'?'might':k]:'edited'}}}
   else if(e.target.dataset.addpre!==undefined&&e.target.value!==''){sl.moves.push(presetMoves(sl.slug)[+e.target.value])}
   tlSave();tlRenderTeam();tlRenderActs()});
-$('tlSlots').addEventListener('click',e=>{const s=e.target.closest('[data-slot]');if(!s)return;const sl=TL.slots[+s.dataset.slot];
+$('tlSlots').addEventListener('click',e=>{if(e.target.id==='tlAddSlot'){TL.slots.push(newSlot(released[0].slug));tlSave();tlRenderTeam();tlRenderActs();return}
+  if(e.target.dataset.delslot!==undefined){const k=+e.target.dataset.delslot;TL.slots.splice(k,1);TL.actions=TL.actions.filter(a=>a.slot!==k).map(a=>a.slot>k?{...a,slot:a.slot-1}:a);tlSave();tlRenderTeam();tlRenderActs();return}
+  const s=e.target.closest('[data-slot]');if(!s)return;const sl=TL.slots[+s.dataset.slot];
   if(e.target.dataset.delmv!==undefined){sl.moves.splice(+e.target.dataset.delmv,1);TL.actions=TL.actions.filter(a=>!(a.slot===+s.dataset.slot&&a.move===+e.target.dataset.delmv)).map(a=>a.slot===+s.dataset.slot&&a.move>+e.target.dataset.delmv?{...a,move:a.move-1}:a)}
   else if(e.target.dataset.addmv!==undefined)sl.moves.push({name:'Custom move',kind:'Physical',might:50,hits:1,ep:20,epGain:0,cooldown:0,status:{might:'edited'},buff:{amp:0,crit:0,shred:0,duration:0}});else return;
   tlSave();tlRenderTeam();tlRenderActs()});
 function tlRenderTarget(){const T=TL.target,f=(k,l,ty,extra)=>`<label>${l}<input data-t="${k}" type="${ty||'number'}" value="${esc(T[k])}" ${extra||''}></label>`;
-  $('tlTarget').innerHTML=f('name','Name','text')+f('hp','HP (enter measured)')+f('def','DEF (enter measured)')+
+  $('tlTarget').innerHTML=`<label>Alpha<select id="tlAlpha"><option value="">Custom target</option>${(GAME.alphas||[]).map(a=>`<option${a.name===T.name?' selected':''}>${esc(a.name)}</option>`).join('')}</select></label>`+f('level','Level','number','min="1" max="70"')+f('name','Name','text')+f('hp','HP (enter measured)')+f('def','DEF (enter measured)')+
    `<label>Type matchup<select data-t="type">${[[2.56,'×2.56 (double weak)'],[1.6,'×1.6 (weak)'],[1,'×1 (neutral)'],[0.625,'×0.625 (resists)'],[0.39,'×0.39 (double resist)']].map(([v,l])=>`<option value="${v}"${+T.type===v?' selected':''}>${l}</option>`).join('')}</select></label>`+
    f('resist','Elemental resistance %')+`<label>Wild or Alpha (×0.625)<select data-t="wild"><option value="1"${T.wild!==false?' selected':''}>Yes</option><option value="0"${T.wild===false?' selected':''}>No</option></select></label>`+
    f('breakMult','BREAK multiplier (unverified)','number','step="0.05" min="0"')+f('recoveryMult','Recovery multiplier (unverified)','number','step="0.05" min="0"')+
-   `<label>Omega target<select data-t="omega"><option value="0"${!T.omega?' selected':''}>No</option><option value="1"${T.omega?' selected':''}>Yes</option></select></label>`;
+   alphaInfo()+`<label>Omega target<select data-t="omega"><option value="0"${!T.omega?' selected':''}>No</option><option value="1"${T.omega?' selected':''}>Yes</option></select></label>`;
   $('tlModel').innerHTML=`<label>Might formula<select id="tlM">${Object.entries(CB.MODELS).map(([k,m])=>`<option value="${k}"${TL.model===k?' selected':''}>${esc(m.label)}</option>`).join('')}</select></label>
    <label>Multi-hit Might<select id="tlMT"><option value="1"${TL.mightTotal?' selected':''}>Listed Might is the total</option><option value="0"${!TL.mightTotal?' selected':''}>Listed Might is per hit</option></select></label>
-   <label>Starting EP<input id="tlEP" type="number" min="0" value="${TL.startEP}"></label><label>Max EP<input id="tlMaxEP" type="number" min="1" value="${TL.maxEP}"></label>
+   <label>Starting team EP<input id="tlEP" type="number" min="0" value="${TL.startEP}"></label><label>Max team EP<input id="tlMaxEP" type="number" min="1" value="${TL.maxEP}"></label>
    <p class="small" style="grid-column:1/-1">${esc((CB.MODELS[TL.model]||CB.MODELS.A).about)} Neither model is confirmed; record test runs to find out which one matches the game. BREAK and Recovery multipliers start at 1 (no change) because no source gives a number: Alphas take "greatly increased damage" while broken (AniimoTools).</p>`}
-$('tlTarget').addEventListener('change',e=>{const k=e.target.dataset.t;if(!k)return;const v=e.target.value;TL.target[k]=k==='name'?v:k==='wild'||k==='omega'?v==='1':(k==='breakMult'||k==='recoveryMult')&&v===''?null:Math.max(0,+v||0);tlSave()});
+$('tlTarget').addEventListener('change',e=>{if(e.target.id==='tlAlpha'){const a=alphaByName(e.target.value);TL.target.name=a?a.name:'Alpha';if(a&&a.level&&!TL.target.level)TL.target.level=+String(a.level).split(/[–-]/)[0];applyMeasurement();tlSave();tlRenderTarget();return}
+  const k=e.target.dataset.t;if(!k)return;const v=e.target.value;TL.target[k]=k==='name'?v:k==='wild'||k==='omega'?v==='1':(k==='breakMult'||k==='recoveryMult'||k==='level')&&v===''?null:Math.max(0,+v||0);if(k==='hp'||k==='def')TL.target.defStatus='assumption';if(k==='level'||k==='name')applyMeasurement();tlSave();if(k==='level'||k==='name'||k==='hp'||k==='def')tlRenderTarget()});
+$('tlTarget').addEventListener('click',e=>{if(e.target.id!=='tlSaveMeasure')return;const T=TL.target,a=alphaByName(T.name);if(!a||!T.level){alert('Pick the Alpha and enter its level first.');return}
+  const M=measured();M[a.name+'|'+T.level]={hp:+T.hp,def:+T.def,savedAt:Date.now()};LS.set(AMK,M);T.defStatus='measured';tlSave();tlRenderTarget()});
 $('tlModel').addEventListener('change',e=>{if(e.target.id==='tlM')TL.model=e.target.value;if(e.target.id==='tlMT')TL.mightTotal=e.target.value==='1';if(e.target.id==='tlEP')TL.startEP=Math.max(0,+e.target.value||0);if(e.target.id==='tlMaxEP')TL.maxEP=Math.max(1,+e.target.value||100);tlSave();tlRenderTarget()});
 function tlRenderActs(){const names=TL.slots.map(sl=>E.bySlug[memberSt(sl).st.slug].name);
   $('tlActs').innerHTML='<tr><th>#</th><th>Aniimo</th><th>Move</th><th>Wait s</th><th>Target state</th><th></th></tr>'+TL.actions.map((a,i)=>`<tr data-a="${i}"><td>${i+1}</td><td><select data-k="slot">${names.map((n,j)=>`<option value="${j}"${a.slot===j?' selected':''}>${esc(n)}</option>`).join('')}</select></td>
@@ -1231,11 +1259,11 @@ function tlCfg(){return {members:TL.slots.map(sl=>{const ms=memberSt(sl);return 
 const fmt=n=>Math.round(n).toLocaleString();
 function tlRun(){TLCFG=tlCfg();try{RP.checkConfig(TLCFG)}catch(err){$('tlLog').innerHTML='<p class="banner"><b>Fix the setup first:</b> '+esc(err.message)+'</p>';TLOUT=null;tlTab('log');return}
   TLOUT=CB.simulate(E,SET,TLCFG);const o=TLOUT,ok=o.log.filter(x=>!x.error);
-  let h=`<div class="verdict"><h4>${fmt(o.total)} damage in ${o.elapsed.toFixed(1)}s ${o.defeated?'· target defeated':`· ${(100*o.hpLeft/o.maxHP).toFixed(1)}% HP left`}</h4>${esc(o.modelLabel)} <span class="chip experimental">experimental</span> · ${ok.length} hits · not confirmed against the game yet.${o.complete?'':`<div style="margin-top:6px"><span class="chip unverified">incomplete</span> Some moves have no listed ${[...new Set(o.incomplete.flatMap(x=>x.missing))].join(' or ')}, so this run can't be compared with others yet: ${o.incomplete.map(x=>`${esc(x.move)} (${x.missing.join(', ')})`).join('; ')}. Fill them in on the Team tab once you know them.</div>`}</div>`;
+  let h=`<div class="verdict"><h4>${fmt(o.total)} damage in ${o.elapsed.toFixed(1)}s ${o.defeated?'· target defeated':`· ${(100*o.hpLeft/o.maxHP).toFixed(1)}% HP left`}</h4>Team EP: started at ${TLCFG.startEP}, ended at ${Math.round(o.ep)} (one shared pool; recovery over time isn't modelled because its rate isn't published). ${esc(o.modelLabel)} <span class="chip experimental">experimental</span> · ${ok.length} hits · not confirmed against the game yet.${o.complete?'':`<div style="margin-top:6px"><span class="chip unverified">incomplete</span> Some moves have no listed ${[...new Set(o.incomplete.flatMap(x=>x.missing))].join(' or ')}, so this run can't be compared with others yet: ${o.incomplete.map(x=>`${esc(x.move)} (${x.missing.join(', ')})`).join('; ')}. Fill them in on the Team tab once you know them.</div>`}</div>`;
   if(o.warnings.length)h+=`<div class="banner"><b>Read before trusting these numbers:</b><ul>${o.warnings.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div>`;
-  h+=`<div class="scroll"><table class="rtab tl-log"><tr><th>Time</th><th>Aniimo</th><th>Move</th><th>Hit</th><th>State</th><th>Damage</th><th>Target HP</th><th>Confidence</th><th></th></tr>`+o.log.map((x,i)=>x.error?`<tr><td>${x.time}s</td><td>${esc(x.who||'')}</td><td>${esc(x.move||'')}</td><td></td><td>${CB.STATES[x.state]}</td><td colspan="4" class="err">Skipped: ${esc(x.error)}</td></tr>`:
-    `<tr><td>${x.time}s</td><td>${esc(x.who)}</td><td>${esc(x.move)}</td><td>${x.hit}/${x.hits}</td><td>${CB.STATES[x.state]}</td><td><b>${fmt(x.damage)}</b></td><td>${x.hpPct.toFixed(1)}%</td><td><span class="chip ${x.confidence}">${x.confidence}</span></td><td><button class="linkbtn" type="button" data-why="${i}">Why</button></td></tr>
-     <tr class="more" id="tlw${i}" hidden><td colspan="9"><ul class="tl-mods">${x.mods.map(m=>`<li>${esc(m.name)}: <b>${m.value}</b> <span class="chip ${m.status}">${m.status}</span></li>`).join('')}</ul>${x.buffs.length?`Active buffs: ${x.buffs.map(esc).join(', ')}. `:''}${x.itemNotes.length?`Not simulated: ${x.itemNotes.map(esc).join(' ')}`:''}</td></tr>`).join('')+'</table></div>';
+  h+=`<div class="scroll"><table class="rtab tl-log"><tr><th>Time</th><th>Aniimo</th><th>Move</th><th>Hit</th><th>State</th><th>Damage</th><th>Target HP</th><th title="Shared team EP before → after this move">Team EP</th><th>Confidence</th><th></th></tr>`+o.log.map((x,i)=>x.error?`<tr><td>${x.time}s</td><td>${esc(x.who||'')}</td><td>${esc(x.move||'')}</td><td></td><td>${CB.STATES[x.state]}</td><td colspan="5" class="err">Skipped: ${esc(x.error)}</td></tr>`:
+    `<tr><td>${x.time}s</td><td>${esc(x.who)}</td><td>${esc(x.move)}</td><td>${x.hit}/${x.hits}</td><td>${CB.STATES[x.state]}</td><td><b>${fmt(x.damage)}</b></td><td>${x.hpPct.toFixed(1)}%</td><td title="cost ${x.epCost}, back ${x.epGain}">${x.hit===1?`${Math.round(x.epBefore)} → ${Math.round(x.epAfter)}`:''}</td><td><span class="chip ${x.confidence}">${x.confidence}</span></td><td><button class="linkbtn" type="button" data-why="${i}">Why</button></td></tr>
+     <tr class="more" id="tlw${i}" hidden><td colspan="10"><ul class="tl-mods">${x.mods.map(m=>`<li>${esc(m.name)}: <b>${m.value}</b> <span class="chip ${m.status}">${m.status}</span></li>`).join('')}</ul>${x.buffs.length?`Active buffs: ${x.buffs.map(esc).join(', ')}. `:''}${x.itemNotes.length?`Not simulated: ${x.itemNotes.map(esc).join(' ')}`:''}</td></tr>`).join('')+'</table></div>';
   $('tlLog').innerHTML=h;tlTab('log')}
 $('tlLog').addEventListener('click',e=>{const w=e.target.closest('[data-why]');if(w){const r=$('tlw'+w.dataset.why);r.hidden=!r.hidden}});
 $('tlRun').onclick=()=>{try{tlRun()}catch(err){console.error(err);$('tlLog').innerHTML='<p class="banner">Something went wrong: '+esc(err.message)+'</p>';tlTab('log')}};
@@ -1372,19 +1400,19 @@ function runBuilds(){
 
 /* team */
 function slotHtml(i){const opts=released.map(x=>`<option value="${x.slug}">${esc(x.name)}</option>`).join('');
-  return `<div class="slot3"><h4>Slot ${i+1}</h4><label>Aniimo<select data-k="a">${opts}</select></label>
+  return `<div class="slot3"><h4>Slot ${i+1}</h4><label>Aniimo<select data-k="a"><option value="">(empty)</option>${opts}</select></label>
    <label>Stats from<select data-k="src"><option value="def">Defaults below</option><option value="planner">Planner inputs</option></select></label>
    <label>Goal<select data-k="g">${goalKeys.filter(k=>k!=='custom').map(k=>`<option value="${k}">${esc(GAME.goals[k].label)}</option>`).join('')}</select></label>
    <label>Importance<select data-k="w"><option value="1">Normal</option><option value="2">High</option><option value="0.5">Low</option></select></label></div>`}
-function initTeam(){$('tSlots').innerHTML=[0,1,2].map(slotHtml).join('');
+function initTeam(){$('tSlots').innerHTML=[0,1,2,3].map(slotHtml).join('');
   const saved=LS.get('aniimo.team.v1',null);const sl=[...$('tSlots').children];
-  sl.forEach((el,i)=>{const sel=el.querySelector('[data-k=a]');sel.value=(saved&&saved[i]&&saved[i].a)||released[i*7%released.length].slug;
-    if(saved&&saved[i]){el.querySelector('[data-k=g]').value=saved[i].g;el.querySelector('[data-k=w]').value=saved[i].w}else el.querySelector('[data-k=g]').value=E.defaultGoal(E.bySlug[sel.value])});
+  sl.forEach((el,i)=>{const sel=el.querySelector('[data-k=a]');sel.value=saved?(saved[i]?saved[i].a:''):released[i*7%released.length].slug;
+    if(saved&&saved[i]){el.querySelector('[data-k=g]').value=saved[i].g;el.querySelector('[data-k=w]').value=saved[i].w}else if(sel.value)el.querySelector('[data-k=g]').value=E.defaultGoal(E.bySlug[sel.value])});
   refreshSlotSources()}
 function refreshSlotSources(){const builds=LS.get('aniimo.builds.v1',[]);const saved=LS.get('aniimo.team.v1',null);
   [...$('tSlots').children].forEach((el,i)=>{const s=el.querySelector('[data-k=src]'),keep=s.value||(saved&&saved[i]&&saved[i].src)||'def';
     s.innerHTML='<option value="def">Defaults below</option><option value="planner">Planner inputs (same Aniimo only)</option>'+builds.map((b,j)=>[b,j]).filter(([b])=>b.state.planner.slug===el.querySelector('[data-k=a]').value).map(([b,j])=>`<option value="b${j}">Saved: ${esc(b.name)}</option>`).join('');s.value=[...s.options].some(o=>o.value===keep)?keep:'def'})}
-$('tSlots').addEventListener('input',e=>{const el=e.target.closest('.slot3');if(e.target.dataset.k==='a'){el.querySelector('[data-k=g]').value=E.defaultGoal(E.bySlug[e.target.value]);refreshSlotSources()}
+$('tSlots').addEventListener('input',e=>{const el=e.target.closest('.slot3');if(e.target.dataset.k==='a'){if(e.target.value)el.querySelector('[data-k=g]').value=E.defaultGoal(E.bySlug[e.target.value]);refreshSlotSources()}
   LS.set('aniimo.team.v1',[...$('tSlots').children].map(x=>({a:x.querySelector('[data-k=a]').value,src:x.querySelector('[data-k=src]').value,g:x.querySelector('[data-k=g]').value,w:x.querySelector('[data-k=w]').value})));markStale()});
 function slotState(el){const slug=el.querySelector('[data-k=a]').value,src=el.querySelector('[data-k=src]').value,a=E.bySlug[slug];
   if(src==='planner'){const s=engineState();if(s.slug===slug)return s;TEAMNOTES.push(`${a.name}: the planner is showing ${E.bySlug[s.slug].name}, so this slot used the defaults.`)}
@@ -1392,7 +1420,7 @@ function slotState(el){const slug=el.querySelector('[data-k=a]').value,src=el.qu
   return {slug,level:+$('tLevel').value||60,rank:+$('tRank').value,stats:Object.fromEntries(STATS.map(s=>[s,{inn:0,aq:0,raw:null}]))}}
 let TEAMNOTES=[];
 function runTeam(){
-  TEAMNOTES=[];const els=[...$('tSlots').children];const members=els.map(el=>({st:slotState(el),goal:el.querySelector('[data-k=g]').value,weight:+el.querySelector('[data-k=w]').value}));
+  TEAMNOTES=[];const els=[...$('tSlots').children].filter(el=>el.querySelector('[data-k=a]').value);if(!els.length){$('oTeam').innerHTML='<p class="banner">Pick at least one Aniimo.</p>';return}const members=els.map(el=>({st:slotState(el),goal:el.querySelector('[data-k=g]').value,weight:+el.querySelector('[data-k=w]').value}));
   const owned=$('oItems').value==='owned';const pool=poolNow();
   if(!pool.length){$('oTeam').innerHTML='<p class="banner">No items to hand out. Add the items you own under My items, or switch to "Every item at +15".</p>';return}
   const r=E.optimizeTeam(members,SET,{inventory:owned?INV:null,allowDuplicates:!owned&&$('tDup').checked,poolFor:()=>pool});
@@ -1410,6 +1438,7 @@ function runTeam(){
     let why=owned?'there aren\'t enough copies to give each Aniimo its own favourite':!$('tDup').checked&&dup.length?'some Aniimo want the same item, and duplicates are switched off':'the team pick scores higher once team effects are counted';
     if(owned){const need={};ids.forEach(id=>need[id]=(need[id]||0)+1);const short=Object.keys(need).filter(id=>(INV[id]||[]).length<need[id]);if(!short.length)why='the team pick scores higher once team effects and item levels are counted'}
     html+=`<p class="note">Giving each Aniimo its own best item would be: ${r.naive.map((x,i)=>`${esc(E.bySlug[members[i].st.slug].name)}: ${x.id?esc(ITEM[x.id].name):'none'}`).join(', ')}. The team pick differs because ${why}.</p>`}
+  html+=`<p class="small">${r.search==='exhaustive'?'Every combination of items was checked.':'The search stopped early, so this is the best combination found, not guaranteed the best.'}</p>`;
   TEAMNOTES.forEach(n=>html+=`<p class="note">${esc(n)}</p>`);
   r.notes.forEach(n=>html+=`<p class="note">${esc(n)}</p>`);
   html+=`<p class="small"><b>What "team" counts today:</b> item limits (copies and levels you own), Auspicious Bell's team crit, and each slot's importance. Buffs, debuffs, BREAK windows and healing between Aniimo come from skills, and skill numbers aren't in this site's data yet, so they are not counted. Results are estimates.</p>`;

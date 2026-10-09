@@ -14,14 +14,14 @@ C.MODELS = {
        base: (att, def, might) => Math.max(att * might / 100 - def, 0.1 * att * might / 100) }
 };
 C.STATES = { normal: 'Normal', break: 'BREAK', recovery: 'Recovery' };
-const conf = list => list.includes('placeholder') ? 'placeholder' : list.includes('unknown') ? 'unknown' : list.includes('experimental') ? 'experimental' : list.includes('assumption') ? 'assumption' : 'verified';
+const conf = list => (list = list.map(x => x === 'measured' ? 'assumption' : x), list.includes('placeholder')) ? 'placeholder' : list.includes('unknown') ? 'unknown' : list.includes('experimental') ? 'experimental' : list.includes('assumption') ? 'assumption' : 'verified';
 
 /* member: {st (planner state), moves:[...], name} ; cfg: {members, actions, target, model, mightTotal, startEP, maxEP} */
 C.simulate = function (E, set, cfg) {
   const T = cfg.target || {}, maxHP = Math.max(1, +T.hp || 1), model = C.MODELS[cfg.model] || C.MODELS.A;
   const sc0 = set.scenarios[set.scenario] || { behind: 0.2, stackUptime: 0.8 };
   let hp = maxHP, time = 0, total = 0, gauge = 0;
-  const ep = (cfg.members || []).map(() => Math.max(0, +cfg.startEP || 0)), maxEP = Math.max(1, +cfg.maxEP || 100);
+  const maxEP = Math.max(1, +cfg.maxEP || 100); let ep = Math.min(maxEP, Math.max(0, +cfg.startEP || 0)); // one shared team pool
   const cds = {}, buffs = [], log = [], warnings = new Set(), incomplete = new Map();
   const ctx = (cfg.members || []).map(m => { try { return E.context(m.st, set); } catch (e) { return null; } });
   ctx.forEach((c, i) => { if (c && c.usesPlaceholder.length) warnings.add(`${E.bySlug[c.st.slug].name}: blank raw stats (${c.usesPlaceholder.join(', ')}) use the placeholder of ${set.A.rawPlaceholder.v}.`); });
@@ -35,11 +35,11 @@ C.simulate = function (E, set, cfg) {
     const key = a.slot + ':' + a.move;
     if ((cds[key] || 0) > time + 1e-9) { log.push({ ...base, who: m.name, move: mv.name, error: `Cooldown: ready at ${cds[key].toFixed(1)}s` }); return; }
     const cost = mv.ep == null ? 0 : Math.max(0, +mv.ep);
-    if (ep[a.slot] < cost) { log.push({ ...base, who: m.name, move: mv.name, error: `Not enough EP (${ep[a.slot].toFixed(0)} of ${cost})` }); return; }
+    if (ep < cost) { log.push({ ...base, who: m.name, move: mv.name, epBefore: ep, epAfter: ep, error: `Not enough team EP (${ep.toFixed(0)} of ${cost})` }); return; }
     if (mv.ep == null) warnings.add(`${mv.name}: EP cost not listed, so it costs nothing here.`);
     const miss = [mv.ep == null ? 'EP cost' : null, mv.cooldown == null ? 'cooldown' : null].filter(Boolean);
     if (miss.length) incomplete.set(m.name + ': ' + mv.name, miss);
-    ep[a.slot] -= cost;
+    const epBefore = ep, gain = Math.max(0, +mv.epGain || 0); ep -= cost; const epAfter = Math.min(maxEP, ep + gain);
     const live = buffs.filter(b => b.until > time);
     const bAmp = live.reduce((t, b) => t + (+b.amp || 0) / 100, 0), bCrit = live.reduce((t, b) => t + (+b.crit || 0) / 100, 0), shred = Math.min(1, live.reduce((t, b) => t + (+b.shred || 0) / 100, 0));
     const hits = Math.max(1, Math.round(+mv.hits || 1)), total_ = (mv.mightTotal != null ? mv.mightTotal : cfg.mightTotal) !== false;
@@ -51,18 +51,19 @@ C.simulate = function (E, set, cfg) {
       const fx = m.st.item ? E.itemEffects(m.st.item, m.st.itemLv || 0, c, sc) : E.itemEffects(null, 0, c, sc);
       const f = fx.blocked ? E.itemEffects(null, 0, c, sc) : fx;
       const P = E.hitParts(c, f, null, bCrit); cdrUsed = P.cdr;
-      const typeM = Math.max(0, T.type == null ? 1 : +T.type), same = mv.sameElement ? 1.1 : 1, elem = Math.max(0, 1 + (+m.boost || 0) / 100 - (+T.resist || 0) / 100);
+      const fi = (c.a.formInfo || []).find(f => f.form === (m.st.form || c.a.forms[0])), els = fi ? fi.elements : (c.a.element ? [c.a.element] : []), autoSame = mv.element && els.length ? els.includes(mv.element) : null;
+      const typeM = Math.max(0, T.type == null ? 1 : +T.type), same = (autoSame == null ? !!mv.sameElement : autoSame) ? 1.1 : 1, elem = Math.max(0, 1 + (+m.boost || 0) / 100 - (+T.resist || 0) / 100);
       const ampM = Math.max(0.2, 1 + P.amp + bAmp), finalM = 1 + P.final, alpha = T.wild === false ? 1 : 0.625;
       const mult = v => (v === '' || v == null || !Number.isFinite(+v)) ? 1 : Math.max(0, +v), stM = base.state === 'break' ? mult(T.breakMult) : base.state === 'recovery' ? mult(T.recoveryMult) : 1;
       const b = model.base(P.attack, def, perHitMight);
       const dmg = mv.kind === 'buff' ? 0 : b * typeM * same * elem * P.crit * ampM * finalM * P.persS * P.hitMult * alpha * stM;
       const mods = [
         { name: 'Attack', value: +P.attack.toFixed(1), status: c.usesPlaceholder.some(s => s === 'ATK' || s === 'BREAK') && !c.hitByLevel ? 'placeholder' : 'verified' },
-        { name: 'Target DEF' + (shred ? ` (−${Math.round(shred * 100)}% shred)` : ''), value: +def.toFixed(1), status: T.defStatus || 'assumption' },
+        { name: 'Target DEF' + (shred ? ` (−${Math.round(shred * 100)}% shred)` : '') + (T.defStatus === 'measured' ? ' (your measurement)' : ''), value: +def.toFixed(1), status: T.defStatus === 'measured' ? 'measured' : 'assumption' },
         { name: `Might${total_ && hits > 1 ? ` (${mv.might} ÷ ${hits} hits)` : ''}`, value: +perHitMight.toFixed(2), status: hits > 1 ? 'assumption' : (mv.status && mv.status.might) || 'assumption' },
         { name: model.label, value: +b.toFixed(1), status: 'experimental' },
         { name: 'Type matchup', value: typeM, status: 'verified' },
-        { name: 'Same element', value: same, status: 'verified' },
+        { name: autoSame == null ? 'Same element (ticked by hand)' : `Same element (move ${mv.element}, form ${els.join('/')})`, value: same, status: autoSame == null ? 'assumption' : 'verified' },
         { name: 'Elemental Boost − resistance', value: +elem.toFixed(3), status: 'assumption' },
         { name: 'Crit (expected)', value: +P.crit.toFixed(3), status: 'assumption' },
         { name: 'Damage Amp (item, settings, buffs)', value: +ampM.toFixed(3), status: 'assumption' },
@@ -74,12 +75,12 @@ C.simulate = function (E, set, cfg) {
       ];
       hp = Math.max(0, hp - dmg); total += dmg;
       if (mv.kind === 'break' || (c.a.role === 'Break')) gauge += P.brk * perHitMight / 100;
-      log.push({ ...base, who: m.name, move: mv.name, hit: h, hits, damage: dmg, hpLeft: hp, hpPct: 100 * hp / maxHP, ep: ep[a.slot], buffs: live.map(x => x.label), mods,
+      log.push({ ...base, who: m.name, move: mv.name, hit: h, hits, damage: dmg, hpLeft: hp, hpPct: 100 * hp / maxHP, epBefore, epCost: cost, epGain: gain, epAfter, ep: epAfter, buffs: live.map(x => x.label), mods,
         confidence: conf(mods.map(x => x.status).concat(c.usesPlaceholder.length ? ['placeholder'] : [])), itemNotes: f.unscored.concat(fx.blocked ? [fx.blocked] : []) });
       f.unscored.forEach(n => warnings.add(`${m.name}: ${n}`));
     }
     cds[key] = time + Math.max(0, +mv.cooldown || 0) * (1 - cdrUsed);
-    ep[a.slot] = Math.min(maxEP, ep[a.slot] + Math.max(0, +mv.epGain || 0));
+    ep = epAfter;
     const bf = mv.buff || {}; if ((+bf.duration || 0) > 0) buffs.push({ until: time + (+bf.duration), amp: +bf.amp || 0, crit: +bf.crit || 0, shred: +bf.shred || 0, label: `${m.name}: ${mv.name}` });
   });
   return { log, total, gauge, hpLeft: hp, maxHP, defeated: hp <= 0, elapsed: time, ep, warnings: [...warnings], model: cfg.model || 'A', modelLabel: model.label, version: C.version,

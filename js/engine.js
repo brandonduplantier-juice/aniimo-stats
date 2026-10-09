@@ -371,46 +371,41 @@ E.compareBuilds = function (st, set, poolFn) {
    members: [{st, goal, weight}], pool per member via poolFn(i), inventory: {id:[levels]} or null (= every item at +15, duplicates allowed per setting).
    Team score = sum of weight × log(member score vs no item), plus team effects such as Auspicious Bell's Luck stacks. */
 E.optimizeTeam = function (members, set, opts) {
-  const K = opts.topK || 7, inv = opts.inventory;
-  const cands = members.map((m, i) => {
-    const pool = opts.poolFor(i);
-    const off = E.rankItems(m.st, set, m.goal, pool);
-    const teamItems = new Set(G.items.filter(it => JSON.stringify(it.rules).includes('teamCrit')).map(it => it.id));
-    let list = off.rows.slice(0, K);
-    pool.forEach(p => { if (teamItems.has(p.id) && !list.some(r => r.id === p.id && r.lvl === p.lvl)) { const r = off.rows.find(x => x.id === p.id && x.lvl === p.lvl); if (r) list.push(r); } });
-    if (!list.some(r => !r.id)) list.push(off.base);
-    return { m, off, list };
-  });
-  // team crit if someone holds a team-crit item
-  const teamCritOf = combo => combo.reduce((t, r) => t + (r.fx ? r.fx.team.filter(x => x.kind === 'critRate').reduce((u, x) => u + x.v, 0) : 0), 0);
-  const withTeam = new Map();
+  const inv = opts.inventory, maxNodes = opts.maxNodes || 3e6;
+  const cands = members.map((m, i) => { const pool = opts.poolFor(i), off = E.rankItems(m.st, set, m.goal, pool); return { m, off, list: off.rows.slice() }; });
+  // team crit from items like Auspicious Bell depends on the whole team, so each member's score is cached per team-crit level
+  const tcOf = r => r.fx ? r.fx.team.filter(x => x.kind === 'critRate').reduce((u, x) => u + x.v, 0) : 0;
+  const cache = new Map();
   const memberLog = (i, r, tc) => { if (!tc) return Math.log(r.rel);
-    const key = i + '|' + (r.id || '') + '|' + r.lvl + '|' + tc.toFixed(4); if (withTeam.has(key)) return withTeam.get(key);
+    const key = i + '|' + (r.id || '') + '|' + r.lvl + '|' + tc.toFixed(5); if (cache.has(key)) return cache.get(key);
     const rr = E.rankItems(members[i].st, set, members[i].goal, r.id ? [{ id: r.id, lvl: r.lvl }] : [], { teamCrit: tc });
-    const row = rr.rows.find(x => x.id === r.id) || rr.base; const v = row.log - cands[i].off.base.log; withTeam.set(key, v); return v; };
-  let best = null; const n = members.length;
-  const rec = (i, combo) => {
-    if (i === n) {
-      // inventory and duplicate checks
-      const used = {}; for (const r of combo) if (r.id) { used[r.id] = used[r.id] || []; used[r.id].push(r.lvl); }
-      for (const id in used) { if (inv) { const have = [...(inv[id] || [])].sort((x, y) => y - x), want = [...used[id]].sort((x, y) => y - x);
-          if (want.length > have.length) return; for (let k = 0; k < want.length; k++) if (want[k] > have[k]) return; }
-        else if (!opts.allowDuplicates && used[id].length > 1) return; }
-      const tc = teamCritOf(combo);
-      let score = 0; const parts = combo.map((r, k) => { const l = memberLog(k, r, tc); score += members[k].weight * l; return l; });
-      if (!best || score > best.score + 1e-12) best = { score, combo: [...combo], parts, teamCrit: tc };
-      return;
+    const row = rr.rows.find(x => x.id === r.id) || rr.base, v = row.log - cands[i].off.base.log; cache.set(key, v); return v; };
+  // upper bound per member: its best score if the team had the most team crit possible (more crit never lowers a score)
+  const tcMax = cands.reduce((t, c) => t + Math.max(0, ...c.list.map(tcOf)), 0);
+  const ub = cands.map((c, i) => members[i].weight * Math.max(...c.list.map(r => memberLog(i, r, tcMax))));
+  const ubRest = ub.map((_, i) => ub.slice(i).reduce((t, x) => t + x, 0)).concat(0);
+  let best = null, nodes = 0, complete = true; const n = members.length, combo = [], used = {};
+  const fits = r => { if (!r.id) return true; const k = r.id, have = inv ? (inv[k] || []) : null, cur = used[k] || [];
+    if (!inv) return opts.allowDuplicates || cur.length === 0;
+    const want = [...cur, r.lvl].sort((x, y) => y - x), h = [...have].sort((x, y) => y - x); if (want.length > h.length) return false;
+    for (let j = 0; j < want.length; j++) if (want[j] > h[j]) return false; return true; };
+  const rec = (i, partialOpt) => {
+    if (++nodes > maxNodes) { complete = false; return; }
+    if (i === n) { const tc = combo.reduce((t, r) => t + tcOf(r), 0); let score = 0; const parts = combo.map((r, k) => { const l = memberLog(k, r, tc); score += members[k].weight * l; return l; });
+      if (!best || score > best.score + 1e-12) best = { score, combo: [...combo], parts, teamCrit: tc }; return; }
+    for (const r of cands[i].list) {
+      if (best && partialOpt + ubRest[i] <= best.score + 1e-12) return; // nothing left here can beat the best found
+      if (!fits(r)) continue;
+      combo.push(r); if (r.id) (used[r.id] = used[r.id] || []).push(r.lvl);
+      rec(i + 1, partialOpt + members[i].weight * memberLog(i, r, tcMax));
+      combo.pop(); if (r.id) used[r.id].pop();
     }
-    for (const r of cands[i].list) { combo.push(r); rec(i + 1, combo); combo.pop(); }
   };
-  rec(0, []);
-  // the naive answer: each member's own best item, ignoring the others
-  const naive = cands.map(x => x.off.rows[0]);
-  const notes = [];
-  const roles = members.map(m => E.bySlug[m.st.slug].role);
+  rec(0, 0);
+  const naive = cands.map(x => x.off.rows[0]), notes = [], roles = members.map(m => E.bySlug[m.st.slug].role);
   if (!roles.includes('Break')) notes.push('No Break Aniimo on this team, so BREAK gauge damage comes only from side stats.');
   if (!roles.some(r => ['Heal', 'Regen'].includes(r))) notes.push('No Heal or Regen Aniimo on this team.');
-  return { best, naive, cands, notes };
+  return { best, naive, cands, notes, search: complete ? 'exhaustive' : 'approximate', nodes };
 };
 
 /* ---------- per-hit numbers for the Team Lab (same rules as the optimizer) ---------- */
