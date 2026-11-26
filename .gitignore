@@ -1,0 +1,10 @@
+# Local operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local development
+.env
+.env.*
+!.env.example
+node_modules/
