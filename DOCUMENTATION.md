@@ -19,3 +19,7 @@ The following map points to existing resources; their contents and authority are
 
 - [VERSION.txt](VERSION.txt)
 - [render.yaml](render.yaml)
+
+## Release management
+
+- [Release and versioning policy](RELEASE_POLICY.md): verification, version naming, release evidence and rollback requirements.
